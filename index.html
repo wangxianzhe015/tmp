@@ -1,1 +1,526 @@
-Welcome!
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="assets/css/app.css"/>
+    <link rel="stylesheet" href="assets/css/theme.css"/>
+    <link rel="stylesheet" href="assets/css/lib/jquery-ui.css"/>
+    <link rel="stylesheet" href="assets/css/lib/multi-select.css"/>
+    <link rel="stylesheet" href="assets/css/lib/jquery.fileupload.css">
+    <link rel="stylesheet" href="assets/css/lib/jquery.fileupload-ui.css">
+</head>
+<body>
+
+<img id="background-image" src="http://eskipaper.com/images/simple-dark-background-1.jpg"/>
+<canvas id="c"></canvas>
+<div id='imageDialog' class="image-tooltip">
+    <ul class="top tab-menu">
+        <li class="active">
+            <a data-tab="#info" data-edit="false">Info</a>
+        </li>
+        <li>
+            <a data-tab="#form" data-edit="false">Tags</a>
+        </li>
+        <li>
+            <a data-tab="#workflow" data-edit="false">Workflow</a>
+        </li>
+        <li>
+            <a data-tab="#checklist" data-edit="false">Checklist</a>
+        </li>
+        <li style="width:45px;">
+            <a data-tab="#integration" data-edit="false">&gt;</a>
+        </li>
+        <li style="width:45px;">
+            <a data-tab="#json" data-edit="false">&gt;&gt;</a>
+        </li>
+        <li style="width:45px;">
+            <a data-tab="#documents" data-edit="false" style="padding-top:5px;padding-bottom: 1px;">
+                <img src="assets/images/icons/file.png" style="height:15px;"/>
+            </a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <div id="info"  class="tab-pane active">
+            <input type="text" id="shape-heading"/>
+            <h3></h3>
+            <textarea id="shape-datatext"></textarea>
+            <button id="set-info" class="normal-btn">OK</button>
+        </div>
+        <div id="form" class="tab-pane">
+            <div class="form-group">
+                <label for="multi-select" class="form-control">Tags</label>
+                <select id="multi-select" multiple="multiple" class="form-control multi-select">
+                </select>
+            </div>
+        </div>
+        <div id="workflow" class="tab-pane">
+            <h3>Delay</h3>
+            <div class="progress">
+                <div id="bar" style="width:30%;"></div>
+            </div>
+            <button class="progress-btn" id="progress-minus-btn">-</button>
+            <button class="progress-btn" id="progress-plus-btn">+</button>
+            <h3>Comments</h3>
+            <div class="form-group">
+                <textarea id="new-comment" class="form-control" placeholder="<Type>..."></textarea>
+                <button id="add-comment" class="normal-btn right">Add</button>
+            </div>
+            <div class="form-group" id="element-comments"></div>
+        </div>
+        <div id="checklist" class="tab-pane">
+            <div class="form-group" id="checklist-labels"></div>
+            <div class="form-group">
+                <textarea class="form-control" id="checklist-input" placeholder="<Type>..."></textarea>
+                <button class="normal-btn right" id="checklist-checkbox-add">Add</button>
+                <h3></h3>
+                <div id="checklist-checkbox-list"></div>
+                <h3></h3>
+            </div>
+            <ul class="suggest-list"></ul>
+        </div>
+        <div id="integration" class="tab-pane">
+            <div class="form-group">
+                <h3>Cluster Key</h3>
+                <input class="form-control" id="cluster-key" placeholder="<Type>"/>
+                <h3></h3>
+            </div>
+            <div class="form-group">
+                <button class="normal-btn" id="show-trash-element">Trash</button>
+                <button class="normal-btn" id="move-element">Move</button>
+                <button class="normal-btn" id="show-render-element">Image</button>
+                <button class="normal-btn" id="show-set-color">Set Color</button>
+            </div>
+            <div class="form-group">
+                <button class="normal-btn" id="beat-element">Beat</button>
+                <button class="normal-btn" id="clone-element">Clone</button>
+                <button class="normal-btn" id="export-element">Export</button>
+            </div>
+            <h3></h3>
+            <div class="form-group ext-info" id="trash-panel">
+                <label class="form-control">Are you sure?</label>
+                <input name="confirm-trash" type="radio" value="yes"/><label>Yes</label>
+                <input name="confirm-trash" type="radio" value="no"/><label>No</label>
+                <button class="normal-btn" id="trash-element" style="margin-left: 50px;">Confirm</button>
+            </div>
+            <div class="form-group ext-info" id="move-panel">
+                <select id="move-element-workspace-select" class="form-control width-half"></select>
+                <button class="normal-btn" id="move-element-confirm">Confirm</button>
+                <button class="normal-btn" id="move-element-cancel">Cancel</button>
+            </div>
+            <div class="form-group ext-info" id="image-panel">
+                <label for="element-image">Image URL</label>
+                <input type="text" id="element-image" class="form-control" placeholder="http://"/>
+                <button class="normal-btn" id="render-element">Confirm</button>
+            </div>
+            <div class="form-group ext-info" id="color-panel">
+                <label for="element-color" class="form-control">Select Color</label>
+                <br>
+                <select id="element-color" class="form-control width-half">
+                    <option value="rgba(255,255,255,.8)">Default</option>
+                    <option value="red">Red</option>
+                    <option value="white">White</option>
+                    <option value="black">Black</option>
+                    <option value="custom">Custom</option>
+                </select>
+                <input type="text" id="rgb-color-input" class="form-control width-half" placeholder="0F0F0F" style="display: none;"/>
+                <button class="normal-btn right" id="set-color">Confirm</button>
+            </div>
+        </div>
+        <div id="json" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="object-tag" class="form-control" placeholder="<Type Tag...>"/>
+                <textarea id="json-object" class="form-control"></textarea>
+                <button id="new-object-btn" class="normal-btn">New</button>
+                <button id="add-object-btn" class="normal-btn">Add Object</button>
+                <ul id="object-tags" class="tags"></ul>
+            </div>
+        </div>
+        <div id="documents" class="tab-pane">
+            <ul id="document-list"></ul>
+            <div id="document-tooltip">
+                <span id="document-message" class="float-tooltip"></span>
+                <img id="idea-img" src="assets/images/icons/idea-24.png" alt="help on document"/>
+            </div>
+        </div>
+        <div id="tab1" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="tab1-name" class="form-control bottom-tab-name" data-id="0" value="Tab1"/>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="tab1-text" class="form-control bottom-tab-text" data-id="0" placeholder="Text..."></textarea>
+            </div>
+        </div>
+        <div id="tab2" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="tab2-name" class="form-control bottom-tab-name" data-id="1" value="Tab2"/>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="tab2-text" class="form-control bottom-tab-text" data-id="1" placeholder="Text..."></textarea>
+            </div>
+        </div>
+        <div id="tab3" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="tab3-name" class="form-control bottom-tab-name" data-id="2" value="Tab3"/>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="tab3-text" class="form-control bottom-tab-text" data-id="2" placeholder="Text..."></textarea>
+            </div>
+        </div>
+        <div id="tab4" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="tab4-name" class="form-control bottom-tab-name" data-id="3" value="Tab4"/>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="tab4-text" class="form-control bottom-tab-text" data-id="3" placeholder="Text..."></textarea>
+            </div>
+        </div>
+        <div id="tab5" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="tab5-name" class="form-control bottom-tab-name" data-id="4" value="Tab5"/>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="tab5-text" class="form-control bottom-tab-text" data-id="4" placeholder="Text..."></textarea>
+            </div>
+        </div>
+        <div id="button-pane">
+            <button id="ttip-edit">Edit</button>
+            <button id="ttip-exit">Exit</button>
+        </div>
+    </div>
+    <ul class="bottom tab-menu">
+        <li>
+            <a data-tab="#tab1" data-edit="false">Tab1</a>
+        </li>
+        <li>
+            <a data-tab="#tab2" data-edit="false">Tab2</a>
+        </li>
+        <li>
+            <a data-tab="#tab3" data-edit="false">Tab3</a>
+        </li>
+        <li>
+            <a data-tab="#tab4" data-edit="false">Tab4</a>
+        </li>
+        <li>
+            <a data-tab="#tab5" data-edit="false">Tab5</a>
+        </li>
+    </ul>
+</div>
+<div id='preview-box' class="image-tooltip">
+    <div id="preview-images-container"></div>
+    <div id="pagination">
+        <img id="prev-preview-image" src="assets/images/icons/arrow-up-24.png"/>
+        <img id="next-preview-image" src="assets/images/icons/arrow-down-24.png"/>
+        <input type="text" id="current-preview-image" value="1"/>
+        /
+        <span id="total-preview-images"></span>
+        <img id="save-document-image" src="assets/images/icons/save-24.png" style="margin-left: 15px;"/>
+    </div>
+</div>
+<div id="uploadDialog" class="image-tooltip">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#transfer">Transfer</a>
+        </li>
+        <li>
+            <a data-tab="#history">History</a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <form id="fileupload" action="upload" method="POST" enctype="multipart/form-data">
+            <div id="transfer" class="tab-pane active">
+                <div class="form-group">
+                    <div class="fileupload-buttonbar">
+                        <div class="fileupload-buttons">
+                            <span id="upload-plus" class="upload-button upload-plus"></span>
+                            <span id="upload-start" class="upload-button upload-start"></span>
+                            <span id="upload-cancel" class="upload-button upload-cancel"></span>
+                            <span class="ui-button-icon ui-icon ui-icon-circle-arrow-e"></span>
+                            <span class="ui-button-icon ui-icon ui-icon-cancel"></span>
+                            <span class="fileinput-button" style="display: none;">
+                                <input type="file" name="files[]" multiple>
+                            </span>
+                            <button type="submit" class="start" style="display: none;"></button>
+                            <button type="reset" class="cancel" style="display: none;"></button>
+                            <span class="fileupload-process"></span>
+                        </div>
+                        <div class="fileupload-progress fade" style="display:none">
+                            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <table role="presentation"><tbody class="upload-files"></tbody></table>
+                    <div id="dropzone"></div>
+                </div>
+            </div>
+            <div id="history" class="tab-pane">
+                <table role="presentation"><tbody class="download-files"></tbody></table>
+            </div>
+        </form>
+    </div>
+</div>
+<div id='settingDialog' class="image-tooltip">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#theme">Theme</a>
+        </li>
+        <li>
+            <a data-tab="#tag-edit">Tags</a>
+        </li>
+        <li>
+            <a data-tab="#callback-tab">Callback</a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <div id="theme" class="tab-pane active">
+            <div class="form-group">
+                <label for="app-theme">Theme</label>
+                <select id="app-theme" class="form-control">
+                    <option value="default">Default</option>
+                    <option value="fresh-and-vermillon">Fresh and Vermillon</option>
+                    <option value="tangerine-and-teal">Tangerine and Teal</option>
+                    <option value="dusty-and-lavendar">Dusty and Lavendar</option>
+                    <option value="powder-and-peach">Powder and Peach</option>
+                    <option value="storm-and-cloud">Storm and Cloud</option>
+                    <option value="evening-and-sunset">Evening and Sunset</option>
+                    <option value="clown-and-bright">Clown and Bright</option>
+                    <option value="blueberry-and-apricot">Blueberry and Apricot</option>
+                    <option value="denim-and-gold">Denim and Gold</option>
+                    <option value="smoke-and-blush">Smoke and Blush</option>
+                    <option value="cotton-and-healing">Cotton and Healing</option>
+                    <option value="watermelon-and-blackberry">Watermelon and Blackberry</option>
+                    <option value="lagoon-and-beach">Lagoon and Beach</option>
+                    <option value="petal-and-shrub">Petal and Shrub</option>
+                    <option value="coral-and-romance">Coral and Romance</option>
+                    <option value="cucumber-and-kiwi">Cucumber and Kiwi</option>
+                    <option value="eggplant-and-grape">Eggplant and Grape</option>
+                    <option value="apricot-and-citrus">Apricot and Citrus</option>
+                    <option value="sailor-and-coral">Sailor and Coral</option>
+                    <option value="marine-and-sky">Marine and Sky</option>
+                    <option value="indigo-and-crimson">Indigo and Crimson</option>
+                    <option value="joker">Joker</option>
+                    <option value="dark-joker">Dark Joker</option>
+                    <option value="ice-and-water">Ice and Water</option>
+                    <option value="honey-and-cerulean">Honey and Cerulean</option>
+                    <option value="sunshine-and-ocean">Sunshine and Ocean</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="grid-show-check"/>
+                <label for="grid-show-check">Show Grid</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="pattern-apply-check"/>
+                <label for="pattern-apply-check">Apply Pattern</label>
+            </div>
+            <div class="form-group">
+                <label for="background-pattern">Pattern</label>
+                <input type="text" id="background-pattern" class="form-control" value="http://eskipaper.com/images/simple-dark-background-1.jpg"/>
+                <!--<input type="text" id="background-pattern" class="form-control" value="https://red-moristems.rhcloud.com/test.jpg"/>-->
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="pattern-tint-check"/>
+                <label for="pattern-tint-check">Apply Tint</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="pattern-parallax-check"/>
+                <label for="pattern-parallax-check">Parallax Scrolling</label>
+            </div>
+        </div>
+        <div id="tag-edit" class="tab-pane">
+            <h3>Tags</h3>
+            <textarea id="tags-list">lorem,ipsum</textarea>
+            <h3>Labels</h3>
+            <textarea id="label-list">Review Date,Due Date</textarea>
+            <h3>AutoSuggest</h3>
+            <textarea id="auto-suggest" rows="4"></textarea>
+            <button id="test" class="normal-btn">Test</button>
+            <button id="test-draggable" class="normal-btn">Test Draggable</button>
+        </div>
+        <div id="callback-tab" class="tab-pane">
+            <div class="form-group">
+                <input type="text" id="callback-name" class="form-control" placeholder="<Type>..."/>
+                <textarea id="callback" class="form-control"></textarea>
+            </div>
+            <div class="row">
+                <div class="column six">
+                    <button class="normal-btn right" id="run-callback-btn">Run</button>
+                </div>
+                <div class="column three center">
+                    <button class="normal-btn" id="reload-callback-btn">Re-load</button>
+                </div>
+                <div class="column three center">
+                    <button class="normal-btn" id="add-callback-btn">Add Callback</button>
+                </div>
+            </div>
+            <ul class="tags" id="callback-tags"></ul>
+        </div>
+    </div>
+</div>
+<div id='tagDialog' class="image-tooltip">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#views" data-edit="true">Views</a>
+        </li>
+        <li>
+            <a data-tab="#filters" data-edit="false">Filters</a>
+        </li>
+        <li>
+            <a data-tab="#clusters" data-edit="false">Clusters</a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <div id="views" class="tab-pane active">
+            <h3></h3>
+            <div class="form-group">
+                <label for="view-name" class="form-control">Name</label>
+                <input type="text" id="view-name" class="form-control" placeholder="<Type>..."/>
+            </div>
+            <div class="form-group">
+                <button id="view-save" class="normal-btn">Save View</button>
+            </div>
+            <h3></h3>
+            <div id="view-list"></div>
+        </div>
+        <div id="filters" class="tab-pane">
+            <label for="tags" class="form-control">Tags</label>
+            <select id="tags" multiple="multiple" class="form-control"></select>
+        </div>
+        <div id="clusters" class="tab-pane">
+            <ul id="cluster-list"></ul>
+        </div>
+    </div>
+</div>
+<div id="notification">
+    <div id="message"></div>
+</div>
+<div id="new-element-div">
+    <div id="new-element-content"></div>
+</div>
+<div id="alert" class="dialog">
+    <div class="dialog-body">
+        <div class="dialog-header">Header</div>
+        <div class="dialog-content">Content</div>
+        <div class="dialog-footer">
+            <button class="dialog-close" dismiss="#alert">Close</button>
+        </div>
+    </div>
+</div>
+<div id="save" class="dialog">
+    <div class="dialog-body">
+        <div class="dialog-header">Save</div>
+        <div class="dialog-content">
+            <div class="form-group">
+                <label class="form-control" for="save-file-name">Workspace</label>
+                <input class="form-control" type="text" id="save-file-name" placeholder="<Type>..."/>
+            </div>
+        </div>
+        <div class="dialog-footer">
+            <button id="save-confirm" class="confirm">Confirm</button>
+            <button class="dialog-close" dismiss="#save">Close</button>
+        </div>
+    </div>
+</div>
+<div id="load" class="dialog">
+    <div class="dialog-body">
+        <div class="dialog-header">Load</div>
+        <div class="dialog-content">
+            <div class="form-group">
+                <label class="form-control" for="load-file-name">Choose Workspace</label>
+                <select class="form-control" id="load-file-name"></select>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" id="save-current-workspace"/>
+                <label for="save-current-workspace">Save Current Changes to Workspace</label>
+            </div>
+        </div>
+        <div class="dialog-footer ui-ico">
+            <button id="load-confirm" class="confirm">Confirm</button>
+            <button class="dialog-close" dismiss="#load">Close</button>
+        </div>
+    </div>
+</div>
+<div id="iframe-panel">
+    <iframe></iframe>
+    <span id="close-iframe" title="Close">X</span>
+</div>
+
+<div id="iframe-draggable">
+    <div id="iframe-title-bar"></div>
+    <iframe></iframe>
+    <span id="close-draggable-iframe" title="Close">X</span>
+</div>
+
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error"></strong>
+        </td>
+        <td>
+            <div class="progress"></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <span class="upload-button upload-start one"></span>
+                <button class="start" disabled style="display:none;"></button>
+            {% } %}
+            {% if (!i) { %}
+                <span class="upload-button upload-cancel one"></span>
+                <button class="cancel" style="display:none;"></button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td colspan='3'>
+            <p class="name">
+                <a title="{%=o.formatFileSize(file.size)%}" href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+            </p>
+            {% if (file.error) { %}
+                <div><span class="error">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+
+<script src="assets/js/lib/fabric.js"></script>
+<script src="assets/js/lib/fabric.canvasex.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery-ui.min.js"></script>
+<script type="text/javascript" src="assets/js/lib/tmpl.min.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.fileupload.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.fileupload-process.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.fileupload-validate.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.fileupload-ui.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.fileupload-jquery-ui.js"></script>
+<script type="text/javascript" src="assets/js/lib/jquery.ui-contextmenu.min.js"></script>
+<script type="text/javascript" src="assets/js/lib/multi-select.js"></script>
+<script type="text/javascript" src="assets/js/app/utils.js"></script>
+<script type="text/javascript" src="assets/js/app/button.js"></script>
+<script type="text/javascript" src="assets/js/app/element.js"></script>
+<script type="text/javascript" src="assets/js/app/group.js"></script>
+<script type="text/javascript" src="assets/js/app/view.js"></script>
+<script type="text/javascript" src="assets/js/app/image-tool.js"></script>
+<script type="text/javascript" src="assets/js/app/grid.js"></script>
+<script type="text/javascript" src="assets/js/app/cluster.js"></script>
+<script type="text/javascript" src="assets/js/app/preview.js"></script>
+<script type="text/javascript" src="assets/js/app/eventHandlers.js"></script>
+<script type="text/javascript" src="assets/js/app/app.js"></script>
+<script type="text/javascript" src="assets/js/app/canvas.js"></script>
+</body>
+
+</html>
