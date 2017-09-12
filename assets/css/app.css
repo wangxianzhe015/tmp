@@ -10,8 +10,13 @@
     src: url('./fonts/brandon_reg.eot');
     src: url('./fonts/brandon_reg.eot?#iefix') format('embedded-opentype'), url('./fonts/brandon_reg.woff') format('woff'), url('./fonts/brandon_reg.ttf') format('truetype'), url('./fonts/brandon_reg.svg') format('svg');
 }
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
 *{
-    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-family: VagRounded, Helvetica, sans-serif;
 }
 body{
     margin: 0;

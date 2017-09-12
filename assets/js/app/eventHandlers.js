@@ -397,6 +397,20 @@ function initHandlers(){
         }
     });
 
+    $("#pattern-parallax-check").on("click", function(){
+        if ($(this).prop('checked')){
+            $("#background-image").css({
+                width: 1.5 * window.innerWidth,
+                height: 1.5 * window.innerHeight
+            });
+        } else {
+            $("#background-image").css({
+                width: 2 * window.innerWidth,
+                height: 2 * window.innerHeight
+            });
+        }
+    });
+
     $("#grid-show-check").on("click", function(){
         var check = $(this).prop('checked');
         if (check){

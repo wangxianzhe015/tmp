@@ -30,7 +30,7 @@ function draw1() {
         originY: 'center',
         lineHeight: 1,
         fill: 'black',
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold'
     });
 
@@ -100,7 +100,7 @@ function draw2() {
         originX: "center",
         originY: "center",
         lineHeight: 1,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: 'rgba(231,41,225,.2)'
     });
@@ -172,7 +172,7 @@ function draw3() {
         originX: "center",
         originY: "center",
         lineHeight: 1,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:.5
@@ -245,7 +245,7 @@ function draw4() {
         originX: "center",
         originY: "center",
         lineHeight: 12,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:.5
@@ -307,7 +307,7 @@ function draw5() {
         lineHeight: 12,
         originX: "center",
         originY: "center",
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:1
@@ -376,7 +376,7 @@ function draw6() {
         originX: "center",
         originY: "center",
         lineHeight: 12,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity: 1
@@ -479,7 +479,7 @@ function addNewHexagon(name,index){
         originX: "center",
         originY: "center",
         lineHeight: 12,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:1
@@ -540,7 +540,7 @@ function addNewCircle(name,index){
         originX: "center",
         originY: "center",
         lineHeight: 12,
-        fontFamily: 'Roboto Condensed',
+        fontFamily: 'VagRounded',
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:1
@@ -688,9 +688,11 @@ function addElements(newElements){
             elementColor = object.elementColor;
             $("#background-pattern").val(object.pattern);
             if (object.pattern == "" || !object.isPatternApply){
-                canvas.backgroundColor = "rgba(0,0,0,0)";
+                //canvas.backgroundColor = "rgba(0,0,0,0)";
+                $("#background-image").hide();
             } else {
-                canvas.backgroundColor = new fabric.Pattern({source: $("#background-pattern").val()});
+                $("#background-image").attr("src", object.pattern).show();
+                //canvas.backgroundColor = new fabric.Pattern({source: $("#background-pattern").val()});
             }
         } else if (object.class == 'views'){
             views = object.data;
