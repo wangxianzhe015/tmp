@@ -22,6 +22,24 @@ function initHandlers(){
         }
     });
 
+    $(document).on("mousemove", function(moveEventOptions){
+        if (moveEventOptions.clientX < 50){
+            setTimeout(showLeftSidebar,100);
+            setTimeout(hideRightSidebar,100);
+        } else if (window.innerWidth - moveEventOptions.clientX < 50) {
+            setTimeout(hideLeftSidebar, 100);
+            setTimeout(showRightSidebar, 100);
+        } else {
+            setTimeout(hideLeftSidebar,100);
+            setTimeout(hideRightSidebar,100);
+        }
+        if (moveEventOptions.clientY < 100){
+            setTimeout(showTopSidebar, 100);
+        } else {
+            setTimeout(hideTopSidebar, 100);
+        }
+    });
+
     $(document).contextmenu({
         delegate: ".upper-canvas",
         menu: [
@@ -86,6 +104,10 @@ function initHandlers(){
                     break;
             }
         }
+    });
+
+    $("#close-top-sidebar").on("click", function(){
+        $("#top-sidebar").remove();
     });
 
     $(".image-tooltip").on("mouseover", function(event){

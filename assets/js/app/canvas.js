@@ -413,6 +413,9 @@ canvas.on('mouse:up',function(e){
                 }).on('keyup', function(e){
                     $(this).parent().removeClass('empty');
                     $(this).parent().find(".remove-regex-search").show();
+                    if (parseInt($(this).parent().css("left")) + parseInt($(this).css("width")) + 20 < canvas.getWidth()) {
+                        $(this).css("width", ($(this).val().length + 1) * 20 + "px");
+                    }
                     if (e.keyCode === 13) {
                         var regexExp = new RegExp($(this).val().toUpperCase(), "g");
                         canvas.forEachObject(function (obj) {
@@ -425,7 +428,6 @@ canvas.on('mouse:up',function(e){
                         });
                         canvas.renderAll();
                         $(this).attr('readonly', true);
-                        $(this).parent().find(".remove-suggest-list").remove();
                         $(this).parent().find(".suggest-list").remove();
                     } else {
                         var txt = $(this).val(),parent='#'+$(this).parent().attr('id');
@@ -433,25 +435,9 @@ canvas.on('mouse:up',function(e){
                             clearTimeout(regexTimer);
                         }
                         regexTimer = setTimeout(function(){regexSearch(parent,txt);}, 300);
-                        $(this).parent().find(".remove-suggest-list").hide();
                         $(this).parent().find(".suggest-list").hide();
                     }
                 }).appendTo(box).focus();
-
-                $('<span></span>', {
-                    class: 'remove-suggest-list',
-                    text: 'x',
-                    title: 'Remove auto-suggest'
-                }).css({
-                    position: 'absolute',
-                    top: '60px',
-                    left: '-30px',
-                    cursor: 'pointer',
-                    color: 'white'
-                }).on("click", function(){
-                    $(this).parent().find(".suggest-list").remove();
-                    $(this).remove();
-                }).appendTo(box).hide();
 
                 $('<ul></ul>', {
                     'class': 'suggest-list'

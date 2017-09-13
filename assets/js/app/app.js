@@ -43,6 +43,8 @@ var clusters = [], positionBeforeClustering = null,
 
 var regexTimer,regexSearchCount=0;
 
+var topbar = null, leftbar = null, rightbar = null;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false

@@ -486,11 +486,12 @@ button#progress-plus-btn{
     position: absolute;
 }
 .regex-search-box .regex-search-input{
+    font-family: SanFrancisco, Helvetica, sans-serif;
     background: none;
     border: none;
     font-size: 30px;
     color: white;
-    width: 300px;
+    min-width: 300px;
 }
 .regex-search-box .suggest-list{
     transform: scaleX(-1);
@@ -664,10 +665,11 @@ input#shape-heading{
 textarea#shape-datatext{
     color: white;
     height: calc(100% - 100px);
-    min-height: 150px;
+    min-height: 250px;
     width: calc(100% - 20px);
     font-size: 1em;
-    line-height: 11px;
+    font-weight: bold;
+    line-height: 1.5em;
     border: none;
     background: transparent;
     overflow: hidden;
@@ -735,6 +737,42 @@ textarea#shape-datatext{
 #preview-box #pagination span{
     vertical-align: middle;
 }
+
+#top-sidebar{
+    position: fixed;
+    top: -140px;
+    width: 100%;
+    height: 140px;
+    background-color: rgba(0,0,0,.7);
+}
+#top-sidebar #close-top-sidebar{
+    padding: 5px;
+    cursor: pointer;
+    background-color: rgba(0,0,0,.9);
+    color: white;
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    border-radius: 5px;
+
+}
+#left-sidebar{
+    width: 50px;
+    height: 100%;
+    position: fixed;
+    left: -50px;
+    top: 0;
+    background-color: black;
+}
+#right-sidebar{
+    width: 50px;
+    height: 100%;
+    position: fixed;
+    right: -50px;
+    top: 0;
+    background-color: black;
+}
+
 #iframe-panel{
     background-color: rgba(30,30,30,.7);
     position: fixed;

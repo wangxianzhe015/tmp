@@ -492,3 +492,45 @@ function makeTextFile(name,text) {
         document.body.removeChild(elem);
     }
 }
+
+function showLeftSidebar(){
+    if (leftbar == null) {
+        leftbar = $("#left-sidebar");
+        leftbar.animate({left: 0});
+    }
+}
+
+function hideLeftSidebar(){
+    if (leftbar != null) {
+        leftbar.animate({left: "-50px"});
+        leftbar = null;
+    }
+}
+
+function showTopSidebar(){
+    if (topbar == null){
+        topbar = $("#top-sidebar");
+        topbar.animate({top: 0});
+    }
+}
+
+function hideTopSidebar(){
+    if (topbar != null){
+        topbar.stop().animate({top: "-140px"});
+        topbar = null;
+    }
+}
+
+function showRightSidebar(){
+    if (rightbar == null){
+        rightbar = $("#right-sidebar");
+        rightbar.animate({right: 0});
+    }
+}
+
+function hideRightSidebar(){
+    if (rightbar != null){
+        rightbar.stop().animate({right: "-50px"});
+        rightbar = null;
+    }
+}
