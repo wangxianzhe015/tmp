@@ -1,208 +1,68 @@
-var buttonRemoveFlag = false;
-
 function addBrowseButton(){
-    var browseImgSrc = "./assets/images/icons/browser-40.png",left,top;
-    if (browseButton == null){
-        left = 50;
-        top = window.innerHeight - 60;
-    } else {
-        left = browseButton.left;
-        top = browseButton.top;
-    }
-    fabric.Image.fromURL(browseImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: 40,
-            height: 40,
-            //fill: '#248784',
-            fill: 'rgba(0,0,0,0)',
-            //opacity:.2,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        browseButton = new fabric.Group([rect, oImg], {
-            left: left,
-            top: top,
-            id: 'browse',
-            class: 'button',
-            isTemporary: false,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            draggable: true,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
+    $("<img/>", {
+        id: "browse-button",
+        src: "./assets/images/icons/browser-40.png",
+        class: "icon-button parent"
+    }).on("mouseover", function(){
 
-        canvas.add(browseButton);
-    });
+    }).on("mouseleave", function(){
+
+    }).appendTo("#left-sidebar");
 }
 
 function addSearchButton(){
-    var searchImgSrc = "./assets/images/icons/search-40.png",left,top;
-    if (searchButton == null){
-        left = 50;
-        top = window.innerHeight - 120;
-    } else {
-        left = searchButton.left;
-        top = searchButton.top;
-    }
-
-    fabric.Image.fromURL(searchImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        searchButton = new fabric.Group([rect, oImg], {
-            left: left,
-            top: top,
-            id: 'search',
-            class: 'button',
-            isTemporary: false,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            draggable: true,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(searchButton);
-    });
-
+    $("<img/>", {
+        id: "search-button",
+        src: "./assets/images/icons/search-40.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        removeImageTools();
+        setTimeout(showTagTooltip,100);
+    }).on("mouseleave", function(){
+        setTimeout(removeImageTools,500);
+    }).appendTo("#left-sidebar");
 }
 
 function addHideButton(){
-    var hideImgSrc = "./assets/images/icons/hide-40.png",left,top;
-    if (hideButton == null){
-        left = 50;
-        top = window.innerHeight - 180;
-    } else {
-        left = hideButton.left;
-        top = hideButton.top;
-    }
-
-    fabric.Image.fromURL(hideImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        hideButton = new fabric.Group([rect, oImg], {
-            left: left,
-            top: top,
-            id: 'hide',
-            class: 'button',
-            isTemporary: false,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            draggable: true,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(hideButton);
-    });
-
+    $("<img/>", {
+        id: "hide-button",
+        src: "./assets/images/icons/hide-40.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
+    }).on("click", function(){
+        if (elementsStatus == 'show') {
+            elementsStatus = 'hide';
+            $(this).attr("src", "./assets/images/icons/unhide-40.png");
+        } else {
+            elementsStatus = 'show';
+            $(this).attr("src", "./assets/images/icons/hide-40.png");
+        }
+        toggleElements();
+    }).appendTo("#left-sidebar");
 }
 
 function addUploadButton(){
-    var uploadImgSrc = "./assets/images/icons/upload-40.png",left,top;
-    if (uploadButton == null){
-        left = 50;
-        top = window.innerHeight - 240;
-    } else {
-        left = uploadButton.left;
-        top = uploadButton.top;
-    }
-
-    fabric.Image.fromURL(uploadImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        uploadButton = new fabric.Group([rect, oImg], {
-            left: left,
-            top: top,
-            id: 'upload',
-            class: 'button',
-            isTemporary: false,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            draggable: true,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(uploadButton);
-    });
-
+    $("<img/>", {
+        id: "upload-button",
+        src: "./assets/images/icons/upload-40.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        showUploadDiv();
+    }).on("mouseleave", function(){
+        setTimeout(removeImageTools, 500);
+    }).appendTo("#left-sidebar");
 }
 
 function addBackButton(){
-    var backImgSrc = "./assets/images/icons/back-40.png",left,top;
-    if (backButton == null){
-        left = 50;
-        top = 50;
-    } else {
-        left = backButton.left;
-        top = backButton.top;
-    }
+    $("<img/>", {
+        id: "back-button",
+        src: "./assets/images/icons/back-40.png",
+        class: "icon-button"
+    }).on("click", function(){
 
-    fabric.Image.fromURL(backImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        backButton = new fabric.Group([rect, oImg], {
-            left: left,
-            top: top,
-            id: 'uncluster',
-            class: 'button',
-            isTemporary: false,
-            originX: 'center',
-            originY: 'center',
-            selectable: true,
-            draggable: true,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(backButton);
-    });
-
+    }).appendTo("#left-sidebar");
 }
 
 function removeButtons(){

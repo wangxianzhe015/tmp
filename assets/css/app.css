@@ -136,6 +136,9 @@ button .text{
     width: 45%;
     min-width: 675px;
 }
+.image-tooltip#tagDialog, .image-tooltip#uploadDialog{
+    left: 60px;
+}
 .ttip{
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -763,6 +766,7 @@ textarea#shape-datatext{
     left: -50px;
     top: 0;
     background-color: black;
+    transform: scaleY(-1);
 }
 #right-sidebar{
     width: 50px;
@@ -771,6 +775,10 @@ textarea#shape-datatext{
     right: -50px;
     top: 0;
     background-color: black;
+}
+#left-sidebar .icon-button{
+    cursor: pointer;
+    transform: scaleY(-1);
 }
 
 #iframe-panel{

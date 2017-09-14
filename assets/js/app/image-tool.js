@@ -107,9 +107,9 @@ function showSettingTooltip(e){
     moveImageTools(dialog,e);
 }
 
-function showTagTooltip(e){
+function showTagTooltip(){
     $('.image-tooltip').hide();
-    //tooltipObject = null;
+
     mouseOverElement = true;
     var viewList = $("#view-list");
     viewList.html("");
@@ -145,17 +145,16 @@ function showTagTooltip(e){
                 'data-key': key
             }).on("click", function(){
                 clusterElements($(this).attr('data-key'));
-                mouseOverElement = false;
                 removeImageTools();
             }).appendTo("#cluster-list");
         }
     }
 
     var dialog = $("#tagDialog");
-    if(getObjPosition(e)){
-        dialog.show();
-    }
-    moveImageTools(dialog,e);
+    var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    dialog.css({
+        top: top > 0 ? top : 0
+    }).show();
 }
 
 function moveImageTools (dialog,e,parent) {
@@ -462,10 +461,12 @@ function composePreviewTab(e){
     }
 }
 
-function showUploadDiv(e){
+function showUploadDiv(){
     $('.image-tooltip').hide();
     mouseOverElement = true;
     var obj = $("#uploadDialog");
-    obj.show();
-    moveImageTools(obj, e);
+    var top = window.scrollY + window.innerHeight - parseInt(obj.css("height")) - 20;
+    obj.css({
+        top: top > 0 ? top : 0
+    }).show();
 }

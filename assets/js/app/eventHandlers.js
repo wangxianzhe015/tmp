@@ -33,7 +33,7 @@ function initHandlers(){
             setTimeout(hideLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
         }
-        if (moveEventOptions.clientY < 100){
+        if (moveEventOptions.clientY < 100 && moveEventOptions.clientX > 50 && !mouseOverElement){
             setTimeout(showTopSidebar, 100);
         } else {
             setTimeout(hideTopSidebar, 100);
@@ -112,7 +112,7 @@ function initHandlers(){
 
     $(".image-tooltip").on("mouseover", function(event){
         mouseOverElement = true;
-    }).on("mouseout", function(event){
+    }).on("mouseleave", function(event){
         mouseOverElement = false;
     });
 
