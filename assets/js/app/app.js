@@ -72,6 +72,7 @@ function init(){
     initHandlers();
 
     addBrowseButton();
+    addButtons();
     addSearchButton();
     addHideButton();
     addUploadButton();

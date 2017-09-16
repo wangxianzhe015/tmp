@@ -96,15 +96,15 @@ function showImageTools (e, parent) {
     moveImageTools(dialog,e,parent);
 }
 
-function showSettingTooltip(e){
+function showSettingTooltip(){
     $('.image-tooltip').hide();
     tooltipObject = null;
     mouseOverElement = true;
     var dialog = $("#settingDialog");
-    if(getObjPosition(e)){
-        dialog.show();
-    }
-    moveImageTools(dialog,e);
+    var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    dialog.css({
+        top: top > 0 ? top : 0
+    }).show();
 }
 
 function showTagTooltip(){

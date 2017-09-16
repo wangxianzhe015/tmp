@@ -68,11 +68,7 @@ function clusterElements(key){
 }
 
 function unClusterElements(){
-    if (backButton != null){
-        canvas.remove(backButton);
-        backButton = null;
-    }
-
+    $("#back-button").remove();
     canvas.forEachObject(function(obj){
         if (obj.class == 'element' && positionBeforeClustering.hasOwnProperty(obj.id)){
             obj.animate({

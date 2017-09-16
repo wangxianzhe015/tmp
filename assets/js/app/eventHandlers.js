@@ -29,7 +29,7 @@ function initHandlers(){
         } else if (window.innerWidth - moveEventOptions.clientX < 50) {
             setTimeout(hideLeftSidebar, 100);
             setTimeout(showRightSidebar, 100);
-        } else {
+        } else if (!mouseOverElement){
             setTimeout(hideLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
         }

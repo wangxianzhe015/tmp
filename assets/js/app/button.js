@@ -4,9 +4,9 @@ function addBrowseButton(){
         src: "./assets/images/icons/browser-40.png",
         class: "icon-button parent"
     }).on("mouseover", function(){
-
+        showChildButtons();
     }).on("mouseleave", function(){
-
+        setTimeout(hideChildButtons,500);
     }).appendTo("#left-sidebar");
 }
 
@@ -61,196 +61,87 @@ function addBackButton(){
         src: "./assets/images/icons/back-40.png",
         class: "icon-button"
     }).on("click", function(){
-
+        unClusterElements();
     }).appendTo("#left-sidebar");
 }
 
-function removeButtons(){
-    if (buttonRemoveFlag) {
-        buttons.forEach(function (button) {
-            canvas.remove(button);
-        });
-        buttons = [];
-        buttonRemoveFlag = false;
-    }
-}
+function addButtons() {
+    $("<img/>", {
+        id: "toggle-lock-button",
+        src: "./assets/images/icons/lock-24.png",
+        class: "icon-button child"
+    }).on("click", function(){
+        if (snapToGrid){
+            snapToGrid = false;
+            $(this).attr("src","./assets/images/icons/lock-24.png");
+            snapStatus = 'lock';
+        } else {
+            snapToGrid = true;
+            $(this).attr("src","./assets/images/icons/unlock-24.png");
+            snapStatus = 'unlock';
+        }
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hideChildButtons, 500);
+    }).appendTo("#left-sidebar");
 
-function addButtons(left, top) {
-    //var hideImgSrc;
-    var lockImgSrc;
-    //var groupImgSrc;
-    var externalImgSrc = "./assets/images/icons/external-24.png";
-    var saveImgSrc = "./assets/images/icons/save-24.png";
-    var openImgSrc = "./assets/images/icons/folder-open-24.png";
-    var settingsImgSrc = "./assets/images/icons/settings-24.png";
-    //if (gridStatus == 'hide') {
-    //    hideImgSrc = "./assets/images/icons/hide-24.png";
-    //} else {
-    //    hideImgSrc = "./assets/images/icons/unhide-24.png";
-    //}
-    if (snapStatus == 'lock') {
-        lockImgSrc = "./assets/images/icons/lock-24.png";
-    } else {
-        lockImgSrc = "./assets/images/icons/unlock-24.png";
-    }
+    $("<img/>", {
+        id: "external-button",
+        src: "./assets/images/icons/external-24.png",
+        class: "icon-button child"
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hideChildButtons, 500);
+    }).on("click", function(){
 
-    //var activeObject = canvas.getActiveGroup();
-    //if (activeObject != null){
-    //    groupImgSrc = "./assets/images/icons/object-group-24.png";
-    //} else {
-    //    groupImgSrc = "./assets/images/icons/object-ungroup-24.png";
-    //}
+    }).appendTo("#left-sidebar");
 
-    fabric.Image.fromURL(lockImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        var button = new fabric.Group([rect, oImg], {
-            left: left + 40,
-            top: top,
-            id: 'toggle-snap',
-            class: 'button',
-            isTemporary: true,
-            category: snapStatus,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            draggable: false,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
+    $("<img/>", {
+        id: "save-button",
+        src: "./assets/images/icons/save-24.png",
+        class: "icon-button child"
+    }).on("click", function(){
+        $("#save-file-name").val(currentFile);
+        $("body").css("overflow","hidden");
+        $("#save").fadeIn();
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hideChildButtons, 500);
+    }).appendTo("#left-sidebar");
 
-        canvas.add(button);
-        buttons.push(button);
-    });
+    $("<img/>", {
+        id: "open-button",
+        src: "./assets/images/icons/folder-open-24.png",
+        class: "icon-button child"
+    }).on("click", function(){
+        loadFileNames();
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hideChildButtons, 500);
+    }).appendTo("#left-sidebar");
 
-    fabric.Image.fromURL(externalImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        var exButton = new fabric.Group([rect, oImg], {
-            left: left + 80,
-            top: top,
-            id: 'external',
-            class: 'button',
-            isTemporary: true,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            draggable: false,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(exButton);
-        buttons.push(exButton);
-    });
-
-    fabric.Image.fromURL(saveImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        var saveButton = new fabric.Group([rect, oImg], {
-            left: left + 120,
-            top: top,
-            id: 'save',
-            class: 'button',
-            isTemporary: true,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            draggable: false,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(saveButton);
-        buttons.push(saveButton);
-    });
-
-    fabric.Image.fromURL(openImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        var openButton = new fabric.Group([rect, oImg], {
-            left: left + 160,
-            top: top,
-            id: 'folder-open',
-            class: 'button',
-            isTemporary: true,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            draggable: false,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(openButton);
-        buttons.push(openButton);
-    });
-
-    fabric.Image.fromURL(settingsImgSrc, function(oImg) {
-        var rect = new fabric.Rect({
-            left: 0,
-            top: 0,
-            width: buttonSize,
-            height: buttonSize,
-            fill: buttonColor,
-            strokeWidth: 2
-        });
-        // scale image down, and flip it, before adding it onto canvas
-        oImg.set({left: 0, top: 0, angle: 0});
-        var settingsButton = new fabric.Group([rect, oImg], {
-            left: left + 200,
-            top: top,
-            id: 'settings',
-            class: 'button',
-            isTemporary: true,
-            originX: 'center',
-            originY: 'center',
-            selectable: false,
-            draggable: false,
-            hasBorders: false,
-            hasControls: false,
-            hasRotatingPoint: false
-        });
-
-        canvas.add(settingsButton);
-        buttons.push(settingsButton);
-    });
+    $("<img/>", {
+        id: "settings-button",
+        src: "./assets/images/icons/settings-24.png",
+        class: "icon-button child"
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+        removeImageTools();
+        setTimeout(showSettingTooltip,100);
+        setTimeout(hideChildButtons, 500);
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(removeImageTools,500);
+        setTimeout(hideChildButtons, 500);
+    }).appendTo("#left-sidebar");
 }
 
 function addAddButtons(left, top) {
@@ -329,12 +220,12 @@ function addAddButtons(left, top) {
 
 }
 
-function moveButtons(left, top){
-    buttons.forEach(function(button,index){
-        button.set({
-            left: left + (index + 1) * 40,
-            top: top
-        });
-    });
-    canvas.renderAll();
+function showChildButtons(){
+    $("#left-sidebar").find(".child").show();
+}
+
+function hideChildButtons(){
+    if (!mouseOverElement){
+        $("#left-sidebar").find(".child").hide();
+    }
 }
