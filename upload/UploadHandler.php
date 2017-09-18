@@ -154,8 +154,8 @@ class UploadHandler
                     // Uncomment the following to force the max
                     // dimensions and e.g. create square thumbnails:
                     //'crop' => true,
-                    'max_width' => 80,
-                    'max_height' => 80
+                    // 'max_width' => 80,
+                    // 'max_height' => 80
                 )
             ),
             'print_response' => true
@@ -267,6 +267,7 @@ class UploadHandler
             .$this->get_singular_param_name()
             .'='.rawurlencode($file->name);
         $file->deleteType = $this->options['delete_type'];
+//        $file->date = date("Y-m-d H:i:s",filemtime($file->name));
         if ($file->deleteType !== 'DELETE') {
             $file->deleteUrl .= '&_method=DELETE';
         }
@@ -295,6 +296,10 @@ class UploadHandler
         return $this->fix_integer_overflow(filesize($file_path));
     }
 
+    protected function get_file_date($file_path){
+        return date("Y-m-d H:i:s", filectime($file_path));
+    }
+
     protected function is_valid_file_object($file_name) {
         $file_path = $this->get_upload_path($file_name);
         if (is_file($file_path) && $file_name[0] !== '.') {
@@ -311,6 +316,7 @@ class UploadHandler
                 $this->get_upload_path($file_name)
             );
             $file->url = $this->get_download_url($file->name);
+            $file->time = $this->get_file_date($this->get_upload_path($file_name));
             foreach ($this->options['image_versions'] as $version => $options) {
                 if (!empty($version)) {
                     if (is_file($this->get_upload_path($file_name, $version))) {
@@ -1092,7 +1098,7 @@ class UploadHandler
             if ($file_size === $file->size) {
                 $file->url = $this->get_download_url($file->name);
                 if ($this->is_valid_image_file($file_path)) {
-                    $this->handle_image_file($file_path, $file);
+//                    $this->handle_image_file($file_path, $file);
                 }
             } else {
                 $file->size = $file_size;
@@ -1101,6 +1107,7 @@ class UploadHandler
                     $file->error = $this->get_error_message('abort');
                 }
             }
+            $file->time = $this->get_file_date($file_path);
             $this->set_additional_file_properties($file);
         }
         return $file;

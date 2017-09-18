@@ -1050,14 +1050,14 @@ $(function () {
     var obj = $('#fileupload');
     obj.fileupload({
         url: 'upload/',
-        dropZone: $("body")
+        dropZone: $("body"),
+        disableImageLoad: true,
+        disableImageResize: true
     });
 
     $(document).bind('drop dragover', function (e) {
-        if (uploadButton != null) {
-            e.preventDefault();
-            showUploadDiv(uploadButton);
-        }
+        e.preventDefault();
+        showUploadDiv();
     }).bind('dragover', function (e) {
         var dropZone = $('#dropzone'),
             timeout = window.dropZoneTimeout;

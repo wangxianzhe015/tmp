@@ -751,13 +751,11 @@ textarea#shape-datatext{
 #top-sidebar #close-top-sidebar{
     padding: 5px;
     cursor: pointer;
-    background-color: rgba(0,0,0,.9);
     color: white;
     position: absolute;
     top: 30px;
     right: 30px;
     border-radius: 5px;
-
 }
 #left-sidebar{
     width: 30px;
@@ -880,6 +878,9 @@ textarea#shape-datatext{
 }
 #fileupload table{
     width: 100%;
+}
+#fileupload .file-date{
+    color: gray;
 }
 .fileupload-progress {
     margin: 10px 0;

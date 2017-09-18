@@ -492,13 +492,16 @@
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
-        <td colspan='3'>
+        <td colspan='2'>
             <p class="name">
                 <a title="{%=o.formatFileSize(file.size)%}" href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
             </p>
             {% if (file.error) { %}
                 <div><span class="error">Error</span> {%=file.error%}</div>
             {% } %}
+        </td>
+        <td class="file-date">
+            {%=file.time %}
         </td>
     </tr>
 {% } %}
