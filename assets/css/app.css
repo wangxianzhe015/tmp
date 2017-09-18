@@ -760,13 +760,13 @@ textarea#shape-datatext{
 
 }
 #left-sidebar{
-    width: 40px;
-    height: 100%;
+    width: 30px;
+    height: calc(100% - 20px);
     position: fixed;
     left: -50px;
     top: 0;
-    padding: 5px;
-    background-color: black;
+    padding: 10px;
+    background-color: #202020;
     transform: scaleY(-1);
 }
 #right-sidebar{
@@ -775,13 +775,15 @@ textarea#shape-datatext{
     position: fixed;
     right: -50px;
     top: 0;
-    background-color: black;
+    background-color: #202020;
 }
 #left-sidebar .icon-button{
     display: block;
     cursor: pointer;
     transform: scaleY(-1);
     position: relative;
+    width: 30px;
+    height: 30px;
 }
 #left-sidebar .icon-button#back-button{
     position: absolute;
@@ -790,7 +792,9 @@ textarea#shape-datatext{
 }
 #left-sidebar .icon-button.child{
     display: none;
-    left: 10px;
+    width: 20px;
+    height: 20px;
+    left: 5px;
 }
 #iframe-panel{
     background-color: rgba(30,30,30,.7);
