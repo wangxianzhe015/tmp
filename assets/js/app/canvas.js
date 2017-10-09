@@ -25,17 +25,6 @@ canvas.on('mouse:over', function(e) {
         } else {
             setTimeout(removeImageTools,500);
         }
-    } else if (e.target != null && e.target.class == "button") {
-        if (e.target.id == "browse") {
-            if (buttons.length == 0) {
-                addButtons(e.target.left, e.target.top);
-            }
-            buttonRemoveFlag = false;
-        } else if (e.target.id == "search") {
-            showTagTooltip(e.target);
-        } else if (e.target.id == "upload") {
-            showUploadDiv(e.target);
-        }
     } else if (e.target != null && e.target.class == "group") {
         if (!e.target.expanded) {
             showImageTools(e.target);
@@ -82,13 +71,6 @@ canvas.on('mouse:move',function(moveEventOptions){
         mouseDrag = true;
     }
 
-    if (moveEventOptions.target == null || moveEventOptions.target.class != "button") {
-        if (!mouseDown && buttons.length > 0 && !buttonRemoveFlag){
-            buttonRemoveFlag = true;
-            setTimeout(removeButtons, 3000);
-        }
-    }
-
     if (moveEventOptions.target != null && moveEventOptions.target.class == "group") {
         var mousePos = canvas.getPointer(moveEventOptions.e);
         var groupPos = getObjPosition(moveEventOptions.target), groupWidth = moveEventOptions.target.width, groupHeight = moveEventOptions.target.height;
@@ -112,8 +94,6 @@ canvas.on('mouse:move',function(moveEventOptions){
     if (moveEventOptions.target != null && moveEventOptions.target.class == "element") {
         //moveImageTools(moveEventOptions.target);
         //showImageTools(moveEventOptions.target);
-    } else if (moveEventOptions.target != null && moveEventOptions.target.class == "button" && moveEventOptions.target.id == "settings") {
-        showSettingTooltip(moveEventOptions.target);
     } else if (moveEventOptions.target != null && moveEventOptions.target.class != "dot") {
         removeDotTooltip();
     } else {
@@ -128,67 +108,7 @@ canvas.on('mouse:down',function(e){
     $("#new-element-div").hide();
     var object = e.target;
     if (object != null){
-        if (object.class == 'button') {
-            if (object.id == 'hide') {
-                if (elementsStatus == 'show') {
-                    elementsStatus = 'hide';
-                    object._objects[1].setSrc("./assets/images/icons/unhide-40.png");
-                } else {
-                    elementsStatus = 'show';
-                    object._objects[1].setSrc("./assets/images/icons/hide-40.png");
-                }
-                toggleElements();
-            //} else if (object.id == 'toggle-grid') {
-            //    if (object.category == 'hide'){
-            //        grid.forEach(function(obj){
-            //            obj.set({
-            //                visible: false
-            //            });
-            //        });
-            //        object.item(1).setSrc("./assets/images/icons/unhide-24.png");
-            //        object.category = 'unhide';
-            //        gridStatus = 'unhide';
-            //    } else if (object.category == 'unhide'){
-            //        grid.forEach(function(obj){
-            //            obj.set({
-            //                visible: true
-            //            });
-            //        });
-            //        object.item(1).setSrc("./assets/images/icons/hide-24.png");
-            //        object.category = 'hide';
-            //        gridStatus = 'hide';
-            //    }
-            } else if (object.id == 'toggle-snap') {
-                if (object.category == 'lock'){
-                    snapToGrid = true;
-                    object._objects[1].setSrc("./assets/images/icons/unlock-24.png");
-                    object.category = 'unlock';
-                    snapStatus = 'unlock';
-                } else if (object.category == 'unlock'){
-                    snapToGrid = false;
-                    object._objects[1].setSrc("./assets/images/icons/lock-24.png");
-                    object.category = 'lock';
-                    snapStatus = 'lock';
-                }
-            } else if (object.id == 'add-new-shape') {
-                if (object.category == 'hexagon') {
-                    getElementName('hex');
-                    //addNewHexagon();
-                } else if (object.category == 'circle'){
-                    getElementName('circle');
-                    //addNewCircle();
-                }
-            } else if (object.id == 'save') {
-                $("#save-file-name").val(currentFile);
-                $("body").css("overflow","hidden");
-                $("#save").fadeIn();
-            } else if (object.id == 'folder-open') {
-                loadFileNames();
-            } else if (object.id == 'uncluster') {
-                unClusterElements();
-            }
-            canvas.renderAll();
-        } else if (object.class == 'element') {
+        if (object.class == 'element') {
             if (targetElement == null) { // New Click
                 if (tempPoly == null && tempText == null) {
                     //clockID = setInterval(holdElement, 1);
@@ -367,8 +287,6 @@ canvas.on('mouse:up',function(e){
             } else if (Math.abs(downPoint.x - upPoint.x) > 20 && Math.abs(downPoint.y - upPoint.y) > 20) {
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
                 addAddButtons(downPoint.x, downPoint.y);
-                //if ($("#regex-search").length)
-                //    return false;
 
                 regexSearchCount++;
                 var box = $('<div/>', {
@@ -458,13 +376,7 @@ canvas.on('mouse:up',function(e){
         }
     }
     var obj = e.target;
-    if (obj != null && obj.class == 'button'){
-        if (obj.id == 'browse') {
-            if (buttons.length == 0) {
-                addButtons(obj.left, obj.top);
-            }
-        }
-    } else if (obj != null && obj.class == 'dot'){
+    if (obj != null && obj.class == 'dot'){
         obj.setOpacity(0);
     }
     mouseDrag = false;
@@ -513,18 +425,6 @@ canvas.on('object:selected', function(e){
 canvas.on('object:moving', function(e){
 
     e.target.setCoords();
-    //canvas.forEachObject(function(obj) {
-    //    if (obj.class == "element") {
-    //        if (obj == e.target) return false;
-    //        if (e.target.intersectsWithObject(obj)){
-    //            obj.setOpacity(.5);
-    //            e.target.setOpacity(.5);
-    //        } else {
-    //            obj.setOpacity(1);
-    //            e.target.setOpacity(1);
-    //        }
-    //    }
-    //});
     if (e.target == tempPoly || e.target == tempText){
         var polyPos = getObjPosition(tempPoly);
         var textPos = getObjPosition(tempText);
@@ -567,13 +467,6 @@ canvas.on('object:moving', function(e){
         elementsInfo[e.target.id].x = e.target.left;
         elementsInfo[e.target.id].y = e.target.top;
         canvas.renderAll();
-    } else if (e.target.class == 'button'){
-        if (e.target.id == 'browse'){
-            if (buttons.length > 0) {
-                buttonRemoveFlag = true;
-                removeButtons();
-            }
-        }
     } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
         var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
         moveThreeDots(obj);

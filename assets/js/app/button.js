@@ -55,6 +55,16 @@ function addUploadButton(){
     }).appendTo("#left-sidebar");
 }
 
+function addChipButton(){
+    $("<img/>", {
+        id: "microchip-button",
+        src: "./assets/images/icons/microchip-40.png",
+        class: "icon-button"
+    }).on("click", function(){
+        showTaggerFrame();
+    }).appendTo("#left-sidebar");
+}
+
 function addBackButton(){
     $("<img/>", {
         id: "back-button",
@@ -228,4 +238,9 @@ function hideChildButtons(){
     if (!mouseOverElement){
         $("#left-sidebar").find(".child").hide();
     }
+}
+
+function showTaggerFrame(){
+    $(".image-tooltip").hide();
+    $("#tagger-iframe").show();
 }

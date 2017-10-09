@@ -7,6 +7,7 @@
     <meta name="keywords" content="" />
     <link rel="stylesheet" href="assets/css/app.css"/>
     <link rel="stylesheet" href="assets/css/theme.css"/>
+    <link rel="stylesheet" href="assets/css/text-tagger.css"/>
     <link rel="stylesheet" href="assets/css/lib/jquery-ui.css"/>
     <link rel="stylesheet" href="assets/css/lib/multi-select.css"/>
     <link rel="stylesheet" href="assets/css/lib/jquery.fileupload.css">
@@ -14,7 +15,8 @@
 </head>
 <body>
 
-<img id="background-image" src="http://eskipaper.com/images/simple-dark-background-1.jpg"/>
+<img id="background-image" src=""/>
+<!--<img id="background-image" src="http://eskipaper.com/images/simple-dark-background-1.jpg"/>-->
 
 <canvas id="c"></canvas>
 <div id='imageDialog' class="image-tooltip">
@@ -459,6 +461,12 @@
     <span id="close-draggable-iframe" title="Close">X</span>
 </div>
 
+<div id="tagger-iframe" class="image-tooltip">
+    <div class="ttip">
+        <iframe src="tagger.html"></iframe>
+    </div>
+</div>
+
 <div id="left-sidebar"></div>
 <div id="top-sidebar">
     <span id="close-top-sidebar" title="Close">X</span>
@@ -528,6 +536,7 @@
 <script type="text/javascript" src="assets/js/app/grid.js"></script>
 <script type="text/javascript" src="assets/js/app/cluster.js"></script>
 <script type="text/javascript" src="assets/js/app/preview.js"></script>
+<script type="text/javascript" src="assets/js/app/text-tagger.js"></script>
 <script type="text/javascript" src="assets/js/app/eventHandlers.js"></script>
 <script type="text/javascript" src="assets/js/app/app.js"></script>
 <script type="text/javascript" src="assets/js/app/canvas.js"></script>

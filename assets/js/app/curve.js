@@ -83,7 +83,7 @@ function onBeforeSelectionCleared(e) {
     if (activeObject.name == "p0" || activeObject.name == "p2") {
         activeObject.line2.animate('opacity', '0', {
             duration: 200,
-            onChange: canvas.renderAll.bind(canvas),
+            onChange: canvas.renderAll.bind(canvas)
         });
         activeObject.line2.selectable = false;
     }

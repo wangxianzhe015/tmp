@@ -20,7 +20,6 @@ var elementsStatus = 'show';
 var elementsInfo = [];
 
 var grid = [],nearPointIndex, snapToGrid = false,gridX = 0, gridY = 0;
-var buttons = [], browseButton=null,searchButton=null,hideButton=null,uploadButton=null,backButton=null;
 var groups = [];
 var showContextMenu = false;
 
@@ -44,6 +43,8 @@ var clusters = [], positionBeforeClustering = null,
 var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
+
+var textClipboard = "";
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
@@ -76,7 +77,8 @@ function init(){
     addSearchButton();
     addHideButton();
     addUploadButton();
-    drawElements();
+    addChipButton();
+    //drawElements();
     loadAllCallbacks();
 
     loadFormations();

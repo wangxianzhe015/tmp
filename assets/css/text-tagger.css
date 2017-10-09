@@ -1,0 +1,39 @@
+.tagger-icons-container{
+    background-color: rgba(40,40,40,.8);
+    color: white;
+    height: 24px;
+    border-radius: 5px;
+    padding: 5px;
+    position: absolute;
+    display: none;
+    z-index: 100000;
+}
+.tagger-icon{
+    width: 24px;
+    height: 24px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+.tagger-highlight-text{
+    background: #555d55;
+    border-radius: 3px;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+    line-height: 1.5em;
+}
+.tagger-highlight-text:hover > .tagger-highlight-save-icon{
+    display: inline;
+}
+.tagger-highlight-save-icon{
+    position: absolute;
+    display: none;
+    cursor: pointer;
+    margin-left: -24px;
+}
+.tagger-highlight-save-icon.selected{
+    display: inline;
+    box-shadow: -3px 3px 10px #4777fb;
+}
+.tagger-highlight-save-icon:hover{
+    display: inline;
+}
