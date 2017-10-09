@@ -78,7 +78,7 @@ function init(){
     addHideButton();
     addUploadButton();
     addChipButton();
-    //drawElements();
+    drawElements();
     loadAllCallbacks();
 
     loadFormations();
