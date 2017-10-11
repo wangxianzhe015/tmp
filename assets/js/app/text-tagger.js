@@ -90,6 +90,7 @@
         $obj.find(".tagger-highlight-text").each(function(i, el){
             $(el).replaceWith($(el).html());
         });
+        $obj.textillate('in');
     }
 
     $.fn.textTagger = function(options) {
@@ -101,9 +102,9 @@
             initialDelay: 0,
             autoStart: true,
             in: {
-                effect: 'fadeInLeftBig',
-                delayScale: 1.5,
-                delay: 50,
+                effect: 'fadeIn',
+                delayScale: 1,
+                delay: 0,
                 sync: true
             },
             out: {
@@ -130,12 +131,11 @@
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);
 
-            var obj = window.getSelection().baseNode.parentNode, $obj = $(obj).parents("[class^=word]"),
-                anchorOffset = selectedText.anchorOffset,
-                extentOffset = selectedText.extentOffset,
-                focusOffset = selectedText.focusOffset,
-                wholeText = $obj.text(),
-                highlightTag = $("<span></span>", {
+            var anchorNode = window.getSelection().anchorNode.parentNode, $anchorNode = $(anchorNode), anchorOrder = $anchorNode.parents("[class^=word]").attr("class"),
+                focusNode = window.getSelection().focusNode.parentNode, $focusNode = $(focusNode), focusOrder = $focusNode.parents("[class^=word]").attr("class"),
+                startWord = 0, endWord = 0,
+                startChar = 0, endChar = 0,
+                highlightTag = $("<code></code>", {
                     id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
                     class: "tagger-highlight-text",
                     html: clipboardData
@@ -150,19 +150,42 @@
                         $(this).remove();
                     }
                 }));
-            console.log(obj);
-            console.log($obj);
-            console.log(wholeText);
-            $obj.html("")
-                .append($("<span></span>",{
-                    class: "tagger-text-hinge",
-                    html: wholeText.substring(0,anchorOffset)
-                }))
-                .append(highlightTag)
-                .append($("<span></span>",{
-                    class: "tagger-text-hinge",
-                    html: wholeText.substring(extentOffset > focusOffset? extentOffset:focusOffset, wholeText.length)
-                }));
+            if (parseInt(anchorOrder.substring(4)) > parseInt(focusOrder.substring(4))){
+                startWord = parseInt(focusOrder.substring(4));
+                endWord = parseInt(anchorOrder.substring(4));
+                startChar = parseInt($focusNode.attr("class").substring(4));
+                endChar = parseInt($anchorNode.attr("class").substring(4));
+            } else {
+                startWord = parseInt(anchorOrder.substring(4));
+                endWord = parseInt(focusOrder.substring(4));
+                startChar = parseInt($anchorNode.attr("class").substring(4));
+                endChar = parseInt($focusNode.attr("class").substring(4));
+            }
+            if (startWord == endWord){
+                var $obj = $(".word"+startWord), charNumber = $obj.find("[class*='char']").length;
+                for (var i = startChar; i <= endChar; i ++){
+                    $obj.find(".char" + i).remove();
+                }
+                $("<span></span>",{
+                    class: "word" + (parseFloat(startWord) + .5)
+                }).insertAfter(".word"+startWord);
+                for (var j = endChar + 1; j <= charNumber; j ++){
+                    $obj.find(".char" + j).detach().appendTo($obj.next());
+                }
+                highlightTag.insertAfter(".word" + startWord);
+            } else {
+                var $obj = $(".word" + startWord), charNumber = $obj.find("[class*='char']").length;
+                for (var i = startChar; i <= charNumber; i ++){
+                    $obj.find(".char" + i).remove();
+                }
+                for (i = startWord + 1; i < endWord; i ++){
+                    $(".word"+i).remove();
+                }
+                for (i = 1; i <= endChar; i ++){
+                    $(".word"+endWord).find(".char"+i).remove();
+                }
+                highlightTag.insertAfter(".word" + startWord);
+            }
 
             $(this).textillate('out');
         });
