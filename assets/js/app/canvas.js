@@ -107,8 +107,18 @@ canvas.on('mouse:down',function(e){
     downPoint = {x: e.e.pageX, y: e.e.pageY};
     $("#new-element-div").hide();
     var object = e.target;
-    if (object != null){
-        if (object.class == 'element') {
+    if (object != null) {
+        if (object.class == 'button') {
+            if (object.id == 'add-new-shape') {
+                if (object.category == 'hexagon') {
+                    getElementName('hex');
+                    //addNewHexagon();
+                } else if (object.category == 'circle'){
+                    getElementName('circle');
+                    //addNewCircle();
+                }
+            }
+        }else if (object.class == 'element') {
             if (targetElement == null) { // New Click
                 if (tempPoly == null && tempText == null) {
                     //clockID = setInterval(holdElement, 1);

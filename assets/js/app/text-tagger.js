@@ -1,7 +1,7 @@
 ;(function(document, $) {
     var taggerContainerClassName = "tagger-icons-container",
+        randomValue = "qu8SyShOm1nLyo3UCYxnv5o3IJXNeI34",
         taggerIconPath = {
-            "paste": "/assets/images/icons/paste-24.png",
             "cut": "/assets/images/icons/cut-24.png",
             "inverse": "/assets/images/icons/invert-selection-24.png",
             "unhighlight": "/assets/images/icons/highlight-24.png",
@@ -22,19 +22,60 @@
         }).appendTo("body");
 
         $("<img/>",{
-            class: "tagger-icon tagger-icon-paste",
-            title: "Paste",
-            src: path + taggerIconPath.paste
-        }).on("click", function(){
-            hideTaggerIcons();
-        }).appendTo("."+taggerContainerClassName);
-
-        $("<img/>",{
             class: "tagger-icon tagger-icon-cut",
             title: "Cut",
             src: path + taggerIconPath.cut
         }).on("click", function(){
             hideTaggerIcons();
+            document.execCommand('copy');
+
+            if (typeof window.getSelection != "undefined") {
+                var sel = window.getSelection(), range, data, textTag;
+                if (sel.rangeCount) {
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        range = sel.getRangeAt(i);
+                        data = range.extractContents();
+                        textTag = document.createElement("span");
+                        textTag.className = "textillate-out-span";
+                        range.insertNode(textTag);
+
+                        if (window.getSelection) {
+                            if (window.getSelection().empty) {  // Chrome
+                                window.getSelection().empty();
+                            } else if (window.getSelection().removeAllRanges) {  // Firefox
+                                window.getSelection().removeAllRanges();
+                            }
+                        } else if (document.selection) {  // IE?
+                            document.selection.empty();
+                        }
+
+                        $(textTag).html(data).textillate({
+                            loop: false,
+                            initialDelay: 0,
+                            autoStart: true,
+                            in: {
+                                effect: 'fadeIn',
+                                delayScale: 0,
+                                delay: 0,
+                                sync: true,
+                                callback: function(){
+                                    $(".textillate-out-span").textillate('out');
+                                }
+                            },
+                            out: {
+                                effect: 'hinge',
+                                delayScale: 1.5,
+                                delay: 0,
+                                sync: true,
+                                callback: function () {
+                                    $(".textillate-out-span").remove();
+                                }
+                            }
+                        });
+                        //console.log($(data).children().find("img"));
+                    }
+                }
+            }
         }).appendTo("."+taggerContainerClassName);
 
         $("<img/>",{
@@ -43,6 +84,7 @@
             src: path + taggerIconPath.inverse
         }).on("click", function(){
             hideTaggerIcons();
+            $("#" + $(this).parent().attr("data-target")).html(window.getSelection().getRangeAt(0).cloneContents());
         }).appendTo("."+taggerContainerClassName);
 
         $("<img/>",{
@@ -60,16 +102,48 @@
             src: path + taggerIconPath.tick
         }).on("click", function(){
             hideTaggerIcons();
+
+            if (typeof window.getSelection != "undefined") {
+                var sel = window.getSelection(), range, data, highlightTag;
+                if (sel.rangeCount) {
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        range = sel.getRangeAt(i);
+                        data = range.extractContents();
+                        highlightTag = $("<code></code>", {
+                            id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
+                            class: "tagger-highlight-text",
+                            html: data
+                        }).prepend($("<img/>",{
+                            class: "tagger-highlight-save-icon",
+                            src: "." + taggerIconPath.save
+                        }).on({
+                            click: function(){
+                                $(this).addClass("selected");
+                            },
+                            dblclick: function(){
+                                $(this).remove();
+                            }
+                        }));
+
+                        range.insertNode(highlightTag.get(0));
+
+                        if (window.getSelection) {
+                            if (window.getSelection().empty) {  // Chrome
+                                window.getSelection().empty();
+                            } else if (window.getSelection().removeAllRanges) {  // Firefox
+                                window.getSelection().removeAllRanges();
+                            }
+                        } else if (document.selection) {  // IE?
+                            document.selection.empty();
+                        }
+                    }
+                }
+            }
+
         }).appendTo("."+taggerContainerClassName);
     }
 
     function showTaggerIcons(posX, posY){
-        var clipboardData = getClipboardData();
-        if (clipboardData == ""){
-            $(".tagger-icon-paste").hide();
-        } else {
-            $(".tagger-icon-paste").show();
-        }
         $(".tagger-icons-container").css({
             left: posX,
             top: posY
@@ -80,43 +154,21 @@
         $(".tagger-icons-container").hide();
     }
 
-    function getClipboardData(){
-        return "test";
-    }
-
     function unhighlightAll(target){
         var $obj = $("#" + target);
         $obj.find(".tagger-highlight-save-icon").remove();
-        $obj.find(".tagger-highlight-text").each(function(i, el){
-            $(el).replaceWith($(el).html());
-        });
-        $obj.textillate('in');
+        while( $obj.find(".tagger-highlight-text").length > 0) {
+            $obj.find(".tagger-highlight-text").each(function (i, el) {
+                $(el).replaceWith($(el).html());
+            });
+        }
+        $obj.html($obj.html());
     }
 
     $.fn.textTagger = function(options) {
         if ($(".tagger-icons-container").length == 0){
             addTaggerIcons($(this).attr("id"));
         }
-        $(this).textillate({
-            loop: false,
-            initialDelay: 0,
-            autoStart: true,
-            in: {
-                effect: 'fadeIn',
-                delayScale: 1,
-                delay: 0,
-                sync: true
-            },
-            out: {
-                effect: 'hinge',
-                delayScale: 1.5,
-                delay: 50,
-                sync: false,
-                shuffle: false,
-                reverse: false,
-                callback: function () {}
-            }
-        });
         return this.on("mouseup", function(event) {
             if (window.getSelection().toString() == "")return false;
             var top = event.originalEvent.clientY - 60<0?event.originalEvent.clientY + 60:event.originalEvent.clientY - 60;
@@ -126,68 +178,31 @@
         }).on("mousedown", function(){
             hideTaggerIcons();
         }).on("paste", function(e){
-            var selectedText = window.getSelection();
-            if ( selectedText.toString() == "")return false;
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);
 
-            var anchorNode = window.getSelection().anchorNode.parentNode, $anchorNode = $(anchorNode), anchorOrder = $anchorNode.parents("[class^=word]").attr("class"),
-                focusNode = window.getSelection().focusNode.parentNode, $focusNode = $(focusNode), focusOrder = $focusNode.parents("[class^=word]").attr("class"),
-                startWord = 0, endWord = 0,
-                startChar = 0, endChar = 0,
-                highlightTag = $("<code></code>", {
-                    id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
-                    class: "tagger-highlight-text",
-                    html: clipboardData
-                }).prepend($("<img/>",{
-                    class: "tagger-highlight-save-icon",
-                    src: "." + taggerIconPath.save
-                }).on({
-                    click: function(){
-                        $(this).addClass("selected");
-                    },
-                    dblclick: function(){
-                        $(this).remove();
+            if (typeof window.getSelection != "undefined") {
+                var sel = window.getSelection(), range;
+                if (sel.rangeCount) {
+                    for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                        range = sel.getRangeAt(i);
+                        range.insertNode(document.createTextNode(clipboardData));
+
                     }
-                }));
-            if (parseInt(anchorOrder.substring(4)) > parseInt(focusOrder.substring(4))){
-                startWord = parseInt(focusOrder.substring(4));
-                endWord = parseInt(anchorOrder.substring(4));
-                startChar = parseInt($focusNode.attr("class").substring(4));
-                endChar = parseInt($anchorNode.attr("class").substring(4));
-            } else {
-                startWord = parseInt(anchorOrder.substring(4));
-                endWord = parseInt(focusOrder.substring(4));
-                startChar = parseInt($anchorNode.attr("class").substring(4));
-                endChar = parseInt($focusNode.attr("class").substring(4));
-            }
-            if (startWord == endWord){
-                var $obj = $(".word"+startWord), charNumber = $obj.find("[class*='char']").length;
-                for (var i = startChar; i <= endChar; i ++){
-                    $obj.find(".char" + i).remove();
                 }
-                $("<span></span>",{
-                    class: "word" + (parseFloat(startWord) + .5)
-                }).insertAfter(".word"+startWord);
-                for (var j = endChar + 1; j <= charNumber; j ++){
-                    $obj.find(".char" + j).detach().appendTo($obj.next());
-                }
-                highlightTag.insertAfter(".word" + startWord);
-            } else {
-                var $obj = $(".word" + startWord), charNumber = $obj.find("[class*='char']").length;
-                for (var i = startChar; i <= charNumber; i ++){
-                    $obj.find(".char" + i).remove();
-                }
-                for (i = startWord + 1; i < endWord; i ++){
-                    $(".word"+i).remove();
-                }
-                for (i = 1; i <= endChar; i ++){
-                    $(".word"+endWord).find(".char"+i).remove();
-                }
-                highlightTag.insertAfter(".word" + startWord);
             }
 
-            $(this).textillate('out');
+            if (window.getSelection) {
+                if (window.getSelection().empty) {  // Chrome
+                    window.getSelection().empty();
+                } else if (window.getSelection().removeAllRanges) {  // Firefox
+                    window.getSelection().removeAllRanges();
+                }
+            } else if (document.selection) {  // IE?
+                document.selection.empty();
+            }
+
+            $(this).html($(this).html());
         });
     };
 

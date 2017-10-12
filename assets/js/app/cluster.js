@@ -63,8 +63,9 @@ function clusterElements(key){
     delete clusters['temp'];
     canvas.renderAll();
 
-    if (backButton == null && key != 'temp')
+    if ($("#back-button").length == 0 && key != 'temp') {
         addBackButton();
+    }
 }
 
 function unClusterElements(){

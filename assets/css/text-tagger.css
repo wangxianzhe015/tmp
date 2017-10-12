@@ -1,3 +1,12 @@
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
+*{
+    font-family: VagRounded, Helvetica, sans-serif;
+}
+.playground{overflow:hidden;}
 .tagger-icons-container{
     background-color: rgba(40,40,40,.8);
     color: white;
@@ -21,7 +30,6 @@
     letter-spacing: 1px;
     line-height: 1.5em;
     visibility: visible;
-    margin: 0 .5em;
 }
 .tagger-highlight-text:hover > .tagger-highlight-save-icon{
     display: inline;

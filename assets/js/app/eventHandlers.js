@@ -106,6 +106,8 @@ function initHandlers(){
         }
     });
 
+    $("#tagger-iframe").draggable();
+
     $("#close-top-sidebar").on("click", function(){
         $("#top-sidebar").remove();
     });

@@ -21,7 +21,8 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #248784;
+    background-color: gray;
+    /*background-color: #248784;*/
     /*overflow: hidden;*/
 }
 body{
@@ -788,7 +789,6 @@ textarea#shape-datatext{
 }
 #left-sidebar .icon-button#back-button{
     position: absolute;
-    left: 5px;
     bottom: 5px;
 }
 #left-sidebar .icon-button.child{
@@ -850,6 +850,7 @@ textarea#shape-datatext{
     right: 0;
 }
 #tagger-iframe iframe{
+    font-family: VagRounded, Helvetica, sans-serif;
     height: 100%;
     width: 100%;
     border: none;
