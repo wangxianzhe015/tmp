@@ -109,7 +109,7 @@
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
                         data = range.extractContents();
-                        highlightTag = $("<code></code>", {
+                        highlightTag = $("<span></span>", {
                             id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
                             class: "tagger-highlight-text",
                             html: data
@@ -126,6 +126,7 @@
                         }));
 
                         range.insertNode(highlightTag.get(0));
+                        range.insertNode(document.createElement("br"));
 
                         if (window.getSelection) {
                             if (window.getSelection().empty) {  // Chrome
@@ -157,6 +158,7 @@
     function unhighlightAll(target){
         var $obj = $("#" + target);
         $obj.find(".tagger-highlight-save-icon").remove();
+        $obj.find("br").remove();
         var hiddens = $obj.find(".textillate-out-span");
         hiddens.each(function(i,el){
             $(el).replaceWith($(el).find(".texts").text());
@@ -185,13 +187,13 @@
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);
 
+            $(this).find(".tagger-instruction").remove();
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range;
                 if (sel.rangeCount) {
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
                         range.insertNode(document.createTextNode(clipboardData));
-
                     }
                 }
             }

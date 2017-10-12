@@ -6,7 +6,10 @@
 *{
     font-family: SanFrancisco, Helvetica, sans-serif;
 }
-.playground{overflow:hidden;}
+.playground{
+    overflow:hidden;
+    margin: 0 100px;
+}
 .tagger-icons-container{
     background-color: rgba(40,40,40,.8);
     color: white;
@@ -24,7 +27,8 @@
     cursor: pointer;
 }
 .tagger-highlight-text{
-    background: #555d55;
+    background: rgba(255,255,255,.5);
+    color: black;
     border-radius: 3px;
     font-size: 1.2em;
     letter-spacing: 1px;
