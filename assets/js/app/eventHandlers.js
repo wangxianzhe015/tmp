@@ -896,8 +896,8 @@ function initHandlers(){
         });
     });
 
-    $("#close-iframe").on("click", function(){
-        $("#iframe-panel").hide();
+    $(".close-iframe").on("click", function(){
+        $(this).parent().hide();
     });
 
     $("#test-draggable").on("click", function(){
@@ -906,10 +906,6 @@ function initHandlers(){
             iframeHandler($(this));
             $("#iframe-draggable").css("left",(window.innerWidth - parseInt(obj.css('width'))) / 2).show();
         });
-    });
-
-    $("#close-draggable-iframe").on("click", function(){
-        $("#iframe-draggable").hide();
     });
 
     $("#iframe-draggable").draggable();

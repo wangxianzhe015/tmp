@@ -102,8 +102,10 @@ function showSettingTooltip(){
     mouseOverElement = true;
     var dialog = $("#settingDialog");
     var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    var left = window.scrollX + 50;
     dialog.css({
-        top: top > 0 ? top : 0
+        top: top > 0 ? top : 0,
+        left: left
     }).show();
 }
 
@@ -152,8 +154,10 @@ function showTagTooltip(){
 
     var dialog = $("#tagDialog");
     var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    var left = window.scrollX + 50;
     dialog.css({
-        top: top > 0 ? top : 0
+        top: top > 0 ? top : 0,
+        left: left
     }).show();
 }
 
@@ -466,7 +470,9 @@ function showUploadDiv(){
     mouseOverElement = true;
     var obj = $("#uploadDialog");
     var top = window.scrollY + window.innerHeight - parseInt(obj.css("height")) - 20;
+    var left = window.scrollX + 50;
     obj.css({
-        top: top > 0 ? top : 0
+        top: top > 0 ? top : 0,
+        left: left
     }).show();
 }

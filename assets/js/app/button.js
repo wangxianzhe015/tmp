@@ -242,5 +242,8 @@ function hideChildButtons(){
 
 function showTaggerFrame(){
     $(".image-tooltip").hide();
-    $("#tagger-iframe").show();
+    $("#tagger-iframe").css({
+        top: window.scrollY,
+        left: window.scrollX + 60
+    }).show();
 }

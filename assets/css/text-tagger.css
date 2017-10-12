@@ -1,10 +1,10 @@
 @font-face {
-    font-family: VagRounded;
-    src: url('./fonts/VAGRoundedStd-Black.eot');
-    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+    font-family: SanFrancisco;
+    src: url('./fonts/SF-UI-Display-Ultralight.eot');
+    src: url('./fonts/SF-UI-Display-Ultralight.eot?#iefix') format('embedded-opentype'), url('./fonts/SF-UI-Display-Ultralight.woff') format('woff'), url('./fonts/SF-UI-Display-Ultralight.ttf') format('truetype'), url('./fonts/SF-UI-Display-Ultralight.svg') format('svg');
 }
 *{
-    font-family: VagRounded, Helvetica, sans-serif;
+    font-family: SanFrancisco, Helvetica, sans-serif;
 }
 .playground{overflow:hidden;}
 .tagger-icons-container{

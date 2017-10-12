@@ -36,7 +36,7 @@
                         range = sel.getRangeAt(i);
                         data = range.extractContents();
                         textTag = document.createElement("span");
-                        textTag.className = "textillate-out-span";
+                        textTag.className = "textillate-in-span";
                         range.insertNode(textTag);
 
                         if (window.getSelection) {
@@ -59,7 +59,7 @@
                                 delay: 0,
                                 sync: true,
                                 callback: function(){
-                                    $(".textillate-out-span").textillate('out');
+                                    $(".textillate-in-span").textillate('out');
                                 }
                             },
                             out: {
@@ -68,7 +68,7 @@
                                 delay: 0,
                                 sync: true,
                                 callback: function () {
-                                    $(".textillate-out-span").remove();
+                                    $(".textillate-in-span").removeClass("textillate-in-span").addClass("textillate-out-span");
                                 }
                             }
                         });
@@ -157,6 +157,10 @@
     function unhighlightAll(target){
         var $obj = $("#" + target);
         $obj.find(".tagger-highlight-save-icon").remove();
+        var hiddens = $obj.find(".textillate-out-span");
+        hiddens.each(function(i,el){
+            $(el).replaceWith($(el).find(".texts").text());
+        });
         while( $obj.find(".tagger-highlight-text").length > 0) {
             $obj.find(".tagger-highlight-text").each(function (i, el) {
                 $(el).replaceWith($(el).html());
