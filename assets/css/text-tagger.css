@@ -7,9 +7,19 @@
     font-family: SanFrancisco, Helvetica, sans-serif;
     font-weight: bold;
 }
+:focus{
+    outline: none;
+}
 html, body, .playground{
     height: 100%;
     overflow: hidden;
+}
+input {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    background-color: rgba(40,40,40,.8);
+    color: white;
 }
 .playground{
     overflow:hidden;
@@ -19,10 +29,9 @@ html, body, .playground{
     background-color: rgba(40,40,40,.8);
     color: white;
     height: 24px;
+    width: 136px;
     border-radius: 5px;
     padding: 5px;
-    position: absolute;
-    display: none;
     z-index: 100000;
 }
 .tagger-icon{
@@ -61,7 +70,6 @@ html, body, .playground{
     display: none;
     cursor: pointer;
     width: 100px;
-    margin-left: -100px;
 }
 .tagger-highlight-keyword.selected{
     color: gray;
@@ -70,6 +78,9 @@ html, body, .playground{
 }
 .tagger-highlight-keyword:hover{
     display: inline;
+}
+.tagger-highlight-keyword.left{
+    margin-left: -100px;
 }
 .btn{
     background-color: rgb(92,183,92);

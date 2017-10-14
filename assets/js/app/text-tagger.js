@@ -19,14 +19,13 @@
         $("<div></div>",{
             class: taggerContainerClassName,
             "data-target": target
-        }).appendTo("body");
+        }).insertBefore("#"+target);
 
         $("<img/>",{
             class: "tagger-icon tagger-icon-cut",
             title: "Cut",
             src: path + taggerIconPath.cut
         }).on("click", function(){
-            hideTaggerIcons();
             document.execCommand('copy');
 
             if (typeof window.getSelection != "undefined") {
@@ -82,7 +81,6 @@
             title: "Inverse selection",
             src: path + taggerIconPath.inverse
         }).on("click", function(){
-            hideTaggerIcons();
             $("#" + $(this).parent().attr("data-target")).html(window.getSelection().getRangeAt(0).cloneContents());
         }).appendTo("."+taggerContainerClassName);
 
@@ -91,7 +89,6 @@
             title: "Unhighlight all",
             src: path + taggerIconPath.unhighlight
         }).on("click", function(){
-            hideTaggerIcons();
             unhighlightAll($(this).parent().attr("data-target"));
         }).appendTo("."+taggerContainerClassName);
 
@@ -100,6 +97,7 @@
             title: "Confirm",
             src: path + taggerIconPath.tick
         }).on("click", function(){
+            if (window.getSelection().toString() == "")return false;
             $("#tagger-keyword-div").show();
         }).appendTo("."+taggerContainerClassName);
 
@@ -124,21 +122,22 @@
             text: "Set"
         }).on("click", function(){
             $("#tagger-keyword-div").hide();
-            hideTaggerIcons();
 
             var keyword = $("#tagger-keyword-select").val();
             if (typeof window.getSelection != "undefined") {
-                var sel = window.getSelection(), range, data, highlightTag;
+                var sel = window.getSelection(), range, data, children, highlightTag, keywordTag;
                 if (sel.rangeCount) {
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
                         data = range.extractContents();
+                        children = $(data).children();
                         highlightTag = $("<span></span>", {
                             id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
                             class: "tagger-highlight-text",
                             "data-keyword": keyword,
                             html: data
-                        }).prepend($("<span></span>",{
+                        });
+                        keywordTag = $("<span></span>",{
                             class: "tagger-highlight-keyword",
                             text: keyword
                         }).on({
@@ -149,10 +148,18 @@
                                 $(this).parent().attr("data-keyword","");
                                 $(this).remove();
                             }
-                        }));
+                        });
 
-                        range.insertNode(highlightTag.get(0));
-                        range.insertNode(document.createElement("br"));
+                        if (children.length > 0){
+                            highlightTag.append(keywordTag);
+                            range.insertNode(document.createElement("br"));
+                            range.insertNode(highlightTag.get(0));
+                        } else {
+                            $(keywordTag).addClass("left");
+                            highlightTag.prepend(keywordTag);
+                            range.insertNode(highlightTag.get(0));
+                            range.insertNode(document.createElement("br"));
+                        }
 
                         if (window.getSelection) {
                             if (window.getSelection().empty) {  // Chrome
@@ -203,12 +210,7 @@
         }
         return this.on("mouseup", function(event) {
             if (window.getSelection().toString() == "")return false;
-            var top = event.originalEvent.clientY - 60<0?event.originalEvent.clientY + 60:event.originalEvent.clientY - 60;
-            var left = event.originalEvent.clientX + parseInt($(".tagger-icons-container").css("width")) + 20>parseInt(window.scrollX + window.innerWidth)?window.scrollX+window.innerWidth-parseInt($(".tagger-icons-container").css("width")-20):event.originalEvent.clientX;
-            showTaggerIcons(left, top);
-            //showTaggerIcons($(this).css("left"), $(this).css("top"));
         }).on("mousedown", function(){
-            hideTaggerIcons();
         }).on("paste", function(e){
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);
