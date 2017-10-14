@@ -5,6 +5,11 @@
 }
 *{
     font-family: SanFrancisco, Helvetica, sans-serif;
+    font-weight: bold;
+}
+html, body, .playground{
+    height: 100%;
+    overflow: hidden;
 }
 .playground{
     overflow:hidden;
@@ -26,6 +31,19 @@
     margin: 0 5px;
     cursor: pointer;
 }
+#tagger-keyword-div{
+    position: absolute;
+    width: 230px;
+    display: none;
+}
+#tagger-keyword-div #tagger-keyword-select{
+    padding: 5px 10px;
+    width: 130px;
+    margin: 0 10px;
+    background-color: rgba(40,40,40,.8);
+    color: white;
+    border-radius: 5px;
+}
 .tagger-highlight-text{
     background: rgba(255,255,255,.5);
     color: black;
@@ -35,19 +53,32 @@
     line-height: 1.5em;
     visibility: visible;
 }
-.tagger-highlight-text:hover > .tagger-highlight-save-icon{
+.tagger-highlight-text:hover > .tagger-highlight-keyword{
     display: inline;
 }
-.tagger-highlight-save-icon{
+.tagger-highlight-keyword{
     position: absolute;
     display: none;
     cursor: pointer;
-    margin-left: -24px;
+    width: 100px;
+    margin-left: -100px;
 }
-.tagger-highlight-save-icon.selected{
+.tagger-highlight-keyword.selected{
+    color: gray;
     display: inline;
-    box-shadow: -3px 3px 10px #4777fb;
+    text-shadow: -3px 3px 10px #4777fb;
 }
-.tagger-highlight-save-icon:hover{
+.tagger-highlight-keyword:hover{
     display: inline;
+}
+.btn{
+    background-color: rgb(92,183,92);
+    color: white;
+    cursor: pointer;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    width: 80px;
 }

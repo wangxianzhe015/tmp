@@ -1,13 +1,13 @@
 ;(function(document, $) {
     var taggerContainerClassName = "tagger-icons-container",
-        randomValue = "qu8SyShOm1nLyo3UCYxnv5o3IJXNeI34",
         taggerIconPath = {
             "cut": "/assets/images/icons/cut-24.png",
             "inverse": "/assets/images/icons/invert-selection-24.png",
             "unhighlight": "/assets/images/icons/highlight-24.png",
             "tick": "/assets/images/icons/check-24.png",
             "save": "/assets/images/icons/save-full-24.png"
-        };
+        },
+        keywords = ["keyword01", "keyword02", "keyword03"];
 
     function addTaggerIcons(target){
         var path = "";
@@ -72,7 +72,6 @@
                                 }
                             }
                         });
-                        //console.log($(data).children().find("img"));
                     }
                 }
             }
@@ -101,8 +100,33 @@
             title: "Confirm",
             src: path + taggerIconPath.tick
         }).on("click", function(){
+            $("#tagger-keyword-div").show();
+        }).appendTo("."+taggerContainerClassName);
+
+        $("<div></div>", {
+            id: "tagger-keyword-div"
+        }).appendTo("." + taggerContainerClassName);
+
+        $("<select></select>", {
+            id: "tagger-keyword-select"
+        }).appendTo("#tagger-keyword-div");
+
+        keywords.forEach(function(word){
+            $("<option></option>", {
+                value: word,
+                text: word
+            }).appendTo("#tagger-keyword-select");
+        });
+
+        $("<button></button>", {
+            id: "tagger-keyword-set-btn",
+            class: "btn",
+            text: "Set"
+        }).on("click", function(){
+            $("#tagger-keyword-div").hide();
             hideTaggerIcons();
 
+            var keyword = $("#tagger-keyword-select").val();
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range, data, highlightTag;
                 if (sel.rangeCount) {
@@ -112,15 +136,17 @@
                         highlightTag = $("<span></span>", {
                             id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
                             class: "tagger-highlight-text",
+                            "data-keyword": keyword,
                             html: data
-                        }).prepend($("<img/>",{
-                            class: "tagger-highlight-save-icon",
-                            src: "." + taggerIconPath.save
+                        }).prepend($("<span></span>",{
+                            class: "tagger-highlight-keyword",
+                            text: keyword
                         }).on({
                             click: function(){
                                 $(this).addClass("selected");
                             },
                             dblclick: function(){
+                                $(this).parent().attr("data-keyword","");
                                 $(this).remove();
                             }
                         }));
@@ -141,7 +167,7 @@
                 }
             }
 
-        }).appendTo("."+taggerContainerClassName);
+        }).appendTo("#tagger-keyword-div");
     }
 
     function showTaggerIcons(posX, posY){
