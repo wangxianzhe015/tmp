@@ -2,10 +2,8 @@
     var taggerContainerClassName = "tagger-icons-container",
         taggerIconPath = {
             "cut": "/assets/images/icons/cut-24.png",
-            "inverse": "/assets/images/icons/invert-selection-24.png",
             "unhighlight": "/assets/images/icons/highlight-24.png",
-            "tick": "/assets/images/icons/check-24.png",
-            "save": "/assets/images/icons/save-full-24.png"
+            "tick": "/assets/images/icons/check-24.png"
         },
         keywords = ["keyword01", "keyword02", "keyword03"];
 
@@ -19,7 +17,7 @@
         $("<div></div>",{
             class: taggerContainerClassName,
             "data-target": target
-        }).insertBefore("#"+target);
+        }).insertBefore($("#"+target).parents(".playground"));
 
         $("<img/>",{
             class: "tagger-icon tagger-icon-cut",
@@ -77,14 +75,6 @@
         }).appendTo("."+taggerContainerClassName);
 
         $("<img/>",{
-            class: "tagger-icon tagger-icon-inverse",
-            title: "Inverse selection",
-            src: path + taggerIconPath.inverse
-        }).on("click", function(){
-            $("#" + $(this).parent().attr("data-target")).html(window.getSelection().getRangeAt(0).cloneContents());
-        }).appendTo("."+taggerContainerClassName);
-
-        $("<img/>",{
             class: "tagger-icon tagger-icon-unhightlight",
             title: "Unhighlight all",
             src: path + taggerIconPath.unhighlight
@@ -125,40 +115,65 @@
 
             var keyword = $("#tagger-keyword-select").val();
             if (typeof window.getSelection != "undefined") {
-                var sel = window.getSelection(), range, data, children, highlightTag, keywordTag;
+                var sel = window.getSelection(), range, data, children, highlightTag, keywordTag, isSecond = false;
                 if (sel.rangeCount) {
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
-                        data = range.extractContents();
+                        data = range.cloneContents();
                         children = $(data).children();
-                        highlightTag = $("<span></span>", {
-                            id: "highlighted-word-" + parseInt(Math.random() * 1000000000),
+                        children.each(function(i,el){
+                            console.log($(el));
+                            if ($(el).parents(".second").length > 0){
+                                isSecond = true;
+                            }
+                        });
+                        if (isSecond) return false;
+                        range.deleteContents();
+                        var randomId = "highlighted-word-" + parseInt(Math.random() * 1000000000);
+                        highlightTag = $("<code></code>", {
+                            id: randomId,
                             class: "tagger-highlight-text",
                             "data-keyword": keyword,
                             html: data
-                        });
-                        keywordTag = $("<span></span>",{
-                            class: "tagger-highlight-keyword",
-                            text: keyword
                         }).on({
                             click: function(){
-                                $(this).addClass("selected");
+                                $("#"+$(this).attr("id")+"-keyword").addClass("selected");
                             },
+                            mouseover: function(){
+                                var $obj = $("#"+$(this).attr("id")+"-keyword");
+                                if (!$obj.hasClass("selected")) {
+                                    $obj.show();
+                                }
+                            },
+                            mouseleave: function(){
+                                var $obj = $("#"+$(this).attr("id")+"-keyword");
+                                if (!$obj.hasClass("selected")) {
+                                    $obj.hide();
+                                }
+                            }
+                        });
+                        keywordTag = $("<p></p>",{
+                            id: randomId + "-keyword",
+                            class: "tagger-highlight-keyword",
+                            "data-target": randomId,
+                            text: keyword
+                        }).on({
                             dblclick: function(){
-                                $(this).parent().attr("data-keyword","");
+                                $("#"+$(this).attr("data-target")).attr("data-keyword","");
                                 $(this).remove();
                             }
                         });
 
                         if (children.length > 0){
-                            highlightTag.append(keywordTag);
-                            range.insertNode(document.createElement("br"));
+                            $(keywordTag).appendTo($(this).parents(".tagger-icons-container").next().find(".tagger-keyword-right-panel"));
+                            highlightTag.addClass("second");
+                            //range.insertNode(document.createElement("br"));
                             range.insertNode(highlightTag.get(0));
                         } else {
-                            $(keywordTag).addClass("left");
-                            highlightTag.prepend(keywordTag);
+                            $(keywordTag).appendTo($(this).parents(".tagger-icons-container").next().find(".tagger-keyword-left-panel"));
+                            highlightTag.addClass("first");
                             range.insertNode(highlightTag.get(0));
-                            range.insertNode(document.createElement("br"));
+                            //range.insertNode(document.createElement("br"));
                         }
 
                         if (window.getSelection) {
@@ -175,17 +190,6 @@
             }
 
         }).appendTo("#tagger-keyword-div");
-    }
-
-    function showTaggerIcons(posX, posY){
-        $(".tagger-icons-container").css({
-            left: posX,
-            top: posY
-        }).show();
-    }
-
-    function hideTaggerIcons(){
-        $(".tagger-icons-container").hide();
     }
 
     function unhighlightAll(target){
@@ -205,7 +209,32 @@
     }
 
     $.fn.textTagger = function(options) {
-        if ($(".tagger-icons-container").length == 0){
+        var playground = $("<div></div>", {
+            class: "playground"
+        }).insertBefore($(this));
+
+        $(this).addClass("tagger-container").appendTo(playground);
+
+        playground.append($("<div></div>", {
+            class: "tagger-keyword-right-panel"
+        })).prepend($("<div></div>", {
+            class: "tagger-keyword-left-panel"
+        }));
+
+        $("<div></div>", {
+            class: "tagger-button-panel"
+        }).append($("<input/>", {
+            type: "text",
+            id: "tagger-app-name",
+            placeholder: "App Name"
+        })).append($("<button></button>", {
+            class: "btn",
+            text: "Save"
+        }).on("click", function(){
+            //TODO: save app
+        })).insertAfter(playground);
+
+        if ($(this).find(".tagger-icons-container").length == 0){
             addTaggerIcons($(this).attr("id"));
         }
         return this.on("mouseup", function(event) {
