@@ -5,7 +5,7 @@
             "unhighlight": "/assets/images/icons/highlight-24.png",
             "tick": "/assets/images/icons/check-24.png"
         },
-        keywords = ["keyword01", "keyword02", "keyword03"];
+        keywords = ["Fact", "Hint", "Metadata"];
 
     function addTaggerIcons(target){
         var path = "";
@@ -231,7 +231,12 @@
             class: "btn",
             text: "Save"
         }).on("click", function(){
-            //TODO: save app
+            if ($(this).html() == "Save") {
+                //TODO: save app
+                $(this).html("Close");
+            } else {
+                console.log($(this).parents());
+            }
         })).insertAfter(playground);
 
         if ($(this).find(".tagger-icons-container").length == 0){
