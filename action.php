@@ -34,6 +34,15 @@ switch ($action) {
     case 'regex-search':
         regexSearch();
         break;
+    case 'save-people':
+        savePeople();
+        break;
+    case 'load-people':
+        loadPeople();
+        break;
+    case 'array-from-people-list':
+        getArrayFromPeopleList();
+        break;
 }
 
 function save(){
@@ -43,7 +52,7 @@ function save(){
 //    $files = array_diff(scandir($path), array('.', '..'));
 //    $fileName = sizeof($files);
 //    $myFile = fopen("./data/" . $fileName . ".json", "wr") or die("Unable to open file!");
-    $myFile = fopen("./data/".$fileName.".json", "wr") or die("Unable to open file!");
+    $myFile = fopen("./data/canvas/".$fileName.".json", "wr") or die("Unable to open file!");
     fwrite($myFile, $param);
     fclose($myFile);
 
@@ -51,7 +60,7 @@ function save(){
 }
 
 function loadFileNames() {
-    $path = "./data/";
+    $path = "./data/canvas/";
     $files = scandir($path);
 
     echo json_encode($files);
@@ -59,9 +68,9 @@ function loadFileNames() {
 
 function load() {
     $fileName = $_POST['fileName'];
-    $myFile = fopen("./data/".$fileName.".json", "r") or die("Unable to open file!");
+    $myFile = fopen("./data/canvas/".$fileName.".json", "r") or die("Unable to open file!");
     if ($myFile) {
-        $content = fread($myFile, filesize("./data/".$fileName.".json"));
+        $content = fread($myFile, filesize("./data/canvas/".$fileName.".json"));
         fclose($myFile);
         echo $content;
     } else {
@@ -71,7 +80,7 @@ function load() {
 }
 
 function loadCallbackNames() {
-    $path = "./callback/";
+    $path = "./data/callback/";
     $files = scandir($path);
 
     echo json_encode($files);
@@ -80,7 +89,7 @@ function loadCallbackNames() {
 function saveCallback(){
     $content = $_POST['callback'];
     $fileName = $_POST['name'];
-    $myFile = fopen("./callback/".$fileName.".txt", "wr") or die("Unable to open file!");
+    $myFile = fopen("./data/callback/".$fileName.".txt", "wr") or die("Unable to open file!");
     fwrite($myFile, $content);
     fclose($myFile);
 
@@ -89,9 +98,9 @@ function saveCallback(){
 
 function loadCallback() {
     $fileName = $_POST['name'];
-    $myFile = fopen("./callback/".$fileName.".txt", "r") or die("Unable to open file!");
+    $myFile = fopen("./data/callback/".$fileName.".txt", "r") or die("Unable to open file!");
     if ($myFile) {
-        $content = fread($myFile, filesize("./callback/".$fileName.".txt"));
+        $content = fread($myFile, filesize("./data/callback/".$fileName.".txt"));
         fclose($myFile);
         echo $content;
     } else {
@@ -101,9 +110,9 @@ function loadCallback() {
 }
 
 function loadFormations(){
-    $myFile = fopen("./cluster/formation.json", "r") or die("Unable to open file!");
+    $myFile = fopen("./data/cluster/formation.json", "r") or die("Unable to open file!");
     if ($myFile) {
-        $content = fread($myFile, filesize("./cluster/formation.json"));
+        $content = fread($myFile, filesize("./data/cluster/formation.json"));
         fclose($myFile);
         echo $content;
     } else {
@@ -113,7 +122,7 @@ function loadFormations(){
 
 function saveFormations(){
     $data = $_POST['data'];
-    $myFile = fopen("./cluster/formation.json", "wr") or die("Unable to open file!");
+    $myFile = fopen("./data/cluster/formation.json", "wr") or die("Unable to open file!");
     if ($myFile) {
         fwrite($myFile, $data);
         fclose($myFile);
@@ -141,5 +150,45 @@ function regexSearch(){
         echo json_encode($result);
     } else {
         echo "fail";
+    }
+}
+
+function loadPeople(){
+    $myFile = fopen("./data/people/data.json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        if (filesize("./data/people/data.json") > 0) {
+            $content = fread($myFile, filesize("./data/people/data.json"));
+            fclose($myFile);
+        } else {
+            $content = "";
+        }
+        echo $content;
+    } else {
+        echo "fail";
+    }
+}
+
+function savePeople(){
+    $data = trim($_POST['data']);
+    $myFile = fopen("./data/people/data.json", "wr") or die("Unable to open file!");
+    if ($myFile) {
+        $result = array();
+        foreach(preg_split("/((\r?\n)|(\r\n?))/", $data) as $line){
+            $pattern = '/[a-z0-9_\-\+]+@[a-z0-9\-]+\.([a-z]{2,3})(?:\.[a-z]{2})?/i';
+            preg_match($pattern, $line, $matches);
+            $mail = $matches[0];
+            $tmp1 = str_replace($mail, "", $line);
+            $pattern = '/\s*@[a-zA-Z0-9]+/i';
+            preg_match($pattern, $tmp1, $matches);
+            $slack = $matches[0];
+            $name = str_replace($slack, "", $tmp1);
+            array_push($result, [$mail, trim($name), trim($slack)]);
+        }
+
+        fwrite($myFile, json_encode($result));
+        fclose($myFile);
+        echo "People Saved";
+    } else {
+        echo 'fail';
     }
 }

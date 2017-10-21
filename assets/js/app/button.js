@@ -65,6 +65,36 @@ function addChipButton(){
     }).appendTo("#left-sidebar");
 }
 
+function addFeedButton(){
+    $("<img/>", {
+        id: "feed-button",
+        src: "./assets/images/icons/feed-24.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
+        showFeedDiv();
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hideFeedDiv, 500);
+    }).appendTo("#right-sidebar");
+}
+
+function addUserButton(){
+    $("<img/>", {
+        id: "user-button",
+        src: "./assets/images/icons/user-24.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = true;
+        removeImageTools();
+        showPeopleListDiv();
+    }).on("mouseleave", function(){
+        mouseOverElement = false;
+        setTimeout(hidePeopleListDiv, 500);
+    }).appendTo("#left-sidebar");
+}
+
 function addBackButton(){
     $("<img/>", {
         id: "back-button",
@@ -246,4 +276,26 @@ function showTaggerFrame(){
         top: window.scrollY,
         left: window.scrollX + 60
     }).show();
+}
+
+function showFeedDiv(){
+    $("#dropdown-div").show();
+}
+
+function hideFeedDiv(){
+    if (!mouseOverElement){
+        $("#dropdown-div").hide();
+    }
+}
+
+function showPeopleListDiv(){
+    $('.image-tooltip').hide();
+    mouseOverElement = true;
+    $("#contactDiv").show();
+}
+
+function hidePeopleListDiv(){
+    if (!mouseOverElement){
+        $("#contactDiv").hide();
+    }
 }

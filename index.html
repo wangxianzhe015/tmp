@@ -279,6 +279,9 @@
         <li>
             <a data-tab="#callback-tab">Callback</a>
         </li>
+        <li style="width: 90px;">
+            <a data-tab="#add-people">Add People</a>
+        </li>
     </ul>
     <div class="ttip">
         <div id="theme" class="tab-pane active">
@@ -364,6 +367,19 @@
             </div>
             <ul class="tags" id="callback-tags"></ul>
         </div>
+        <div id="add-people" class="tab-pane">
+            <div class="form-group">
+                <button id="browse-people-btn" class="normal-btn">Browse</button>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="people-list" class="form-control" style="min-height: 200px;overflow-y:auto;resize:none;"></textarea>
+            </div>
+            <div class="form-group">
+                <button id="add-people-btn" class="normal-btn">+</button>
+                <button id="people-invite-all-btn" class="normal-btn" style="display: none;">Invite All</button>
+            </div>
+        </div>
     </div>
 </div>
 <div id='tagDialog' class="image-tooltip">
@@ -400,9 +416,81 @@
         </div>
     </div>
 </div>
+
+<div class="image-tooltip" id="dropdown-div">
+    <section id="dropdown-content">
+        <div class="dropdown">
+            <div class="title">Telefonplan</div>
+            <ul>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+                <li>Liljeholmen</li>
+                <li>Midsommarkransen</li>
+                <li>Telefonplan</li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+<div class="image-tooltip" id="contactDiv">
+    <div class="ttip">
+        <div id="people-list-div"></div>
+    </div>
+</div>
+
+<div class="image-tooltip" id="messageDiv">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#message-content">Content</a>
+        </li>
+        <li>
+            <a data-tab="#message-attachments">Attachments</a>
+        </li>
+        <li>
+            <a data-tab="#not-used-yet">[]</a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <div id="message-content" class="tab-pane active">
+            <div class="form-group">
+                <label for="message-to-address">To:</label>
+                <input type="text" class="form-control" id="message-to-address" placeholder="<Address>"/>
+            </div>
+            <div class="form-group">
+                <label for="message-subject">Subject:</label>
+                <input class="form-control" id="message-subject" type="text" placeholder="<Subject>"/>
+            </div>
+            <div class="form-group">
+                <label for="message-date">Date:</label>
+                <input type="text" class="form-control" id="message-date" placeholder="<Date>" />
+            </div>
+        </div>
+        <div id="message-attachments" class="tab-pane">
+
+        </div>
+        <div id="not-used-yet" class="tab-pane">
+
+        </div>
+    </div>
+</div>
+
 <div id="notification">
     <div id="message"></div>
 </div>
+
 <div id="new-element-div">
     <div id="new-element-content"></div>
 </div>

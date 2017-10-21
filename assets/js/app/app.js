@@ -78,10 +78,13 @@ function init(){
     addHideButton();
     addUploadButton();
     addChipButton();
+    addFeedButton();
+    addUserButton();
     drawElements();
     loadAllCallbacks();
 
     loadFormations();
+    loadPeople();
 }
 
 

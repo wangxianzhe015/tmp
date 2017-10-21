@@ -33,7 +33,7 @@ function initHandlers(){
             setTimeout(hideLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
         }
-        if (moveEventOptions.clientY < 100 && moveEventOptions.clientX > 50 && !mouseOverElement){
+        if (moveEventOptions.clientY < 100 && moveEventOptions.clientX > 50 && window.innerWidth - moveEventOptions.clientX > 50 && !mouseOverElement){
             setTimeout(showTopSidebar, 100);
         } else {
             setTimeout(hideTopSidebar, 100);
@@ -110,6 +110,14 @@ function initHandlers(){
 
     $("#close-top-sidebar").on("click", function(){
         $("#top-sidebar").remove();
+    });
+
+    $(".dropdown .title").click(function () {
+        $(this).parent().toggleClass("closed");
+    });
+
+    $(".dropdown li").click(function () {
+        $(this).parent().parent().toggleClass("closed").find(".title").text($(this).text());
     });
 
     $(".image-tooltip").on("mouseover", function(event){
@@ -957,6 +965,26 @@ function initHandlers(){
         $.getScript("callback/" + fileName + ".txt",function(){});
     });
 
+    $("#add-people-btn").on("click", function(){
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            data: {
+                "action": "save-people",
+                "data": $("#people-list").val()
+            },
+            success: function (res) {
+                if (res == "fail"){
+                    alert("Fail", "Save failed.");
+                } else {
+                    alert("Success", res);
+                    $("#people-invite-all-btn").show();
+                    loadPeople();
+                }
+            }
+        });
+    });
+
     $("#upload-plus").on("click", function(){
         $(this).parent().find("input[type='file']").click();
     });
@@ -1038,6 +1066,62 @@ function loadAllCallbacks(){
                     $("#callback-tags").append(liTag);
                 }
             });
+        }
+    });
+}
+
+function loadPeople(){
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load-people"
+        },
+        success: function(res){
+            if (res == "fail") {
+
+            } else if (res == ""){
+                $("#people-list").val("");
+                //alert("Notification", "People Empty");
+            } else {
+                var list = $.parseJSON(res), txt = "", line = "";
+                $("#people-list-div").html("");
+                var ulTag = $("<ul></ul>", {
+                    class: "people-list"
+                }).appendTo("#people-list-div");
+                list.forEach(function(person){
+                    // Add People tab on Setting dialog
+                    line = person[0] + " " + person[1] + " " + person[2] + "\r\n";
+                    txt += line;
+                    // People list div
+                    $("<li></li>", {
+
+                    }).append($("<p></p>", {
+                        text: person[1],
+                        class: "contact-person-email"
+                    }).append($("<img/>", {
+                        src: "./assets/images/icons/suitcase-24.png"
+                    })).append($("<img/>", {
+                        src: "./assets/images/icons/pen-24.png"
+                    }))).append($("<p></p>", {
+                        text: person[0],
+                        class: "contact-person-name"
+                    }).on("click", function(){
+                        var div = $(this).parents("#contactDiv");
+                        $("#messageDiv").css("left", parseInt(div.css("width")) + 60).show();
+                        $("#message-to-address").val($(this).text());
+
+                    })).append($("<p></p>", {
+                        text: person[2],
+                        class: "contact-person-slack"
+                    }).on("click", function(){
+                        var div = $(this).parents("#contactDiv");
+                        $("#messageDiv").css("left", parseInt(div.css("width")) + 60).show();
+                    }))
+                    .appendTo(ulTag);
+                });
+                $("#people-list").val(txt);
+            }
         }
     });
 }
