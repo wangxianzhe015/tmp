@@ -60,6 +60,9 @@ function addChipButton(){
         id: "microchip-button",
         src: "./assets/images/icons/microchip-40.png",
         class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
     }).on("click", function(){
         showTaggerFrame();
     }).appendTo("#left-sidebar");
@@ -83,7 +86,7 @@ function addFeedButton(){
 function addUserButton(){
     $("<img/>", {
         id: "user-button",
-        src: "./assets/images/icons/user-24.png",
+        src: "./assets/images/icons/user-40.png",
         class: "icon-button"
     }).on("mouseover", function(){
         mouseOverElement = true;

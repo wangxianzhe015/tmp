@@ -70,7 +70,6 @@ input {
 #tagger-keyword-div #tagger-keyword-select{
     padding: 5px 10px;
     width: 130px;
-    margin: 0 10px;
     background-color: rgba(40,40,40,.8);
     color: white;
     border-radius: 5px;
@@ -103,9 +102,17 @@ input {
     color: white;
     cursor: pointer;
     padding: 5px 15px;
+    margin: 0 0 0 10px;
     border: none;
     border-radius: 5px;
     font-size: 1em;
     font-weight: bold;
     width: 80px;
+}
+.image-btn{
+    vertical-align: top;
+    cursor: pointer;
+}
+.tagger-button-panel{
+    text-align: center;
 }

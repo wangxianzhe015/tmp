@@ -516,7 +516,7 @@ function showTopSidebar(){
 
 function hideTopSidebar(){
     if (topbar != null){
-        topbar.stop().animate({top: "-140px"});
+        topbar.stop().animate({top: "-150px"});
         topbar = null;
     }
 }

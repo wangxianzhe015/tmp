@@ -1,19 +1,13 @@
 ;(function(document, $) {
     var taggerContainerClassName = "tagger-icons-container",
         taggerIconPath = {
-            "cut": "/assets/images/icons/cut-24.png",
-            "unhighlight": "/assets/images/icons/highlight-24.png",
-            "tick": "/assets/images/icons/check-24.png"
+            "cut": "./assets/images/icons/cut-24.png",
+            "unhighlight": "./assets/images/icons/highlight-24.png",
+            "tick": "./assets/images/icons/check-24.png"
         },
         keywords = ["Fact", "Hint", "Metadata"];
 
     function addTaggerIcons(target){
-        var path = "";
-        if (window.location.href.lastIndexOf("/") < 10) {
-            path = window.location.href;
-        } else {
-            path = window.location.href.substring(0, window.location.href.lastIndexOf("/"));
-        }
         $("<div></div>",{
             class: taggerContainerClassName,
             "data-target": target
@@ -22,7 +16,7 @@
         $("<img/>",{
             class: "tagger-icon tagger-icon-cut",
             title: "Cut",
-            src: path + taggerIconPath.cut
+            src: taggerIconPath.cut
         }).on("click", function(){
             document.execCommand('copy');
 
@@ -77,15 +71,15 @@
         $("<img/>",{
             class: "tagger-icon tagger-icon-unhightlight",
             title: "Unhighlight all",
-            src: path + taggerIconPath.unhighlight
+            src: taggerIconPath.unhighlight
         }).on("click", function(){
             unhighlightAll($(this).parent().attr("data-target"));
-        }).appendTo("."+taggerContainerClassName);
+        }).appendTo("."+taggerContainerClassName).hide();
 
         $("<img/>",{
             class: "tagger-icon tagger-icon-tick",
             title: "Confirm",
-            src: path + taggerIconPath.tick
+            src: taggerIconPath.tick
         }).on("click", function(){
             if (window.getSelection().toString() == "")return false;
             $("#tagger-keyword-div").show();
@@ -190,6 +184,13 @@
             }
 
         }).appendTo("#tagger-keyword-div");
+
+        $("<button></button>", {
+            text: "Cancel",
+            class: "btn"
+        }).on("click", function(){
+            $("#tagger-keyword-div").hide();
+        }).appendTo("#tagger-keyword-div");
     }
 
     function unhighlightAll(target){
@@ -227,16 +228,22 @@
             type: "text",
             id: "tagger-app-name",
             placeholder: "App Name"
-        })).append($("<button></button>", {
-            class: "btn",
-            text: "Save"
+        })).append($("<img/>", {
+            src: taggerIconPath.tick,
+            class: "image-btn"
         }).on("click", function(){
-            if ($(this).html() == "Save") {
-                //TODO: save app
-                $(this).html("Close");
+            var hintCheck = false;
+            $(".tagger-highlight-keyword").each(function(i, obj){
+                if ($(obj).html() == "Hint") hintCheck = true;
+            });
+            if (hintCheck){
+                console.log("Hint Checked!!!");
             } else {
-                console.log($(this).parents());
+                console.log("Hint Not Checked!!!");
+                return false;
             }
+            //TODO: save app
+            console.log("App Save");
         })).insertAfter(playground);
 
         if ($(this).find(".tagger-icons-container").length == 0){

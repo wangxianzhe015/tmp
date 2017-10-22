@@ -33,7 +33,7 @@ function initHandlers(){
             setTimeout(hideLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
         }
-        if (moveEventOptions.clientY < 100 && moveEventOptions.clientX > 50 && window.innerWidth - moveEventOptions.clientX > 50 && !mouseOverElement){
+        if (moveEventOptions.clientY < 150 && moveEventOptions.clientX > 50 && window.innerWidth - moveEventOptions.clientX > 50 && !mouseOverElement){
             setTimeout(showTopSidebar, 100);
         } else {
             setTimeout(hideTopSidebar, 100);
@@ -906,6 +906,9 @@ function initHandlers(){
 
     $(".close-iframe").on("click", function(){
         $(this).parent().hide();
+        if ($(this).parents("#tagger-iframe").length > 0){
+            $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-container").html('<span class="tagger-instruction">By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse.</span>');
+        }
     });
 
     $("#test-draggable").on("click", function(){
@@ -982,6 +985,20 @@ function initHandlers(){
                     loadPeople();
                 }
             }
+        });
+    });
+
+    $("#message-div-maximize").on("click", function(){
+        $("#messageDiv").css({
+            width: "40%",
+            height: "70%"
+        })
+    });
+
+    $("#message-div-restore").on("click", function(){
+        $("#messageDiv").css({
+            width: "30%",
+            height: "50%"
         });
     });
 
@@ -1103,7 +1120,7 @@ function loadPeople(){
                         src: "./assets/images/icons/suitcase-24.png"
                     })).append($("<img/>", {
                         src: "./assets/images/icons/pen-24.png"
-                    }))).append($("<p></p>", {
+                    }))).append($("<span></span>", {
                         text: person[0],
                         class: "contact-person-name"
                     }).on("click", function(){
@@ -1111,7 +1128,7 @@ function loadPeople(){
                         $("#messageDiv").css("left", parseInt(div.css("width")) + 60).show();
                         $("#message-to-address").val($(this).text());
 
-                    })).append($("<p></p>", {
+                    })).append($("<span></span>", {
                         text: person[2],
                         class: "contact-person-slack"
                     }).on("click", function(){

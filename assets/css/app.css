@@ -751,18 +751,23 @@ textarea#shape-datatext{
 
 #top-sidebar{
     position: fixed;
-    top: -140px;
+    top: -150px;
     width: 100%;
-    height: 140px;
+    height: 150px;
     background-color: rgba(0,0,0,.7);
+    color: white;
+    z-index: 1000;
+}
+#top-sidebar #topbar-notification{
+    width: 60%;
+    margin: 0 auto;
 }
 #top-sidebar #close-top-sidebar{
     padding: 5px;
     cursor: pointer;
-    color: white;
     position: absolute;
     top: 30px;
-    right: 30px;
+    right: 50px;
     border-radius: 5px;
 }
 #left-sidebar{
@@ -774,6 +779,7 @@ textarea#shape-datatext{
     padding: 10px;
     background-color: #202020;
     transform: scaleY(-1);
+    z-index: 1000;
 }
 #right-sidebar{
     width: 24px;
@@ -783,6 +789,7 @@ textarea#shape-datatext{
     right: -50px;
     top: 0;
     background-color: #202020;
+    z-index: 1000;
 }
 #right-sidebar .icon-button{
     cursor: pointer;
@@ -892,6 +899,7 @@ textarea#shape-datatext{
 }
 .people-list{
     background-color: transparent;
+    font-family: brandon, helvetica, arial, sans-serif;
     color: white;
     margin: 25px 0 0 0;
     padding: 0;
@@ -905,33 +913,41 @@ textarea#shape-datatext{
     padding: 5px 30px 5px 0;
     cursor: pointer;
     border-bottom: solid 1px gray;
-    font-family: brandon,Helvetica,sans-serif;
 }
 .people-list li:first-child{
     border-top: solid 1px gray;
 }
-.people-list li p{
-    margin: 0;
-    line-height: 1.2em;
-    white-space: nowrap;
+.people-list li p, .people-list li span {
     font-family: brandon, helvetica, arial, sans-serif;
 }
-.people-list li p:hover{
+.people-list li p{
+    margin: 5px 0;
+    line-height: 1.2em;
+    white-space: nowrap;
+}
+.people-list li p:hover, .people-list li span:hover{
     /*background-color:#3875d7;*/
     color: rgb(232,212,175);
-}
-.people-list li .contact-person-email {
-
 }
 .people-list li .contact-person-email img{
     height: 16px;
     float: right;
 }
-.people-list li .contact-person-slack{
+.people-list li .contact-person-name{
     color: #aaa;
-    font-size: .9em;
+    font-size: .8em;
 }
-
+.people-list li .contact-person-slack{
+    float: right;
+    color: #aaa;
+    font-size: .8em;
+}
+#messageDiv #message-div-controls{
+    text-align: right;
+}
+#messageDiv #message-div-controls img{
+    cursor: pointer;
+}
 /* Dropdown */
 .image-tooltip#dropdown-div{
     right: 50px;
@@ -943,6 +959,7 @@ div.dropdown {
     color: #f0f0f0;
     text-shadow: 0 1px 1px black;
     width: inherit;
+    font-weight: bold;
 }
 div.dropdown.closed ul {
     margin-top: 0;
@@ -1051,7 +1068,7 @@ div.dropdown ul li:before {
     display: inline-block;
     vertical-align: top;
     position: relative;
-    background: transparent url("../images/line-stop.png");
+    /*background: transparent url("../images/line-stop.png");*/
     margin-top: -12px;
     margin-right: 10px;
     width: 20px;
