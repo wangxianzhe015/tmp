@@ -66,13 +66,23 @@ input {
 }
 #tagger-keyword-div{
     display: none;
+    position: absolute;
 }
 #tagger-keyword-div #tagger-keyword-select{
     padding: 5px 10px;
-    width: 130px;
     background-color: rgba(40,40,40,.8);
     color: white;
     border-radius: 5px;
+}
+#tagger-keyword-div #tagger-unhighlight-btn{
+    margin-left: 10px;
+    cursor: pointer;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
 }
 .tagger-highlight-text{
     background: rgba(255,255,255,.5);
