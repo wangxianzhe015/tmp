@@ -965,7 +965,7 @@ function initHandlers(){
 
     $("#run-callback-btn").on("click", function(){
         var fileName = $("#callback-tags").find(".tag.active").attr("object-name");
-        $.getScript("callback/" + fileName + ".txt",function(){});
+        $.getScript("data/callback/" + fileName + ".txt",function(){});
     });
 
     $("#add-people-btn").on("click", function(){
@@ -1184,6 +1184,19 @@ $(function () {
     }).done(function (result) {
         $(this).fileupload('option', 'done')
             .call(this, $.Event('done'), {result: result});
+    });
+
+});
+
+$(function () {
+    'use strict';
+
+    var obj = $('#message-fileupload');
+    obj.fileupload({
+        url: 'attachment/',
+        disableImageLoad: true,
+        disableImageResize: true,
+        autoUpload: true
     });
 
 });

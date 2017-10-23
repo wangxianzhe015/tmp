@@ -129,8 +129,6 @@
             id: "tagger-unhighlight-btn",
             text: "X"
         }).on("click", function(e){
-            e.preventDefault();
-            e.stopPropagation();
             $("#tagger-keyword-div").hide();
             var sel = window.getSelection(), data = sel.toString(), $obj = $(sel.focusNode.parentNode), $container = $obj.parents(".tagger-container");
             if (data != "") {
