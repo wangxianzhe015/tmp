@@ -25,7 +25,7 @@ input {
 }
 .playground{
     overflow:hidden;
-    height: 75%;
+    height: 70%;
 }
 .playground:before, .playground:after{
     display: table;
@@ -126,5 +126,9 @@ input {
     cursor: pointer;
 }
 .tagger-button-panel{
+    text-align: center;
+}
+.tagger-notification-panel{
+    color: white;
     text-align: center;
 }

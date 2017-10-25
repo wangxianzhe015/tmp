@@ -181,6 +181,10 @@
         }));
 
         $("<div></div>", {
+            class: "tagger-notification-panel"
+        }).insertAfter(playground);
+
+        $("<div></div>", {
             class: "tagger-button-panel"
         }).append($("<input/>", {
             type: "text",
@@ -194,14 +198,34 @@
             $(".tagger-highlight-keyword").each(function(i, obj){
                 if ($(obj).html() == "Hint") hintCheck = true;
             });
-            if (hintCheck){
-                console.log("Hint Checked!!!");
-            } else {
-                console.log("Hint Not Checked!!!");
+            if (!hintCheck){
+                $(".tagger-notification-panel").html("Hint Not Checked!!!");
+                setTimeout(function(){
+                    $(".tagger-notification-panel").html("");
+                }, 3000);
                 return false;
             }
-            //TODO: save app
-            console.log("App Save");
+            var data = [];
+            $(".tagger-highlight-text").each(function(i, el){
+                data[i] = {
+                    text: $(el).text(),
+                    keyword: $(el).attr("data-keyword")
+                }
+            });
+            $.ajax({
+                url: "action.php",
+                data: {
+                    "action": "save-tagger",
+                    data: data
+                },
+                type: "POST",
+                success: function(){
+                    $(".tagger-notification-panel").html("Saved Successfully!");
+                    setTimeout(function(){
+                        $(".tagger-notification-panel").html("");
+                    }, 3000);
+                }
+            });
             $(".tagger-icon-cut").show();
         })).insertAfter(playground);
 

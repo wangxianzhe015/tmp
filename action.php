@@ -40,8 +40,8 @@ switch ($action) {
     case 'load-people':
         loadPeople();
         break;
-    case 'array-from-people-list':
-        getArrayFromPeopleList();
+    case 'save-tagger':
+        saveTagger();
         break;
 }
 
@@ -192,3 +192,17 @@ function savePeople(){
         echo 'fail';
     }
 }
+
+function saveTagger(){
+    $data = json_encode($_POST['data']);
+    $myFile = fopen("./data/tagger/data.json", "wr") or die("Unable to open file!");
+    if ($myFile) {
+        fwrite($myFile, $data);
+        fclose($myFile);
+        echo "success";
+    } else {
+        echo 'fail';
+    }
+}
+
+
