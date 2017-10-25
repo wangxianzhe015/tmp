@@ -19,6 +19,7 @@
             src: taggerIconPath.cut
         }).on("click", function(){
             document.execCommand('copy');
+            $("#tagger-keyword-div").hide();
 
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range, data, textTag;
@@ -93,6 +94,7 @@
             id: "tagger-keyword-select"
         }).on("change", function(){
             var keyword = $(this).val();
+            $(this).val("");
             if (keyword == "") return false;
             $(this).parent().hide();
             if (typeof window.getSelection != "undefined") {
@@ -231,6 +233,10 @@
                         }).on({
                             click: function(){
                                 $("#"+$(this).attr("id")+"-keyword").addClass("selected");
+                                $("#tagger-keyword-div").attr("data-target", $(this).attr("id")).css({
+                                    left: this.getBoundingClientRect().left,
+                                    top: this.getBoundingClientRect().bottom
+                                }).show();
                             },
                             mouseover: function(){
                                 var $obj = $("#"+$(this).attr("id")+"-keyword");
@@ -258,26 +264,27 @@
                             }
                         });
 
-                        if (children.length > 0){
-                            $(keywordTag).appendTo($(this).parents(".playground").find(".tagger-keyword-right-panel"));
-                            highlightTag.addClass("second");
-                            //range.insertNode(document.createElement("br"));
-                            range.insertNode(highlightTag.get(0));
-                        } else {
+                        //if (children.length > 0){
+                        //    $(keywordTag).appendTo($(this).parents(".playground").find(".tagger-keyword-right-panel"));
+                        //    highlightTag.addClass("second");
+                        //    //range.insertNode(document.createElement("br"));
+                        //    range.insertNode(highlightTag.get(0));
+                        //} else {
                             $(keywordTag).appendTo($(this).parents(".playground").find(".tagger-keyword-left-panel"));
                             highlightTag.addClass("first");
                             range.insertNode(highlightTag.get(0));
                             //range.insertNode(document.createElement("br"));
-                        }
+                        //}
                         sel.addRange(range);
                     }
                 }
                 $("#tagger-keyword-div").css({
-                    left: event.originalEvent.clientX,
-                    top: event.originalEvent.clientY + 10
+                    left: range.getBoundingClientRect().left,
+                    top: range.getBoundingClientRect().bottom
                 }).show();
             }
         }).on("mousedown", function(){
+            $("#tagger-keyword-div").attr("data-target", "").hide();
         }).on("paste", function(e){
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);

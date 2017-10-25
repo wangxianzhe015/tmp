@@ -622,15 +622,8 @@ function initHandlers(){
 
     $("#clone-element").on("click", function(){
         if (tooltipObject.class == "element"){
-            var newElement = fabric.util.object.clone(tooltipObject);
-            newElement.id = nameElement('clone',tooltipObject.id);
-            newElement.top = tooltipObject.top + Math.sqrt(3) * radius;
-            canvas.add(newElement);
-
-            elementsInfo[newElement.id] = {
-                x: newElement.left,
-                y: newElement.top
-            }
+            //var newElement = fabric.util.object.clone(tooltipObject);
+            cloneElement(tooltipObject);
             canvas.renderAll();
         }
     });

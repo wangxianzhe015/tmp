@@ -366,8 +366,6 @@ function loadElements(file){
         },
         success: function(res){
             var objects = $.parseJSON(res);
-            buttonRemoveFlag = true;
-            removeButtons();
             //removeElements();
             $("#load").fadeOut();
             $("body").css("overflow","auto");

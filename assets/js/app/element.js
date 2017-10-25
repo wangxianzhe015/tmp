@@ -707,6 +707,91 @@ function addElements(newElements){
     canvas.renderAll();
 }
 
+function cloneElement(object){
+    var poly;
+    if (object.category == "circle") {
+        poly = new fabric.Circle({
+            radius: object._objects[0].radius,
+            fill: object._objects[0].fill,
+            opacity: object._objects[0].opacity,
+            left: object._objects[0].left,
+            top: object._objects[0].top
+        });
+    } else {
+        var points = regularPolygonPoints(6, radius - border / 2);
+        poly = new fabric.Polygon(points, {
+            stroke: object._objects[0].stroke,
+            left: object._objects[0].left,
+            top: object._objects[0].top,
+            strokeWidth: object._objects[0].strokeWidth,
+            strokeLineJoin: object._objects[0].strokeLineJoin,
+            opacity:object._objects[0].opacity,
+            fill: object._objects[0].fill
+        }, false);
+    }
+
+    var text1 = new fabric.Text(object._objects[1].text, {
+        fontSize: object._objects[1].fontSize,
+        textAlign: object._objects[1].textAlign,
+        left: object._objects[1].left,
+        top: object._objects[1].top,
+        lineHeight: object._objects[1].lineHeight,
+        originX: object._objects[1].originX,
+        originY: object._objects[1].originY,
+        fontFamily: object._objects[1].fontFamily,
+        fontWeight: object._objects[1].fontWeight,
+        fill: object._objects[1].fill,
+        opacity:object._objects[1].opacity
+    });
+
+    var formatted = wrapCanvasText(text1, canvas, radius, radius, 'center');
+
+    var newID = nameElement('clone',object.id);
+    var element = new fabric.Group([poly, formatted], {
+        left: object.left,
+        top: object.top + Math.sqrt(3) * radius,
+        class: object.class,
+        cornerStyle: object.cornerStyle,
+        cornerColor: object.cornerColor,
+        category: object.category,
+        originX: object.originX,
+        originY: object.originY,
+        id: newID,
+        position: object.position,
+        hasBorders: object.hasBorders,
+        //hasControls: false,
+        //hasRotatingPoint: false,
+        perPixelTargetFind: object.perPixelTargetFind,
+        link: object.link,
+        progress: object.progress,
+        tags: object.tags,
+        cluster: object.cluster,
+        comments: object.comments,
+        checklistLabel: object.checklistLabel,
+        checklistCheckbox: object.checklistCheckbox,
+        jsonObjects: object.jsonObjects,
+        datatext: object.datatext
+    });
+
+    element.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: false,
+        mr: false,
+        tr: false,
+        tl: false,
+        br: false,
+        bl: false
+    });
+
+    canvas.add(element);
+
+    elementsInfo[newID] = {
+        x: element.left,
+        y: element.top
+    }
+}
+
 function addJSONElement(newElement){
     newElements.forEach(function(object){
         if (object.class == 'element') {
@@ -1041,7 +1126,6 @@ function animateElement(element, left, top, opacity, easing, duration){
 }
 
 function removeElements() {
-    removeButtons();
     var objects = canvas.getObjects();
     for (var index = 0; index < objects.length; index ++){
         if (objects[index].class == 'element'){

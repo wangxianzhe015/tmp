@@ -75,6 +75,8 @@ input {
     border-radius: 5px;
 }
 #tagger-keyword-div #tagger-unhighlight-btn{
+    background: rgba(20,20,20,.8);
+    padding: 3px 7px;
     margin-left: 10px;
     cursor: pointer;
     -moz-user-select: -moz-none;
