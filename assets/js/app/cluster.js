@@ -6,7 +6,7 @@ function clusterElements(key){
                 positionBeforeClustering[obj.id] = {
                     x: obj.left,
                     y: obj.top
-                }
+                };
             }
         });
     }
@@ -28,7 +28,7 @@ function clusterElements(key){
             offsetToMove[el] = {
                 x: x + formationInfo[index - 1].x * 3 * radius / 2,
                 y: y + formationInfo[index - 1].y * Math.round(Math.sqrt(3) * radius / 2)
-            }
+            };
         }
     });
 
@@ -60,7 +60,7 @@ function clusterElements(key){
             }
         }
     });
-    delete clusters['temp'];
+    delete clusters.temp;
     canvas.renderAll();
 
     if ($("#back-button").length == 0 && key != 'temp') {
@@ -80,7 +80,7 @@ function unClusterElements(){
                 duration: 2000,
                 onChange: canvas.renderAll.bind(canvas),
                 easing: fabric.util.ease.easeOutCirc
-            })
+            });
         }
     });
 

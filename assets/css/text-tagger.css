@@ -98,16 +98,23 @@ input {
 .tagger-highlight-keyword{
     display: none;
     cursor: pointer;
-    padding: 5px;
-    background-color: rgba(140,158,140,.8);
-    border-radius: 5px;
+    padding: 20px;
+    border-radius: 100px;
+    border: solid 1px white;
     font-size: 12px;
-    width: 70%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 1.5em;
 }
 .tagger-highlight-keyword.selected{
     color: white;
-    display: inline;
+    display: block;
     text-shadow: -3px 3px 10px #4777fb;
+}
+.tagger-highlight-keyword.hover{
+    display: block;
+    background-color: rgba(140,158,140,.8);
 }
 .btn{
     background-color: rgb(92,183,92);

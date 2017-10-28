@@ -265,15 +265,11 @@
                             mouseover: function(){
                                 var $obj = $("#"+$(this).attr("id")+"-keyword");
                                 if ($obj.html() == "") return false;
-                                if (!$obj.hasClass("selected")) {
-                                    $obj.show();
-                                }
+                                $obj.addClass("hover");
                             },
                             mouseleave: function(){
                                 var $obj = $("#"+$(this).attr("id")+"-keyword");
-                                if (!$obj.hasClass("selected")) {
-                                    $obj.hide();
-                                }
+                                $obj.removeClass("hover");
                             }
                         });
                         keywordTag = $("<p></p>",{

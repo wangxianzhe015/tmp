@@ -163,8 +163,8 @@ canvas.on('mouse:down',function(e){
                             el.isParent = false;
                         });
                     } else {
-                        for (var i = 0; i < groupTarget.length; i ++){
-                            groupTarget[i].isParent = false;
+                        for (var j = 0; j < groupTarget.length; j ++){
+                            groupTarget[j].isParent = false;
                         }
                     }
                     object.isParent = true;
@@ -222,7 +222,7 @@ canvas.on('mouse:down',function(e){
                     if (groupTargetClock == 0) {
                         groupTargetClock = setInterval(highlightGroup, 600);
                     }
-                    showNotification("Select an element to be parent")
+                    showNotification("Select an element to be parent");
                 }
             } else if (object.id == "dot3") {
                 if (groupTarget != null && groupTarget.class == "group"){
@@ -472,7 +472,7 @@ canvas.on('object:moving', function(e){
         } else {
             e.target.set({
                 position: pos.id
-            })
+            });
         }
         elementsInfo[e.target.id].x = e.target.left;
         elementsInfo[e.target.id].y = e.target.top;
