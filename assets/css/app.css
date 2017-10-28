@@ -21,7 +21,8 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #248784;
+    background-color: gray;
+    /*background-color: #248784;*/
     /*overflow: hidden;*/
 }
 body{
@@ -58,6 +59,15 @@ input[type="checkbox"] {
 }
 .center{
     text-align: center;
+}
+.hidden{
+    display: none!important;
+}
+.no-margin{
+    margin: 0!important;
+}
+.no-padding{
+    padding: 0!important;
 }
 .row:before, .row:after{
     display: table;
@@ -136,7 +146,7 @@ button .text{
     width: 45%;
     min-width: 675px;
 }
-.image-tooltip#tagDialog, .image-tooltip#uploadDialog, .image-tooltip#settingDialog, .image-tooltip#contactDiv{
+.image-tooltip#tagDialog, .image-tooltip#uploadDialog, .image-tooltip#settingDialog,{
     left: 50px;
 }
 .image-tooltip#messageDiv{
@@ -346,8 +356,11 @@ input.form-control,select.form-control,textarea.form-control{
 }
 .form-control.width-half{
     padding: 10px;
-    width: calc(50% - 20px);
+    width: calc(50% - 25px);
     display: inline-block;
+}
+.form-control.no-padding{
+    padding: 0;
 }
 textarea.form-control, input.form-control{
     background: transparent;
@@ -453,7 +466,7 @@ button#progress-plus-btn{
     cursor: pointer;
 }
 .suggest-list{
-    background-color: transparent;
+    background-color: rgba(0,0,0,.2);
     color: white;
     position: absolute;
     margin: 25px 0 0 0;
@@ -483,9 +496,12 @@ button#progress-plus-btn{
     white-space: nowrap;
     font-family: brandon, helvetica, arial, sans-serif;
 }
+.suggest-list li .regex-search-head{
+    font-size: 1.1em;
+}
 .suggest-list li .regex-search-tagline{
     color: #aaa;
-    font-size: .8em;
+    font-size: .9em;
 }
 #checklist .suggest-list{
     background-color: rgba(18,18,18,.7);
@@ -869,8 +885,8 @@ textarea#shape-datatext{
     position: absolute;
     height: 50%;
     min-height: 400px;
-    width: 40%;
-    min-width: 800px;
+    width: 60%;
+    min-width: 900px;
     top: 0;
     left: 0;
     font-size:10px;
@@ -896,6 +912,10 @@ textarea#shape-datatext{
 /* Contact Div */
 #contactDiv, #messageDiv{
     position: fixed;
+}
+#contactDiv{
+    left: 300px;
+    top: 150px;
 }
 .people-list{
     background-color: transparent;
@@ -948,6 +968,10 @@ textarea#shape-datatext{
 #messageDiv #message-div-controls img{
     cursor: pointer;
 }
+#messageDiv #message-bcc-check{
+    height: 26px;
+    vertical-align: middle;
+}
 /* Dropdown */
 .image-tooltip#dropdown-div{
     right: 50px;
@@ -960,6 +984,7 @@ div.dropdown {
     text-shadow: 0 1px 1px black;
     width: inherit;
     font-weight: bold;
+    font-size: 12px;
 }
 div.dropdown.closed ul {
     margin-top: 0;

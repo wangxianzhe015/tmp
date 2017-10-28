@@ -108,9 +108,7 @@ input {
     line-height: 1.5em;
 }
 .tagger-highlight-keyword.selected{
-    color: white;
     display: block;
-    text-shadow: -3px 3px 10px #4777fb;
 }
 .tagger-highlight-keyword.hover{
     display: block;

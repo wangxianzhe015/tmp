@@ -114,6 +114,8 @@ function initHandlers(){
 
     $(".dropdown .title").click(function () {
         $(this).parent().toggleClass("closed");
+    }).mouseover(function(){
+        $(this).parent().removeClass("closed");
     });
 
     $(".dropdown li").click(function () {
@@ -997,6 +999,17 @@ function initHandlers(){
         });
     });
 
+    $("#message-date").datepicker();
+    $("#message-cc-select").multipleSelect();
+
+    $("#message-bcc-check").on("click", function(){
+        if ($(this).prop("checked")){
+            $("#message-cc-select").next().toggleClass("hidden");
+        } else {
+            $("#message-cc-select").next().toggleClass("hidden");
+        }
+    });
+
     $("#upload-plus").on("click", function(){
         $(this).parent().find("input[type='file']").click();
     });
@@ -1094,6 +1107,7 @@ function loadPeople(){
 
             } else if (res == ""){
                 $("#people-list").val("");
+                $("#message-cc-select").html("");
                 //alert("Notification", "People Empty");
             } else {
                 var list = $.parseJSON(res), txt = "", line = "";
@@ -1101,10 +1115,16 @@ function loadPeople(){
                 var ulTag = $("<ul></ul>", {
                     class: "people-list"
                 }).appendTo("#people-list-div");
+                $("#message-cc-select").html("");
                 list.forEach(function(person){
                     // Add People tab on Setting dialog
                     line = person[0] + " " + person[1] + " " + person[2] + "\r\n";
                     txt += line;
+                    // Message CC List
+                    $("#message-cc-select").append($("<option></option>", {
+                        text: person[0],
+                        value: person[0]
+                    }));
                     // People list div
                     $("<li></li>", {
 
@@ -1120,7 +1140,7 @@ function loadPeople(){
                         class: "contact-person-name"
                     }).on("click", function(){
                         var div = $(this).parents("#contactDiv");
-                        $("#messageDiv").css("left", parseInt(div.css("width")) + 60).show();
+                        $("#messageDiv").css("left", parseInt(div.css("width")) + 310).css("top", 150).show();
                         $("#message-to-address").val($(this).text());
 
                     })).append($("<span></span>", {
@@ -1133,6 +1153,7 @@ function loadPeople(){
                     .appendTo(ulTag);
                 });
                 $("#people-list").val(txt);
+                $("#message-cc-select").multipleSelect("refresh");
             }
         }
     });

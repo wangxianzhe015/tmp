@@ -446,7 +446,9 @@
 </div>
 
 <div class="image-tooltip" id="contactDiv">
-    <div id="people-list-div"></div>
+    <div class="ttip">
+        <div id="people-list-div"></div>
+    </div>
 </div>
 
 <div class="image-tooltip" id="messageDiv">
@@ -467,22 +469,24 @@
             <img src="assets/images/icons/maximize-24.png" id="message-div-maximize"/>
         </div>
         <div id="message-content" class="tab-pane active">
-            <div class="form-group">
-                <label for="message-to-address">To:</label>
-                <input type="text" class="form-control" id="message-to-address" placeholder="<Address>"/>
+            <div class="form-group no-margin">
+                <input type="text" class="form-control width-half no-margin" id="message-to-address" placeholder="<Address>"/>
+                <input type="text" class="form-control width-half no-margin" id="message-date" placeholder="<Date>" />
             </div>
             <div class="form-group">
-                <label for="message-subject">Subject:</label>
-                <input class="form-control" id="message-subject" type="text" placeholder="<Subject>"/>
+                <input class="form-control" id="message-subject no-margin" type="text" placeholder="<Subject>"/>
             </div>
             <div class="form-group">
-                <label for="message-date">Date:</label>
-                <input type="text" class="form-control" id="message-date" placeholder="<Date>" />
+                <input type="checkbox" id="message-bcc-check" value="Bcc"/>
+                <label for="message-bcc-check">Bcc</label>
+                <select multiple="multiple" class="form-control no-padding no-margin hidden width-half" id="message-cc-select">
+                    <option value="">test01@test.com</option>
+                    <option value="">test02@test.com</option>
+                </select>
             </div>
             <h3></h3>
-            <div class="form-group">
-                <label for="message-body">Body:</label>
-                <textarea class="form-control" id="message-body" placeholder="<Type...>"></textarea>
+            <div class="form-group no-margin">
+                <textarea class="form-control no-margin" id="message-body" placeholder="<Type...>"></textarea>
             </div>
             <div class="form-group">
                 <button id="message-send-btn" class="normal-btn">Send</button>
