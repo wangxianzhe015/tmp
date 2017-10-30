@@ -994,16 +994,56 @@ function initHandlers(){
 
     $(".custom-accordion-header").on("click", function(e){
         e.preventDefault();
-        if (e.originalEvent.target.className == "custom-accordion-add-btn"){
-            console.log("add");
-            return;
-        } else if (e.originalEvent.target.className == "custom-accordion-remove-btn"){
-            console.log("remove");
+        if (e.originalEvent.target.className == "custom-accordion-remove-btn"){
+            $(this).addClass("status-remove");
+            $(this).next().addClass("status-remove");
+            setTimeout(function(){
+                $(".status-remove").remove();
+                saveAccordion();
+            }, 1000);
             return;
         }
         $(".status-open").removeClass("status-open");
-        $(this).toggleClass("status-open");
-        $(this).next().toggleClass("status-open");
+        $(this).addClass("status-open");
+        $(this).next().addClass("status-open");
+    });
+
+    $(".custom-accordion-text").on("keyup", function(){
+        saveAccordion();
+    });
+
+    $(".custom-accordion-add-btn").on("click", function(){
+        $("<h1></h1>", {
+            class: "custom-accordion-header"
+        }).append($("<span></span>", {
+            class: "custom-accordion-title",
+            text: "New Key"
+        })).append($("<span></span>", {
+            class: "custom-accordion-remove-btn",
+            html: "&times;"
+        }).on("click", function(){
+            $(this).addClass("status-remove");
+            $(this).next().addClass("status-remove");
+            setTimeout(function(){
+                $(".status-remove").remove();
+                saveAccordion();
+            }, 1000);
+        })).on("click", function(){
+            $(".status-open").removeClass("status-open");
+            $(this).addClass("status-open");
+            $(this).next().addClass("status-open");
+        }).appendTo($(this).parent().parent());
+
+        $("<div></div>", {
+            class: "custom-accordion-content"
+        }).append($("<textarea></textarea>", {
+            text: "New value",
+            class: "custom-accordion-text form-control"
+        }).on("keyup", function(){
+            saveAccordion();
+        })).appendTo($(this).parent().parent());
+
+        saveAccordion();
     });
 
     $(document).keyup(function(e){
@@ -1139,6 +1179,29 @@ function loadPeople(){
                 $("#people-list").val(txt);
                 $("#message-cc-select").multipleSelect("refresh");
             }
+        }
+    });
+}
+
+function saveAccordion(){
+    var $obj = $("#custom-accordion-div");
+    var $keyObjects = $obj.find(".custom-accordion-header");
+    var result = [];
+    $keyObjects.each(function(i,el){
+        result[i] = {
+            key: $(el).find(".custom-accordion-title").text(),
+            value: $(el).next().find("textarea").val()
+        }
+    });
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            action: "save-accordion",
+            data: result
+        },
+        success: function(res){
+            console.log(res);
         }
     });
 }

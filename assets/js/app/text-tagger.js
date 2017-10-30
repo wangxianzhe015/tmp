@@ -272,7 +272,7 @@
                                 $obj.removeClass("hover");
                             }
                         });
-                        keywordTag = $("<p></p>",{
+                        keywordTag = $("<div></div>",{
                             id: randomId + "-keyword",
                             class: "tagger-highlight-keyword",
                             "data-target": randomId,

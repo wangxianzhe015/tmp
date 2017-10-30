@@ -43,6 +43,9 @@ switch ($action) {
     case 'save-tagger':
         saveTagger();
         break;
+    case 'save-accordion':
+        saveAccordion();
+        break;
 }
 
 function save(){
@@ -205,4 +208,14 @@ function saveTagger(){
     }
 }
 
-
+function saveAccordion(){
+    $data = json_encode($_POST['data']);
+    $myFile = fopen("./data/accordion/data.json", "wr") or die("Unable to open file!");
+    if ($myFile) {
+        fwrite($myFile, $data);
+        fclose($myFile);
+        echo "success";
+    } else {
+        echo 'fail';
+    }
+}

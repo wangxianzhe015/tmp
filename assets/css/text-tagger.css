@@ -99,14 +99,15 @@ input {
     color: white;
     display: none;
     cursor: pointer;
-    padding: 20px;
-    border-radius: 100px;
+    padding: 2em 0.5em;
+    border-radius: 5em;
     border: solid 1px white;
     font-size: 12px;
-    width: 20px;
-    height: 20px;
+    width: 4em;
+    height: 1em;
     text-align: center;
-    line-height: 1.5em;
+    line-height: 1em;
+    margin: 5px auto;
 }
 .tagger-highlight-keyword.selected{
     display: block;

@@ -982,14 +982,28 @@ textarea#shape-datatext{
 /* Custom Accordion */
 .image-tooltip#custom-accordion-div{
     right: 50px;
+    padding: 0;
     position: fixed;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 0;
     -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     -moz-border-radius: 0 0 3px 3px;
+}
+.custom-accordion-control-panel{
+    height: 30px;
+}
+.custom-accordion-add-btn{
+    color: #f0f0f0;
+    margin: 5px;
+    background: none;
+    text-shadow: 0 1px 1px black;
+    border: none;
+    cursor: pointer;
+}
+.custom-accordion-add-btn:hover{
+    color: red;
 }
 .custom-accordion-header, .custom-accordion-content{
     text-align: left;
@@ -1018,6 +1032,10 @@ textarea#shape-datatext{
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
 }
 .custom-accordion-header:hover{
     text-shadow: 0 1px 1px black, 0 0 4px white;
@@ -1040,12 +1058,11 @@ textarea#shape-datatext{
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
 }
-.custom-accordion-header .custom-accordion-add-btn{
-    position: absolute;
-    right: 60px;
-}
-.custom-accordion-header .custom-accordion-add-btn:hover{
-    color: red;
+.custom-accordion-header.status-remove{
+    opacity: 0;
+    height: 0;
+    padding: 0;
+    border: 0;
 }
 .custom-accordion-header .custom-accordion-remove-btn{
     position: absolute;
@@ -1061,6 +1078,7 @@ textarea#shape-datatext{
     height: 0;
     width: 100%;
     opacity: 0;
+    padding: 0;
     -moz-transition: all 0.5s;
     -o-transition: all 0.5s;
     -webkit-transition: all 0.5s;
@@ -1085,6 +1103,12 @@ textarea#shape-datatext{
 }
 .custom-accordion-content.status-open .custom-accordion-text{
     display: block;
+}
+.custom-accordion-content.status-remove {
+    height: 0;
+    width: 100%;
+    opacity: 0;
+    padding: 0;
 }
 
 /* file upload */
