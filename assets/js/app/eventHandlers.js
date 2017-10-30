@@ -975,29 +975,9 @@ function initHandlers(){
         });
     });
 
-    $("#message-div-maximize").on("click", function(){
-        $("#messageDiv").css({
-            width: "40%",
-            height: "70%"
-        })
-    });
-
-    $("#message-div-restore").on("click", function(){
-        $("#messageDiv").css({
-            width: "30%",
-            height: "50%"
-        });
-    });
-
     $("#message-date").datepicker();
-    $("#message-cc-select").multipleSelect();
-
-    $("#message-bcc-check").on("click", function(){
-        if ($(this).prop("checked")){
-            $("#message-cc-select").next().toggleClass("hidden");
-        } else {
-            $("#message-cc-select").next().toggleClass("hidden");
-        }
+    $("#message-cc-select").multipleSelect({
+        placeholder: "Bcc"
     });
 
     $("#upload-plus").on("click", function(){
@@ -1145,7 +1125,7 @@ function loadPeople(){
                         class: "contact-person-slack"
                     }).on("click", function(){
                         var div = $(this).parents("#contactDiv");
-                        $("#messageDiv").css("left", parseInt(div.css("width")) + 60).show();
+                        $("#messageDiv").css("left", parseInt(div.css("width")) + 310).css("top", 150).show();
                     }))
                     .appendTo(ulTag);
                 });

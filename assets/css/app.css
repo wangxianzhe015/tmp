@@ -68,6 +68,12 @@ input[type="checkbox"] {
 .no-padding{
     padding: 0!important;
 }
+.pull-right{
+    float: right;
+}
+.pull-left{
+    float: left;
+}
 .row:before, .row:after{
     display: table;
     content: " ";
@@ -149,9 +155,9 @@ button .text{
     left: 50px;
 }
 .image-tooltip#messageDiv{
-    width: 30%;
+    width: 40%;
     min-width: 0;
-    height: 50%;
+    height: 70%;
     min-height: 0;
 }
 .ttip{
@@ -354,12 +360,9 @@ input.form-control,select.form-control,textarea.form-control{
     overflow: hidden;
 }
 .form-control.width-half{
-    padding: 10px;
-    width: calc(50% - 25px);
+    padding: 10px 0;
+    width: calc(50% - 15px);
     display: inline-block;
-}
-.form-control.no-padding{
-    padding: 0;
 }
 textarea.form-control, input.form-control{
     background: transparent;
@@ -961,11 +964,15 @@ textarea#shape-datatext{
     color: #aaa;
     font-size: .8em;
 }
-#messageDiv #message-div-controls{
+#messageDiv #message-date{
     text-align: right;
 }
-#messageDiv #message-div-controls img{
-    cursor: pointer;
+#messageDiv #message-send-btn{
+    position: absolute;
+    bottom: 10px;
+}
+#messageDiv #message-body{
+    min-height: 100px;
 }
 #messageDiv #message-bcc-check{
     height: 26px;
@@ -1044,7 +1051,7 @@ textarea#shape-datatext{
 }
 .custom-accordion-content.status-open{
     opacity: 1;
-    height: 80px;
+    height: 400px;
     padding: 12px;
     vertical-align: top;
     overflow: hidden;
