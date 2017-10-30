@@ -997,7 +997,6 @@ textarea#shape-datatext{
     text-shadow: 0 1px 1px black;
     width: inherit;
     font-weight: bold;
-    font-size: 12px;
 }
 .custom-accordion-header{
     margin: 0;
@@ -1006,6 +1005,7 @@ textarea#shape-datatext{
     border: 1px solid rgba(25, 25, 25, 0.3);
     padding: 12px;
     cursor: pointer;
+    font-size: 12px;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -1040,6 +1040,23 @@ textarea#shape-datatext{
     -webkit-transform: rotate(0deg);
     transform: rotate(0deg);
 }
+.custom-accordion-header .custom-accordion-add-btn{
+    position: absolute;
+    right: 60px;
+}
+.custom-accordion-header .custom-accordion-add-btn:hover{
+    color: red;
+}
+.custom-accordion-header .custom-accordion-remove-btn{
+    position: absolute;
+    right: 40px;
+}
+.custom-accordion-header .custom-accordion-remove-btn:hover{
+    color: red;
+}
+.custom-accordion-text{
+    display: none;
+}
 .custom-accordion-content{
     height: 0;
     width: 100%;
@@ -1065,6 +1082,9 @@ textarea#shape-datatext{
     background-image: -moz-linear-gradient(top, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
     background-image: -webkit-linear-gradient(top, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
     background-image: linear-gradient(to bottom, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
+}
+.custom-accordion-content.status-open .custom-accordion-text{
+    display: block;
 }
 
 /* file upload */

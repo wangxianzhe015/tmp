@@ -994,6 +994,13 @@ function initHandlers(){
 
     $(".custom-accordion-header").on("click", function(e){
         e.preventDefault();
+        if (e.originalEvent.target.className == "custom-accordion-add-btn"){
+            console.log("add");
+            return;
+        } else if (e.originalEvent.target.className == "custom-accordion-remove-btn"){
+            console.log("remove");
+            return;
+        }
         $(".status-open").removeClass("status-open");
         $(this).toggleClass("status-open");
         $(this).next().toggleClass("status-open");
