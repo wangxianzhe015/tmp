@@ -282,12 +282,12 @@ function showTaggerFrame(){
 }
 
 function showFeedDiv(){
-    $("#dropdown-div").show();
+    $("#custom-accordion-div").show();
 }
 
 function hideFeedDiv(){
     if (!mouseOverElement){
-        $("#dropdown-div").hide();
+        $("#custom-accordion-div").hide();
     }
 }
 

@@ -971,13 +971,20 @@ textarea#shape-datatext{
     height: 26px;
     vertical-align: middle;
 }
-/* Dropdown */
-.image-tooltip#dropdown-div{
+
+/* Custom Accordion */
+.image-tooltip#custom-accordion-div{
     right: 50px;
     position: fixed;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0;
+    -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
+    -moz-border-radius: 0 0 3px 3px;
 }
-
-div.dropdown {
+.custom-accordion-header, .custom-accordion-content{
     text-align: left;
     color: #f0f0f0;
     text-shadow: 0 1px 1px black;
@@ -985,21 +992,8 @@ div.dropdown {
     font-weight: bold;
     font-size: 12px;
 }
-div.dropdown.closed ul {
-    margin-top: 0;
-}
-div.dropdown.closed ul li {
-    margin-top: -40px;
-    height: 0;
-}
-div.dropdown.closed div.title:after {
-    margin-top: -18px;
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-}
-div.dropdown div.title {
+.custom-accordion-header{
+    margin: 0;
     width: 100%;
     height: 40px;
     border: 1px solid rgba(25, 25, 25, 0.3);
@@ -1017,11 +1011,11 @@ div.dropdown div.title {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
-    -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
 }
-div.dropdown div.title:after {
+.custom-accordion-header:hover{
+    text-shadow: 0 1px 1px black, 0 0 4px white;
+}
+.custom-accordion-header:after{
     display: block;
     content: "▾";
     position: absolute;
@@ -1032,37 +1026,29 @@ div.dropdown div.title:after {
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
 }
-div.dropdown ul {
-    margin: 0;
-    padding: 0;
-    max-height: 400px;
-    overflow-y: scroll;
-    -moz-transition: margin-top 1s;
-    -o-transition: margin-top 1s;
-    -webkit-transition: margin-top 1s;
-    transition: margin-top 1s;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-    -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
-    -moz-border-radius: 0 0 3px 3px;
-    -webkit-border-radius: 0;
-    border-radius: 0 0 3px 3px;
+.custom-accordion-header.status-open:after{
+    margin-top: -18px;
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
 }
-div.dropdown ul li {
+.custom-accordion-content{
+    height: 0;
     width: 100%;
-    height: 40px;
-    border: 1px solid rgba(25, 25, 25, 0.3);
+    opacity: 0;
+    -moz-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+}
+.custom-accordion-content.status-open{
+    opacity: 1;
+    height: 80px;
     padding: 12px;
     vertical-align: top;
     overflow: hidden;
     cursor: pointer;
-    -moz-transition: margin-top 0.5s, height 0.5s;
-    -o-transition: margin-top 0.5s, height 0.5s;
-    -webkit-transition: margin-top 0.5s, height 0.5s;
-    transition: margin-top 0.5s, height 0.5s;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -1073,38 +1059,6 @@ div.dropdown ul li {
     background-image: -webkit-linear-gradient(top, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
     background-image: linear-gradient(to bottom, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
 }
-div.dropdown ul li:first-child {
-    border-bottom: none;
-    border-top: none;
-}
-div.dropdown ul li:last-child {
-    border-top: none;
-    -moz-border-radius: 0 0 3px 3px;
-    -webkit-border-radius: 0;
-    border-radius: 0 0 3px 3px;
-}
-div.dropdown ul li:hover {
-    text-shadow: 0 1px 1px black, 0 0 4px white;
-}
-<!--
-div.dropdown ul li:before {
-    content: " ";
-    display: inline-block;
-    vertical-align: top;
-    position: relative;
-    /*background: transparent url("../images/line-stop.png");*/
-    margin-top: -12px;
-    margin-right: 10px;
-    width: 20px;
-    height: 40px;
-    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
-    opacity: 0.7;
-    -moz-transition: all 0.5s;
-    -o-transition: all 0.5s;
-    -webkit-transition: all 0.5s;
-    transition: all 0.5s;
-}
--->
 
 /* file upload */
 #fileupload .fileupload-buttons{

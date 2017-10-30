@@ -112,16 +112,6 @@ function initHandlers(){
         $("#top-sidebar").remove();
     });
 
-    $(".dropdown .title").click(function () {
-        $(this).parent().toggleClass("closed");
-    }).mouseover(function(){
-        $(this).parent().removeClass("closed");
-    });
-
-    $(".dropdown li").click(function () {
-        $(this).parent().parent().toggleClass("closed").find(".title").text($(this).text());
-    });
-
     $(".image-tooltip").on("mouseover", function(event){
         mouseOverElement = true;
     }).on("mouseleave", function(event){
@@ -1020,6 +1010,13 @@ function initHandlers(){
 
     $(".upload-start").on("click", function(){
         $(this).parent().find(".start").click();
+    });
+
+    $(".custom-accordion-header").on("click", function(e){
+        e.preventDefault();
+        $(".status-open").removeClass("status-open");
+        $(this).toggleClass("status-open");
+        $(this).next().toggleClass("status-open");
     });
 
     $(document).keyup(function(e){

@@ -96,6 +96,7 @@ input {
     visibility: visible;
 }
 .tagger-highlight-keyword{
+    color: white;
     display: none;
     cursor: pointer;
     padding: 20px;
