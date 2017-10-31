@@ -80,7 +80,7 @@ function init(){
     addChipButton();
     addFeedButton();
     addUserButton();
-    drawElements();
+    //drawElements();
     loadAllCallbacks();
 
     loadFormations();

@@ -21,7 +21,8 @@
 body{
     margin: 0;
     padding: 0;
-    background-color: #248784;
+    background-color: gray;
+    /*background-color: #248784;*/
     /*overflow: hidden;*/
 }
 body{
@@ -354,7 +355,7 @@ input.form-control,select.form-control,textarea.form-control{
     padding: 10px 0;
     border-radius: 5px;
     background-color: rgb(69,73,85);
-    font-size: 1em;
+    font-size: 12px;
     line-height: 11px;
     border: none;
     overflow: hidden;
@@ -964,6 +965,9 @@ textarea#shape-datatext{
     color: #aaa;
     font-size: .8em;
 }
+#messageDiv #message-content{
+    height: 100%;
+}
 #messageDiv #message-date{
     text-align: right;
 }
@@ -972,7 +976,7 @@ textarea#shape-datatext{
     bottom: 10px;
 }
 #messageDiv #message-body{
-    min-height: 100px;
+    height: calc(100% - 224px);
 }
 #messageDiv #message-bcc-check{
     height: 26px;
@@ -1052,7 +1056,7 @@ textarea#shape-datatext{
     transform: rotate(180deg);
 }
 .custom-accordion-header.status-open:after{
-    margin-top: -18px;
+    margin-top: -12px;
     -moz-transform: rotate(0deg);
     -ms-transform: rotate(0deg);
     -webkit-transform: rotate(0deg);

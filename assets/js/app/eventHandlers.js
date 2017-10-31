@@ -1003,9 +1003,13 @@ function initHandlers(){
             }, 1000);
             return;
         }
-        $(".status-open").removeClass("status-open");
-        $(this).addClass("status-open");
-        $(this).next().addClass("status-open");
+        if ($(this).hasClass("status-open")){
+            $(".status-open").removeClass("status-open");
+        } else {
+            $(".status-open").removeClass("status-open");
+            $(this).addClass("status-open");
+            $(this).next().addClass("status-open");
+        }
     });
 
     $(".custom-accordion-text").on("keyup", function(){
