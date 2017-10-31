@@ -102,14 +102,14 @@
                 if ($obj.attr("data-keyword") != ""){
                     $obj = $(sel.anchorNode.parentNode);
                 }
-                var oldKeyword = $obj.attr("data-keyword"), oldCheck = false;
+                var oldKeyword = $obj.attr("data-keyword"), oldCheck = true;
+                $obj.attr("data-keyword", keyword);
                 $(".tagger-highlight-text").each(function(i,el){
-                    if ($(el).attr("data-keyword") == oldKeyword) oldCheck = true;
+                    if ($(el).attr("data-keyword") == oldKeyword) oldCheck = false;
                 });
                 if (oldCheck){
                     $("#" + oldKeyword + "-keyword").removeClass("selected");
                 }
-                $obj.attr("data-keyword", keyword);
                 //$("#" + $obj.attr("id") + "-keyword").html(keyword);
             }
             $("#" + keyword + "-keyword").addClass("selected");
