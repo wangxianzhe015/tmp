@@ -218,21 +218,22 @@
             src: taggerIconPath.tick,
             class: "image-btn"
         }).on("click", function(){
-            var hintCheck = false;
-            $(".tagger-highlight-keyword").each(function(i, obj){
-                if ($(obj).html() == "Hint") hintCheck = true;
-            });
-            if (!hintCheck){
+            //var hintCheck = false;
+            //$(".tagger-highlight-keyword").each(function(i, obj){
+            //    if ($(obj).html() == "Hint") hintCheck = true;
+            //});
+            if (!$("#Hint-keyword").hasClass("selected")){
                 $(".tagger-notification-panel").html("Hint Not Checked!!!");
                 setTimeout(function(){
                     $(".tagger-notification-panel").html("");
                 }, 3000);
                 return false;
             }
-            var data = {}, wordID = "", tmp;
+            var data = {}, wordID = "", tmp, wordIDs = [], list = [];
             $(".tagger-highlight-text").each(function(i, el){
                 wordID = $(el).attr("data-word-id").toString();
                 if (data[wordID] == undefined) {
+                    wordIDs.push(wordID);
                     data[wordID] = {
                         text: $(el).text(),
                         keyword: $(el).attr("data-keyword")
@@ -245,11 +246,16 @@
                     }
                 }
             });
+            console.log(data);
+            wordIDs.forEach(function(id){
+                list.push(data[id]);
+            });
+            console.log(list);
             $.ajax({
                 url: "action.php",
                 data: {
                     "action": "save-tagger",
-                    data: data
+                    data: list
                 },
                 type: "POST",
                 success: function(){
