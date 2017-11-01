@@ -765,13 +765,13 @@ function cloneElement(object){
         link: object.link,
         progress: object.progress,
         tags: object.tags,
-        cluster: object.cluster,
         comments: object.comments,
         checklistLabel: object.checklistLabel,
         checklistCheckbox: object.checklistCheckbox,
         jsonObjects: object.jsonObjects,
         datatext: object.datatext
     });
+    if (object.cluster != undefined) element.cluster = object.cluster;
 
     element.setControlsVisibility({
         mt: false,

@@ -254,7 +254,7 @@
         return this.on("mouseup", function(event) {
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range, data, children, highlightTag, keywordTag, isSecond = false;
-                if (sel.toString() == "")return false;
+                if (sel.toString() == "" || $(sel.focusNode.parentNode).attr("data-keyword") == "")return false;
                 if (sel.rangeCount) {
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
@@ -281,14 +281,22 @@
                                     top: this.getBoundingClientRect().bottom
                                 }).show();
                             },
-                            mouseover: function(){
-                                var $obj = $("#"+$(this).attr("data-keyword")+"-keyword");
-                                //if ($obj.html() == "") return false;
-                                $obj.addClass("hover");
+                            mouseover: function(e){
+                                if (window.getSelection().toString() != "") return false;
+                                var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                                $objects.each(function(i,el){
+                                    $obj = $("#"+$(el).attr("data-keyword")+"-keyword");
+                                    //if ($obj.html() == "") return false;
+                                    $obj.addClass("hover");
+                                });
                             },
-                            mouseleave: function(){
-                                var $obj = $("#"+$(this).attr("data-keyword")+"-keyword");
-                                $obj.removeClass("hover");
+                            mouseout: function(e){
+                                var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                                $objects.each(function(i,el){
+                                    $obj = $("#"+$(el).attr("data-keyword")+"-keyword");
+                                    //if ($obj.html() == "") return false;
+                                    $obj.removeClass("hover");
+                                });
                             }
                         });
                         //keywordTag = $("<div></div>",{
