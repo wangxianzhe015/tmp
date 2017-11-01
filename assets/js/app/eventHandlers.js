@@ -893,8 +893,8 @@ function initHandlers(){
         $(this).parent().hide();
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-container").html('<span class="tagger-instruction">By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse.</span>');
-            $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-left-panel").html("");
-            $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-right-panel").html("");
+            //$(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-left-panel").html("");
+            //$(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-right-panel").html("");
         }
     });
 

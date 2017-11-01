@@ -246,11 +246,9 @@
                     }
                 }
             });
-            console.log(data);
             wordIDs.forEach(function(id){
                 list.push(data[id]);
             });
-            console.log(list);
             $.ajax({
                 url: "action.php",
                 data: {
