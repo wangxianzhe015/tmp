@@ -102,10 +102,15 @@
                 if ($obj.attr("data-keyword") != ""){
                     $obj = $(sel.anchorNode.parentNode);
                 }
+                var wordID = $obj.attr("data-word-id");
                 var oldKeyword = $obj.attr("data-keyword"), oldCheck = true;
                 $obj.attr("data-keyword", keyword);
                 $(".tagger-highlight-text").each(function(i,el){
-                    if ($(el).attr("data-keyword") == oldKeyword) oldCheck = false;
+                    if ($(el).attr("data-word-id") == wordID){
+                        $(el).attr("data-keyword", keyword);
+                    } else {
+                        if ($(el).attr("data-keyword") == oldKeyword) oldCheck = false;
+                    }
                 });
                 if (oldCheck){
                     $("#" + oldKeyword + "-keyword").removeClass("selected");
@@ -224,11 +229,20 @@
                 }, 3000);
                 return false;
             }
-            var data = [];
+            var data = {}, wordID = "", tmp;
             $(".tagger-highlight-text").each(function(i, el){
-                data[i] = {
-                    text: $(el).text(),
-                    keyword: $(el).attr("data-keyword")
+                wordID = $(el).attr("data-word-id").toString();
+                if (data[wordID] == undefined) {
+                    data[wordID] = {
+                        text: $(el).text(),
+                        keyword: $(el).attr("data-keyword")
+                    }
+                } else {
+                    tmp = data[wordID].text;
+                    data[wordID] = {
+                        text: tmp + $(el).text(),
+                        keyword: $(el).attr("data-keyword")
+                    }
                 }
             });
             $.ajax({
@@ -267,9 +281,9 @@
                         });
                         if (isSecond) return false;
                         range.deleteContents();
-                        var randomId = "highlighted-word-" + parseInt(Math.random() * 1000000000);
+                        var randomId = "word" + parseInt(Math.random() * 1000000000);
                         highlightTag = $("<code></code>", {
-                            id: randomId,
+                            "data-word-id": randomId,
                             class: "tagger-highlight-text",
                             "data-keyword": "",
                             html: data
