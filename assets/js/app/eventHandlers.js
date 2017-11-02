@@ -1,12 +1,5 @@
 function initHandlers(){
     $(window).on("scroll", function(){
-        //var visibleWidth = visibleArea.right - visibleArea.left,
-        //    visibleHeight = visibleArea.bottom - visibleArea.top;
-        //visibleArea.top = parseInt(window.pageYOffset / (Math.sqrt(3) * radius));
-        //visibleArea.left = parseInt(2 * (window.pageXOffset - 2 * radius) / (3 * radius)) + 1;
-        //visibleArea.bottom = visibleArea.top + visibleHeight;
-        //visibleArea.right = visibleArea.left + visibleWidth;
-
         /**
          * Parallax Scrollig
          */
@@ -893,7 +886,7 @@ function initHandlers(){
         $(this).parent().hide();
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-container").html('<span class="tagger-instruction">By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse.</span>');
-            //$(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-left-panel").html("");
+            $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-left-panel").find(".tagger-highlight-keyword").removeClass("selected");
             //$(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-keyword-right-panel").html("");
         }
     });
@@ -1010,6 +1003,11 @@ function initHandlers(){
             $(this).addClass("status-open");
             $(this).next().addClass("status-open");
         }
+        if ($(this).parent().find(".status-open").length == 0){
+            $(this).parents(".image-tooltip").css("height", "50%");
+        } else {
+            $(this).parents(".image-tooltip").css("height", "90%");
+        }
     });
 
     $(".custom-accordion-text").on("keyup", function(){
@@ -1022,33 +1020,76 @@ function initHandlers(){
         }).append($("<span></span>", {
             class: "custom-accordion-title",
             text: "New Key"
+        }).on("mouseover", function(){
+            replaceCustomInput($(this));
         })).append($("<span></span>", {
             class: "custom-accordion-remove-btn",
             html: "&times;"
         }).on("click", function(){
-            $(this).addClass("status-remove");
-            $(this).next().addClass("status-remove");
+            $(this).parent().addClass("status-remove");
+            $(this).parent().next().addClass("status-remove");
             setTimeout(function(){
                 $(".status-remove").remove();
                 saveAccordion();
             }, 1000);
         })).on("click", function(){
-            $(".status-open").removeClass("status-open");
-            $(this).addClass("status-open");
-            $(this).next().addClass("status-open");
-        }).appendTo($(this).parent().parent());
+            if ($(this).hasClass("status-open")){
+                $(".status-open").removeClass("status-open");
+            } else {
+                $(".status-open").removeClass("status-open");
+                $(this).addClass("status-open");
+                $(this).next().addClass("status-open");
+            }
+        }).appendTo($(this).parent().parent().find(".custom-accordion-data-panel"));
 
         $("<div></div>", {
             class: "custom-accordion-content"
-        }).append($("<textarea></textarea>", {
+        }).append($("<img/>", {
+            src: "assets/images/icons/hexagon-24.png",
+            title: "Convert into hexagon"
+        }).on("click", function(){
+            var obj = $(this).parent();
+            obj.removeClass("status-open").css("transform", "translateX(-"+ obj.css("width") + ")").addClass("status-remove");
+            obj.prev().removeClass("status-open").css("transform", "translateX(-"+ obj.prev().css("width") + ")").addClass("status-remove");
+            addNewHexagon(obj.prev().find(".custom-accordion-title").text(), "", 0, obj.prev().offset().left - radius, obj.prev().offset().top + radius, obj.find(".custom-accordion-text").val());
+            setTimeout(function(){
+                $(".status-remove").remove();
+            }, 500);
+        })).append($("<img/>", {
+            src: "assets/images/icons/circle-24.png",
+            title: "Convert into circle"
+        }).on("click", function(){
+            var obj = $(this).parent();
+            obj.removeClass("status-open").css("transform", "translateX(-"+ obj.css("width") + ")").addClass("status-remove");
+            obj.prev().removeClass("status-open").css("transform", "translateX(-"+ obj.prev().css("width") + ")").addClass("status-remove");
+            addNewCircle(obj.prev().find(".custom-accordion-title").text(), "", 0, obj.prev().offset().left - radius, obj.prev().offset().top + radius, obj.find(".custom-accordion-text").val());
+            setTimeout(function(){
+                $(".status-remove").remove();
+            }, 500);
+        })).append($("<textarea></textarea>", {
             text: "New value",
-            class: "custom-accordion-text form-control"
+            class: "custom-accordion-text default-textarea"
         }).on("keyup", function(){
             saveAccordion();
-        })).appendTo($(this).parent().parent());
+        })).appendTo($(this).parent().parent().find(".custom-accordion-data-panel"));
 
         saveAccordion();
     });
+
+    $(".custom-accordion-scroll-up-btn").on("click", function(){
+        var $obj = $(this).parent().parent().find(".custom-accordion-data-panel");
+        $obj.animate({scrollTop: $obj.scrollTop() - 50}, 500);
+    });
+
+    $(".custom-accordion-scroll-down-btn").on("click", function(){
+        var $obj = $(this).parent().parent().find(".custom-accordion-data-panel");
+        $obj.animate({scrollTop: $obj.scrollTop() + 50}, 500);
+    });
+
+    //TODO: this is temporary code. this should be removed later
+    for (var i = 1; i <= 5; i ++){
+        $(".custom-accordion-add-btn").trigger("click");
+    }
 
     $(document).keyup(function(e){
         e.preventDefault();
@@ -1208,6 +1249,31 @@ function saveAccordion(){
             console.log(res);
         }
     });
+}
+
+function replaceCustomInput($obj){
+    var $newObj = $("<input/>", {
+        value: $obj.html(),
+        type: "text",
+        class: "custom-accordion-title-text"
+    }).on("blur mouseleave", function(){
+        replaceCustomTitle($(this));
+        saveAccordion();
+    }).on("click", function(e){
+        e.preventDefault();
+        return false;
+    });
+    $obj.replaceWith($newObj);
+    $newObj.focus();
+}
+
+function replaceCustomTitle($obj){
+    $obj.replaceWith($("<span></span>", {
+        class: "custom-accordion-title",
+        text: $obj.val()
+    }).on("mouseover", function(){
+        replaceCustomInput($(this));
+    }));
 }
 
 $(function () {

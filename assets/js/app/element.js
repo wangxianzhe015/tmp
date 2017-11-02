@@ -441,9 +441,9 @@ function getElementName(type){
             clusters['temp'] = [];
             names.forEach(function(o,index){
                 if (type == 'hex') {
-                    clusters['temp'][index] = addNewHexagon(o,index);
+                    clusters['temp'][index] = addNewHexagon(o,"batch",index);
                 } else if (type == 'circle') {
-                    clusters['temp'][index] = addNewCircle(o,index);
+                    clusters['temp'][index] = addNewCircle(o,"batch",index);
                 }
             });
             $("#new-element-div").hide();
@@ -458,7 +458,7 @@ function getElementName(type){
     }).show();
 }
 
-function addNewHexagon(name,index){
+function addNewHexagon(name, type, index, left, top, datatext){
     var points = regularPolygonPoints(6, radius - border / 2);
 
     var myPoly = new fabric.Polygon(points, {
@@ -488,8 +488,6 @@ function addNewHexagon(name,index){
     var formatted = wrapCanvasText(text, canvas, radius, radius, 'center');
 
     var element = new fabric.Group([myPoly, formatted], {
-        left: downPoint.x,
-        top: downPoint.y + Math.sqrt(3) * radius * index,
         width: 2* radius,
         height: 2* radius,
         cornerStyle: 'circle',
@@ -502,12 +500,10 @@ function addNewHexagon(name,index){
         id: nameElement('new',canvas.getObjects().length),
         progress: '100',
         tags: [],
-        cluster: 'temp',
         comments: [],
         checklistLabel: [],
         checklistCheckbox: [],
-        jsonObjects: [],
-        datatext: 'Edit'
+        jsonObjects: []
     });
     element.setControlsVisibility({
         mt: false,
@@ -519,6 +515,19 @@ function addNewHexagon(name,index){
         br: false,
         bl: false
     });
+
+    if (type == "batch"){
+        element.left = downPoint.x;
+        element.top = downPoint.y + Math.sqrt(3) * radius * index;
+        element.cluster = "temp";
+        element.datatext = "Edit";
+    } else {
+        element.left = left;
+        element.top = top;
+        element.cluster = "";
+        element.datatext = datatext;
+    }
+
     canvas.add(element);
 
     elementsInfo[element.id] = {
@@ -529,7 +538,7 @@ function addNewHexagon(name,index){
     return element.id;
 }
 
-function addNewCircle(name,index){
+function addNewCircle(name, type, index, left, top, datatext){
     var myCircle = new fabric.Circle({radius: Math.sqrt(3) * (radius - border / 2) / 2, fill: elementColor, opacity:.5});
 
     var text = new fabric.IText(name, {
@@ -549,8 +558,6 @@ function addNewCircle(name,index){
     var formatted = wrapCanvasText(text, canvas, radius, radius, 'center');
 
     var element = new fabric.Group([myCircle, formatted], {
-        left: downPoint.x,
-        top: downPoint.y + Math.sqrt(3) * radius * index,
         originX: "center",
         originY: "center",
         hasBorders: false,
@@ -561,12 +568,10 @@ function addNewCircle(name,index){
         id: nameElement('new',canvas.getObjects().length),
         progress: '100',
         tags: [],
-        cluster: 'temp',
         comments: [],
         checklistLabel: [],
         checklistCheckbox: [],
-        jsonObjects: [],
-        datatext: 'Edit'
+        jsonObjects: []
     });
     element.setControlsVisibility({
         mt: false,
@@ -578,6 +583,18 @@ function addNewCircle(name,index){
         br: false,
         bl: false
     });
+
+    if (type == "batch"){
+        element.left = downPoint.x;
+        element.top = downPoint.y + Math.sqrt(3) * radius * index;
+        element.cluster = "temp";
+        element.datatext = "Edit";
+    } else {
+        element.left = left;
+        element.top = top;
+        element.cluster = "";
+        element.datatext = datatext;
+    }
 
     canvas.add(element);
 

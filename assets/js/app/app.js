@@ -8,12 +8,6 @@ var borderColor = "rgba(13,13,13,0)";
 var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
 var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
-var visibleArea = {
-    top: 0,
-    left: 0,
-    right:  Math.floor(2 * (window.innerWidth - 2 * radius) / (3 * radius)) + 1,
-    bottom: Math.floor(window.innerHeight / (Math.sqrt(3) * radius))
-};
 
 var snapStatus = 'lock';
 var elementsStatus = 'show';

@@ -518,7 +518,7 @@ button#progress-plus-btn{
     font-family: SanFrancisco, Helvetica, sans-serif;
     background: none;
     border: none;
-    font-size: 30px;
+    font-size: 45px;
     color: white;
     min-width: 300px;
 }
@@ -635,6 +635,9 @@ button#progress-plus-btn{
     background: white;
     border-radius: 5px;
 }
+#new-element-content{
+    background-color: transparent;
+}
 #view-list{
     padding: 0 20px;
     font-size: 16px;
@@ -680,6 +683,8 @@ span#ungroup-all{
     width: 280px;
     padding: 5px;
     margin-right: 10px;
+    background-color: transparent;
+    border: solid 1px lightgray;
 }
 input#shape-heading{
     color: white;
@@ -691,7 +696,7 @@ input#shape-heading{
     padding: 10px;
     overflow: hidden;
 }
-textarea#shape-datatext{
+textarea.default-textarea{
     color: white;
     height: calc(100% - 100px);
     min-height: 250px;
@@ -987,26 +992,29 @@ textarea#shape-datatext{
     right: 50px;
     padding: 0;
     position: fixed;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
+    transition: all 0.5s;
     -moz-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.3), 0 2px 6px rgba(0, 0, 0, 0.3);
     -moz-border-radius: 0 0 3px 3px;
 }
 .custom-accordion-control-panel{
-    height: 30px;
+    height: 34px;
+    box-shadow: 0 0 5px;
 }
-.custom-accordion-add-btn{
-    color: #f0f0f0;
+.custom-accordion-data-panel{
+    font-size: 12px;
+    height: calc(100% - 34px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    width: 100%;
+}
+.custom-accordion-add-btn, .custom-accordion-scroll-up-btn, .custom-accordion-scroll-down-btn{
     margin: 5px;
     background: none;
-    text-shadow: 0 1px 1px black;
-    border: none;
     cursor: pointer;
-}
-.custom-accordion-add-btn:hover{
-    color: red;
 }
 .custom-accordion-header, .custom-accordion-content{
     text-align: left;
@@ -1046,8 +1054,8 @@ textarea#shape-datatext{
 .custom-accordion-header:after{
     display: block;
     content: "▾";
-    position: absolute;
     right: 20px;
+    position: absolute;
     margin-top: -12px;
     -moz-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
@@ -1067,6 +1075,12 @@ textarea#shape-datatext{
     padding: 0;
     border: 0;
 }
+.custom-accordion-header .custom-accordion-title-text{
+    background-color: transparent;
+    font-size: 1em;
+    color: white;
+    border: solid 1px gray;
+}
 .custom-accordion-header .custom-accordion-remove-btn{
     position: absolute;
     right: 40px;
@@ -1074,7 +1088,7 @@ textarea#shape-datatext{
 .custom-accordion-header .custom-accordion-remove-btn:hover{
     color: red;
 }
-.custom-accordion-text{
+.custom-accordion-content .custom-accordion-text, .custom-accordion-content img{
     display: none;
 }
 .custom-accordion-content{
@@ -1104,7 +1118,7 @@ textarea#shape-datatext{
     background-image: -webkit-linear-gradient(top, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
     background-image: linear-gradient(to bottom, rgba(230, 230, 230, 0.2), rgba(160, 160, 160, 0.2));
 }
-.custom-accordion-content.status-open .custom-accordion-text{
+.custom-accordion-content.status-open .custom-accordion-text, .custom-accordion-content.status-open img{
     display: block;
 }
 .custom-accordion-content.status-remove {

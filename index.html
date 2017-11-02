@@ -48,7 +48,7 @@
         <div id="info"  class="tab-pane active">
             <input type="text" id="shape-heading"/>
             <h3></h3>
-            <textarea id="shape-datatext"></textarea>
+            <textarea id="shape-datatext" class="default-textarea"></textarea>
             <button id="set-info" class="normal-btn">OK</button>
         </div>
         <div id="form" class="tab-pane">
@@ -415,31 +415,27 @@
     </div>
 </div>
 
+<div id='searchTooltip' class="image-tooltip">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#search-tab1" data-edit="true">Tab1</a>
+        </li>
+    </ul>
+    <div class="ttip">
+        <div id="search-tab1" class="tab-pane active">
+            <p>text from the json search</p>
+            <h3></h3>
+        </div>
+    </div>
+</div>
+
 <div class="image-tooltip" id="custom-accordion-div">
     <div class="custom-accordion-control-panel">
-        <button class="custom-accordion-add-btn">+</button>
+        <img class="custom-accordion-add-btn" src="assets/images/icons/plus-24.png"/>
+        <img class="custom-accordion-scroll-up-btn" src="assets/images/icons/arrow-up-24.png"/>
+        <img class="custom-accordion-scroll-down-btn" src="assets/images/icons/arrow-down-24.png"/>
     </div>
-    <h1 class="custom-accordion-header">
-        <span class="custom-accordion-title">Telefonplan</span>
-        <span class="custom-accordion-remove-btn">&times;</span>
-    </h1>
-    <div class="custom-accordion-content">
-        <textarea class="custom-accordion-text form-control">test01@test.com</textarea>
-    </div>
-    <h1 class="custom-accordion-header">
-        <span class="custom-accordion-title">Telefonplan</span>
-        <span class="custom-accordion-remove-btn">&times;</span>
-    </h1>
-    <div class="custom-accordion-content">
-        <textarea class="custom-accordion-text form-control">test01@test.com</textarea>
-    </div>
-    <h1 class="custom-accordion-header">
-        <span class="custom-accordion-title">Telefonplan</span>
-        <span class="custom-accordion-remove-btn">&times;</span>
-    </h1>
-    <div class="custom-accordion-content">
-        <textarea class="custom-accordion-text form-control">test01@test.com</textarea>
-    </div>
+    <div class="custom-accordion-data-panel"></div>
 </div>
 
 <div class="image-tooltip" id="contactDiv">
