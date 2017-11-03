@@ -329,7 +329,7 @@ function showCalendarFrame(){
         }
     });
     canvas.renderAll();
-    $("#calendar-iframe").show();
+    $("#calendar-iframe").show().find("iframe").attr("src", "calendar");
 }
 
 function hideCalendarFrame(){
@@ -343,5 +343,5 @@ function hideCalendarFrame(){
         }
     });
     canvas.renderAll();
-    $("#calendar-iframe").hide();
+    $("#calendar-iframe").hide().find("iframe").attr("src","");
 }

@@ -1,28 +1,12 @@
-@font-face {
-    font-family: VagRounded;
-    src: url('../fonts/VAGRoundedStd-Black.eot');
-    src: url('../fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('../fonts/VAGRoundedStd-Black.woff') format('woff'), url('../fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('../fonts/VAGRoundedStd-Black.svg') format('svg');
-}
-*{
-    font-family: VagRounded, Helvetica, sans-serif;
-    outline: none;
-}
 :active{
     outline: none;
-}
-body{
-    border: solid 1px gray;
-    width: 700px;
-    height: 500px;
-    padding: 50px;
-    margin: 0 auto;
-    overflow-x: hidden;
 }
 .boundary-layout{
     min-width: 150px;
     min-height: 150px;
     margin: 0 auto;
     position: relative;
+    opacity: .7;
 }
 .boundary-layout .top-boundary,.boundary-layout .left-boundary,.boundary-layout .right-boundary,.boundary-layout .bottom-boundary{
 	word-wrap: break-word;
@@ -38,13 +22,14 @@ body{
     transform-origin: left top;
     width: 10px;
     float: left;
+    margin-left:1.5em;
 }
 .boundary-layout-content{
-    padding: 20px;
     float: left;
-    width: calc(100% - 60px);
-    height: calc(100% - 80px);
+    width: calc(100% - 6em);
+    height: calc(100% - 5em);
     overflow: hidden;
+    margin: -1em 3em;
 }
 .right-boundary{
     -webkit-transform: rotate(90deg);
@@ -57,6 +42,7 @@ body{
     transform-origin: right bottom;
     float: right;
     width: 10px;
+    margin-right: 1.5em;
 }
 .top-boundary, .bottom-boundary{
     width: 100%;

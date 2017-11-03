@@ -13,9 +13,11 @@
 	<!-- Fonts -->
 	<!--<link href="https://fonts.googleapis.com/css?family=Roboto:400,700" rel="stylesheet">-->
 
-	<!-- jQuery UI -->
-	<link rel="stylesheet" href="../assets/css/lib/jquery-ui.min.css">
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="../assets/css/lib/jquery-ui.min.css">
 
+    <!-- text wrap -->
+    <link rel="stylesheet" href="../assets/css/text-wrap.css">
 </head>
 <body>
 
@@ -115,13 +117,18 @@
 	<!-- jQuery UI TouchPunch -->
 	<script type="text/javascript" src="../assets/js/lib/jquery.ui.touch-punch.min.js"></script>
 
-	<!-- CNDCE Accordion -->
-	<script type="text/javascript" src="../assets/js/lib/cndce-accordion.js"></script>
+    <!-- CNDCE Accordion -->
+    <script type="text/javascript" src="../assets/js/lib/cndce-accordion.js"></script>
 
+    <!-- CNDCE Accordion -->
+    <script type="text/javascript" src="../assets/js/app/text-wrap.js"></script>
 
-	<script type="text/javascript">
+    <script type="text/javascript">
 
 		$( '#accordion' ).cndceAccordion(  );
+    $(document).ready(function(){
+        boundary(".section",["left left left leleft left leftle left left left left left left left left left left left left left","top top top top top top top top top top top top top top top top top top top top top top top","right right right right right right right right right right right right right right right right right","bottom bottom bottom botto bottom botto bottom botto bottom bottom bottom bottom bottom bottom bottom"]);
+    });
 
 	</script>
 
