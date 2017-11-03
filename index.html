@@ -425,6 +425,7 @@
         <div id="search-tab1" class="tab-pane active">
             <p>text from the json search</p>
             <h3></h3>
+            <img src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
         </div>
     </div>
 </div>
@@ -582,9 +583,14 @@
     <span class="close-iframe" title="Close">X</span>
 </div>
 
-<div id="left-sidebar"></div>
+<div id="calendar-iframe">
+    <iframe src="calendar"></iframe>
+    <span class="close-iframe" title="Close">X</span>
+</div>
 
-<div id="top-sidebar">
+<div id="left-sidebar" class="sidebar"></div>
+
+<div id="top-sidebar" class="sidebar">
     <div id="topbar-notification">
         <p>Evaluation Mode: You haven't authenticated into an established account. Your documents and information have no password protection, therefore anyone able to use your computer is also able to impersonate you. SSL encryption is active but not a sufficient measure. Within 7 days you must establish an account with a verified email address and two-factor authentication scheme to properly protect your documents and information.</p>
         <button class="normal-btn">Register</button>
@@ -592,7 +598,7 @@
     <span id="close-top-sidebar" title="Close">X</span>
 </div>
 
-<div id="right-sidebar"></div>
+<div id="right-sidebar" class="sidebar"></div>
 
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}

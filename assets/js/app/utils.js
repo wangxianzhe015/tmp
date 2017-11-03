@@ -461,13 +461,44 @@ function regexSearch(parent,txt){
                     }).on("click", function(){
                         $(parent).find(".regex-search-input").val($(this).find(".regex-search-head").html()).focus();
                         $(parent).find(".suggest-list").hide().find("li").show();
+                        mouseOverElement = false;
+                        removeImageTools();
+                    }).on("mouseover", function(){
+                        $(this).parent().find(".search-tooltip-object").removeClass("search-tooltip-object");
+                        $(this).addClass("search-tooltip-object");
+                        mouseOverElement = true;
+                        var dialog = $("#searchTooltip");
+                        var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 50;
+                        var left;
+                        console.log($(this).offset().left - window.scrollX);
+                        console.log(dialog.innerWidth());
+                        if (dialog.innerWidth() < $(this).offset().left - window.scrollX){
+                            left = $(this).offset().left - dialog.innerWidth();
+                        } else {
+                            left = $(this).offset().left + $(this).innerWidth();
+                        }
+                        dialog.css({
+                            top: top > 0 ? top : 0,
+                            left: left
+                        }).attr("data-target", $(this).parents(".regex-search-box").attr("id")).show();
+                    }).on("mouseleave", function(){
+                        mouseOverElement = false;
+                        setTimeout(function(){
+                            if (!mouseOverElement) {
+                                $("#searchTooltip").attr("data-target", "");
+                                removeImageTools();
+                                //$("#" + target).find(".search-tooltip-object").removeClass("search-tooltip-object");
+                            }
+                        }, 1000);
                     }).appendTo(suggestList);
                     $('<p></p>', {
-                        text: word.head
-                    }).attr('class','regex-search-head').appendTo(liTag);
+                        text: word.head,
+                        class: 'regex-search-head'
+                    }).appendTo(liTag);
                     $('<p></p>',{
-                        text: word.tag
-                    }).attr('class', 'regex-search-tagline').appendTo(liTag);
+                        text: word.tag,
+                        class: 'regex-search-tagline'
+                    }).appendTo(liTag);
                 }
             });
             $(parent).find(".remove-suggest-list").show();

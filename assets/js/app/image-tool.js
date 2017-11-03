@@ -215,6 +215,7 @@ function removeImageTools(){
     //$('#imageDialog').hide();
     $('.image-tooltip').hide();
     $('#ui-datepicker-div').hide();
+    $(".search-tooltip-object").removeClass("search-tooltip-object");
     tooltipObject = null;
 
     $(".temp-input").remove();

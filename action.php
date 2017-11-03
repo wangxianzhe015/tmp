@@ -137,7 +137,7 @@ function saveFormations(){
 
 function regexSearch(){
     $text = $_POST['text'];
-    $myFile = fopen("./places-temp.csv", "r") or die("Unable to open file!");
+    $myFile = fopen("./data/places/data.csv", "r") or die("Unable to open file!");
     if ($myFile){
         $result = [];
         while(! feof($myFile))

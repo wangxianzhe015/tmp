@@ -68,6 +68,19 @@ function addChipButton(){
     }).appendTo("#left-sidebar");
 }
 
+function addCalendarButton(){
+    $("<img/>", {
+        id: "calendar-button",
+        src: "./assets/images/icons/calendar-white.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
+    }).on("click", function(){
+        showCalendarFrame();
+    }).appendTo("#left-sidebar");
+}
+
 function addFeedButton(){
     $("<img/>", {
         id: "feed-button",
@@ -302,4 +315,33 @@ function hidePeopleListDiv(){
     if (!mouseOverElement){
         $("#contactDiv").hide();
     }
+}
+
+function showCalendarFrame(){
+    $(".image-tooltip").hide();
+    $(".sidebar").hide();
+    canvas.forEachObject(function(obj){
+        if (obj.class == "element" && obj.visible){
+            obj.set({
+                visible: false,
+                class: "temp-disabled"
+            })
+        }
+    });
+    canvas.renderAll();
+    $("#calendar-iframe").show();
+}
+
+function hideCalendarFrame(){
+    $(".sidebar").show();
+    canvas.forEachObject(function(obj){
+        if (obj.class == "temp-disabled"){
+            obj.set({
+                class: "element",
+                visible: true
+            })
+        }
+    });
+    canvas.renderAll();
+    $("#calendar-iframe").hide();
 }

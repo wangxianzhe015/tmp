@@ -16,6 +16,9 @@ function initHandlers(){
     });
 
     $(document).on("mousemove", function(moveEventOptions){
+        if ($(moveEventOptions.originalEvent.target).find("iframe").length > 0){
+            return;
+        }
         if (moveEventOptions.clientX < 50){
             setTimeout(showLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
@@ -883,6 +886,10 @@ function initHandlers(){
     });
 
     $(".close-iframe").on("click", function(){
+        if ($(this).parents("#calendar-iframe").length > 0){
+            hideCalendarFrame();
+            return;
+        }
         $(this).parent().hide();
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-container").html('<span class="tagger-instruction">By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse.</span>');
@@ -985,38 +992,39 @@ function initHandlers(){
         $(this).parent().find(".start").click();
     });
 
-    $(".custom-accordion-header").on("click", function(e){
-        e.preventDefault();
-        if (e.originalEvent.target.className == "custom-accordion-remove-btn"){
-            $(this).addClass("status-remove");
-            $(this).next().addClass("status-remove");
-            setTimeout(function(){
-                $(".status-remove").remove();
-                saveAccordion();
-            }, 1000);
-            return;
-        }
-        if ($(this).hasClass("status-open")){
-            $(".status-open").removeClass("status-open");
-        } else {
-            $(".status-open").removeClass("status-open");
-            $(this).addClass("status-open");
-            $(this).next().addClass("status-open");
-        }
-        if ($(this).parent().find(".status-open").length == 0){
-            $(this).parents(".image-tooltip").css("height", "50%");
-        } else {
-            $(this).parents(".image-tooltip").css("height", "90%");
-        }
-    });
-
-    $(".custom-accordion-text").on("keyup", function(){
-        saveAccordion();
+    $("#add-element-from-search").on("click", function(){
+        var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = obj.find(".regex-search-head").text(), text = obj.find(".regex-search-tagline").text();
+        addNewCircle(name, "", 0, obj.offset().left - radius, obj.offset().top - radius, text);
+        mouseOverElement = false;
+        removeImageTools();
     });
 
     $(".custom-accordion-add-btn").on("click", function(){
         $("<h1></h1>", {
             class: "custom-accordion-header"
+        }).on("click", function(e){
+            e.preventDefault();
+            if (e.originalEvent.target.className == "custom-accordion-remove-btn"){
+                $(this).addClass("status-remove");
+                $(this).next().addClass("status-remove");
+                setTimeout(function(){
+                    $(".status-remove").remove();
+                    saveAccordion();
+                }, 1000);
+                return;
+            }
+            if ($(this).hasClass("status-open")){
+                $(".status-open").removeClass("status-open");
+            } else {
+                $(".status-open").removeClass("status-open");
+                $(this).addClass("status-open");
+                $(this).next().addClass("status-open");
+            }
+            if ($(this).parent().find(".status-open").length == 0){
+                $(this).parents(".image-tooltip").css("height", "50%");
+            } else {
+                $(this).parents(".image-tooltip").css("height", "90%");
+            }
         }).append($("<span></span>", {
             class: "custom-accordion-title",
             text: "New Key"
@@ -1032,15 +1040,7 @@ function initHandlers(){
                 $(".status-remove").remove();
                 saveAccordion();
             }, 1000);
-        })).on("click", function(){
-            if ($(this).hasClass("status-open")){
-                $(".status-open").removeClass("status-open");
-            } else {
-                $(".status-open").removeClass("status-open");
-                $(this).addClass("status-open");
-                $(this).next().addClass("status-open");
-            }
-        }).appendTo($(this).parent().parent().find(".custom-accordion-data-panel"));
+        })).appendTo($(this).parent().parent().find(".custom-accordion-data-panel"));
 
         $("<div></div>", {
             class: "custom-accordion-content"
