@@ -290,7 +290,7 @@ function showTaggerFrame(){
     $(".image-tooltip").hide();
     var $obj = $("#tagger-iframe");
     $obj.css({
-        top: window.scrollY,
+        top: window.scrollY + 150,
         left: window.scrollX + (window.innerWidth - parseInt($obj.css("width"))) / 2
     }).show();
 }

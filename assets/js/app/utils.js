@@ -470,8 +470,6 @@ function regexSearch(parent,txt){
                         var dialog = $("#searchTooltip");
                         var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 50;
                         var left;
-                        console.log($(this).offset().left - window.scrollX);
-                        console.log(dialog.innerWidth());
                         if (dialog.innerWidth() < $(this).offset().left - window.scrollX){
                             left = $(this).offset().left - dialog.innerWidth();
                         } else {

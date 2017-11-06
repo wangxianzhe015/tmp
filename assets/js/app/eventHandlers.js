@@ -1246,7 +1246,7 @@ function saveAccordion(){
             data: result
         },
         success: function(res){
-            console.log(res);
+            console.log("custom accordion save " + res);
         }
     });
 }
