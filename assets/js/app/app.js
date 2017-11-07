@@ -75,6 +75,7 @@ function init(){
     addFeedButton();
     addUserButton();
     addCalendarButton();
+    addIntegrationButton();
     drawElements();
     loadAllCallbacks();
 

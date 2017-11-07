@@ -81,6 +81,19 @@ function addCalendarButton(){
     }).appendTo("#left-sidebar");
 }
 
+function addIntegrationButton(){
+    $("<img/>", {
+        id: "integration-button",
+        src: "./assets/images/icons/plus-40.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
+    }).on("click", function(){
+        showIntegrationFrame();
+    }).appendTo("#left-sidebar");
+}
+
 function addFeedButton(){
     $("<img/>", {
         id: "feed-button",
@@ -345,3 +358,15 @@ function hideCalendarFrame(){
     canvas.renderAll();
     $("#calendar-iframe").hide().find("iframe").attr("src","");
 }
+
+function showIntegrationFrame(){
+    $(".image-tooltip").hide();
+    $(".sidebar").hide();
+    $("#integration-iframe").show();
+}
+
+function hideIntegrationFrame(){
+    $(".sidebar").show();
+    $("#integration-iframe").hide();
+}
+

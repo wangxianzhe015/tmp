@@ -890,6 +890,10 @@ function initHandlers(){
             hideCalendarFrame();
             return;
         }
+        if ($(this).parents("#integration-iframe").length > 0){
+            hideIntegrationFrame();
+            return;
+        }
         $(this).parent().hide();
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-container").html('<span class="tagger-instruction">By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse.</span>');

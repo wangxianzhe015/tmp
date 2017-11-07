@@ -887,7 +887,7 @@ textarea.default-textarea{
     top: 0;
     right: 0;
 }
-#calendar-iframe{
+#calendar-iframe, #integration-iframe{
     background-color: transparent;
     position: fixed;
     width: 100%;
@@ -896,12 +896,12 @@ textarea.default-textarea{
     text-align: center;
     display: none;
 }
-#calendar-iframe iframe{
+#calendar-iframe iframe, #integration-iframe iframe{
     width: 100%;
     height: 100%;
     border: none;
 }
-#calendar-iframe .close-iframe{
+#calendar-iframe .close-iframe, #integration-iframe .close-iframe{
     background-color: #00bdff;
     padding: 10px;
     color: white;

@@ -122,3 +122,6 @@ li:hover:before{
 .cndce-accordion .section .text-bottom{
 	min-width: 100%;
 }
+.cndce-accordion .text-center{
+    text-align: center;
+}

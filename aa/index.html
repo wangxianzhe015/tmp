@@ -1,0 +1,708 @@
+<html>
+<head>
+  <title>Web Form</title
+<meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="style.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="jquery.tristate.js"></script>
+
+
+
+<script>
+$(document).ready(function() {
+	$('.accordion').find('h4.accordion-toggle').click(function() {
+		$('p.accordion-toggle').parent().parent().find('.accordion-content').slideUp('600');
+		$(this).next().slideToggle('600');
+		var parent_toggle = $(this).parent().parent().parent().parent('.accordion-content');
+		if(parent_toggle.is(":visible"))
+		{
+			//console.log('yes');
+		}
+		else
+		{
+		$(".accordion-content").not($(this).next()).slideUp('600');
+		}
+	});
+	$('p.accordion-toggle').on('click', function() {
+	var abx = $(this).parent().parent().find('.accordion-content');
+	if((abx).is(":visible"))
+	{
+	abx.slideUp('600');
+	}
+	else
+	{
+		abx.slideToggle('600');
+		}
+	});
+	$('.accordion-toggle').on('click', function() {
+	var parent_toggle = $(this).parent().parent().parent().parent();
+		if(parent_toggle.is(":visible"))
+		{
+			console.log('yes');
+		}
+		else
+		{
+		  $(".accordion-toggle").not($(this)).removeClass('active');
+		}
+	
+		$(this).toggleClass('active').siblings().removeClass('active');
+	});
+});
+
+</script>
+</head>
+<body>
+<div class="container-fluid">
+<div class="row">
+	<div class="cell-sm-6 cell-md-3 cell-lg-3 black-back lt_fm">
+		<div class="row">
+			<div class="cell-sm-3 cell-md-6 cell-lg-12 main_1 std1">
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 stdiv_content cell-xs-6" >
+					<p id="slide_settin1">Integrations</p>
+				</div>
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 stdiv_content cell-xs-6">
+					<a href="" id="slide_settin1" class="resetbt"></a>
+				</div>
+				
+			</div>
+		</div>
+		<div class="row main_row-starts">
+			<div class="cell-sm-3 cell-md-6 cell-lg-12 main2 mar-left">
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 cell-xs-8 hlf">
+						<p id="slide_main" class="no-margin">New Integration:</p>
+				</div>
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 cell-xs-4 hlf">
+					<div class="form-group no-margin">
+						
+						  <select class="form_slect" id="sel1">
+							<option>o365</option>							
+							<option>Exchange</option>
+							<option>Dropbox</option>
+							<option>SalesForce</option>
+							<option>S3 Cloud</option>
+							<option>Desktop Client</option>
+						  </select>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+		
+		
+		
+		
+		<div class="row main_row-starts">
+			<div class="cell-sm-3 cell-md-6 cell-lg-12 main2" style="padding: 0;">
+				<div class="cell-sm-3 cell-md-6 cell-lg-12" style="padding: 0;">
+			<div class="accordion">
+			
+			<div class="box">
+			<h4 class="accordion-toggle">Status</h4>
+			<div class="accordion-content">
+				<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Last Updated</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="2017-Oct-30  17:87 EST"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Download Progress</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="85%"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>OCR Queue</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="4,532 items"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Storage Consumed</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="82.4 GB"/>
+					</div>
+					</div>
+					
+
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Repositry</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="10,200 documents"/>
+					</div>
+					</div>
+
+
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Documents Received</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="6,000,435 / 400 GB"/>
+					</div>
+					</div>
+					
+					
+			</div>
+			</div>
+			</div>
+			
+			
+			
+			<div class="box">
+			<h4 class="accordion-toggle">General Options</h4>
+			<div class="accordion-content">
+				<div class="form-group">
+						<label for="">OCR Tolerance</label>
+						  <select class="form_slect" id="sel12">
+							<option>90%</option>
+							<option>95%</option>
+							<option>99%</option>
+						  </select>
+					</div>
+					<div class="form-group">
+						<label for="">De-duplication</label>
+						  <select class="form_slect" id="sel12">
+							<option>Always</option>
+							<option>Exclude .doc\.docx</option>
+							<option>Off</option>
+						  </select>
+					</div>
+					<div class="checkbox">
+					<label><input type="checkbox" value="">Aggressive Mode</label>
+					</div>
+			</div>
+			</div>
+			
+			
+			<!--start section -->
+			<div class="box">
+			<h4 class="accordion-toggle">Office 365</h4>
+			<div class="accordion-content">		
+			<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Email Address</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Password</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					
+						<div class="checkbox">
+						<label>
+						<input type="checkbox" class="color-checkbox" id="drop_p_down1" value="">
+						Sync All Mailboxes
+						</label>
+						</div>
+						
+						
+				<!--paste -->
+					<div class="bbox">
+				<div class="cell-lg-6 cell-md-6 cell-xs-6">
+				<p class="accordion-toggle">Attachment Extensions</p>
+				</div>
+		
+				
+					<div class="accordion-content">
+				
+			<div class="bbox">
+			<div class="border_b">
+		
+				
+				<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">PDF</label>		
+						</div>							
+						<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">DOC/DOCX</label>		
+						</div>							
+						<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">XLS</label>		
+						</div>		
+						
+				</div>
+				</div>
+
+			
+			</div>
+			</div>
+			
+				
+			</div>	
+			</div>
+			</div>
+			<!-- end section -->
+			
+			
+			
+			
+			
+			<!--start section -->
+			<div class="box">
+			<h4 class="accordion-toggle">MS Exchange</h4>
+			<div class="accordion-content">		
+			<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Email Address</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Password</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					
+						<div class="checkbox">
+						<label>
+						<input type="checkbox" class="color-checkbox" id="drop_p_down1" value="">
+						Sync All Mailboxes
+						</label>
+						</div>
+						
+						
+				<!--paste -->
+					<div class="bbox">
+				<div class="cell-lg-6 cell-md-6 cell-xs-6">
+				<p class="accordion-toggle">Attachment Extensions</p>
+				</div>
+		
+				
+					<div class="accordion-content">
+				
+			<div class="bbox">
+			<div class="border_b">
+		
+				
+				<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">PDF</label>		
+						</div>							
+						<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">DOC/DOCX</label>		
+						</div>							
+						<div class="checkbox">
+							<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">XLS</label>		
+						</div>		
+						
+				</div>
+				</div>
+
+			
+			</div>
+			</div>
+			
+				
+			</div>	
+			</div>
+			</div>
+			<!-- end section -->
+			
+			
+			
+			
+			
+			
+			
+			<div class="box">
+			<h4 class="accordion-toggle">Dropbox</h4>
+			<div class="accordion-content">
+				<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Token</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Token Secret</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="81,43"/>
+					</div>
+					</div>
+					
+			</div>
+			</div>
+			</div>
+			
+
+
+			<div class="box">
+			<h4 class="accordion-toggle">Desktop Client</h4>
+			<div class="accordion-content">
+				<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Login ID</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Login Password</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="81,43"/>
+					</div>
+					</div>
+					
+			</div>
+			</div>
+			</div>
+			
+			
+
+			
+			<div class="box">
+			<h4 class="accordion-toggle">Amazon Cloud S3</h4>
+			<div class="accordion-content">
+				<div class="row">
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>API URL</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Bucket</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Bucket Secret</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="81,43"/>
+					</div>
+					</div>
+					
+			</div>
+			</div>
+			</div>
+			
+			
+			
+			<div class="box">
+			<h4 class="accordion-toggle">Sales Force</h4>
+			<div class="accordion-content">
+				<div class="row">
+					<div class="cell-lg-12">
+					<div class="form-group">
+						<label for="">API Connector</label>
+						  <select class="form_slect" id="sel12">
+							<option>v1</option>
+							<option>v2</option>
+							
+						  </select>
+					</div>
+					</div>
+					
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>ClientID</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+					<input type="text" class="numeric_counts" value="96,00,0,540,0"/>
+					</div>
+					</div>
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Client Secret</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+					<input type="text" class="numeric_counts" value="14,57"/>
+					</div>
+					</div>
+					
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Username</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="7500"/>
+					</div>
+					</div>
+					<div class="border_b">
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<p>Password</p>
+					</div>
+					<div class="cell-lg-6 cell-xs-6 cell-md-6">
+						<input type="text" class="numeric_counts" value="81,43"/>
+					</div>
+					</div>
+					
+				</div>
+				
+					
+			</div>
+				</div>	
+						<div id="slide_main1">
+						
+						</div>
+					
+		</div>
+		</div>
+				
+				
+			</div>
+		</div>
+		
+	</div>
+	
+	<div class="cell-sm-6 cell-md-3 cell-lg-3 black-back bc-bk rt_fm">
+			<div class="row">
+			<div class="cell-sm-3 cell-md-6 cell-lg-12 main_1 std1">
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 stdiv_content" >
+					<p id="slide_settin1"> Filters</p>
+				</div>
+				<div class="cell-sm-3 cell-md-6 cell-lg-6 stdiv_content">
+					<a href="" id="slide_settin1" class="resetbt"></a>
+				</div>
+				
+			</div>
+		</div>
+		<div class=" main_row-starts">
+
+			
+				<div class="cell-sm-3 cell-md-6 cell-lg-12 main2" style="padding: 0;">
+				<div class="row">
+					<div class="cell-sm-3 cell-md-6 cell-lg-12" style="padding: 0;">
+						<div class="accordion">
+
+
+						<div class="box">
+									<h4 class="accordion-toggle">Office 365</h4>
+									<div class="accordion-content">		
+									<div class="row">
+											
+											<div class="bbox">
+										<div class="cell-lg-6 cell-md-6 cell-xs-6">
+										<p class="accordion-toggle">Inbox 
+										
+										<input type="checkbox"   value="">
+										</p>
+										</div>
+								
+										
+											<div class="accordion-content">
+										
+									<div class="bbox">
+									<div class="border_b">
+										
+														
+										<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Folder 1</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Folder 2</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Folder 3</label>		
+												</div>		
+												
+										</div>
+										</div>
+
+									
+									</div>
+									</div>
+									
+									
+									<div class="bbox">
+										<div class="cell-lg-6 cell-md-6 cell-xs-6">
+										<p class="accordion-toggle">Custom Folder  
+										<input type="checkbox"   value="">
+										</p>
+										</div>
+								
+										
+											<div class="accordion-content">
+										
+									<div class="bbox">
+									<div class="border_b">
+										
+														
+										<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Sub-Folder 1</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Sub-Folder 2</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Sub-Folder 3</label>		
+												</div>		
+												
+										</div>
+										</div>
+
+									
+									</div>
+									</div>
+									
+									
+										
+										<!--paste -->
+										
+									</div>	
+									</div>
+									</div>
+			
+
+
+
+						</div>
+						
+						
+						<!--Accordian-->
+						
+						
+												<div class="accordion">
+
+
+						<div class="box">
+									<h4 class="accordion-toggle">Dropbox</h4>
+									<div class="accordion-content">		
+									<div class="row">
+											
+											<div class="bbox">
+										<div class="cell-lg-6 cell-md-6 cell-xs-6">
+										<p class="accordion-toggle">JohnSmith\ 
+										
+										<input type="checkbox"   value="">
+										</p>
+										</div>
+								
+										
+											<div class="accordion-content">
+										
+									<div class="bbox">
+									<div class="border_b">
+										
+														
+										<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Conracts</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Disputes</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">International</label>		
+												</div>		
+												
+										</div>
+										</div>
+
+									
+									</div>
+									</div>
+									
+									
+									<div class="bbox">
+										<div class="cell-lg-6 cell-md-6 cell-xs-6">
+										<p class="accordion-toggle">PeterLee\
+										<input type="checkbox"   value="">
+										</p>
+										</div>
+								
+										
+											<div class="accordion-content">
+										
+									<div class="bbox">
+									<div class="border_b">
+										
+														
+										<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">C Drive</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Network Share</label>		
+												</div>							
+												<div class="checkbox">
+													<label><input type="checkbox" class="color-checkbox" id="drop_p_down" value="">Phone Sync</label>		
+												</div>		
+												
+										</div>
+										</div>
+
+									
+									</div>
+									</div>
+									
+									
+										
+										<!--paste -->
+										
+									</div>	
+									</div>
+									</div>
+			
+
+
+
+						</div>
+						
+					</div>
+
+					
+					
+				</div>
+			
+		</div>
+	</div>
+	
+			
+	
+</div>
+
+</div>
+<script>
+$('.rt_fm .checkbox input').tristate();
+</script>
+</body>
+</html>
