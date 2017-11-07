@@ -458,6 +458,7 @@ function regexSearch(parent,txt){
             list.forEach(function(word){
                 if (word !== ''){
                     liTag = $('<li></li>',{
+                        "data-hidden": word['hidden']
                     }).on("click", function(){
                         $(parent).find(".regex-search-input").val($(this).find(".regex-search-head").html()).focus();
                         $(parent).find(".suggest-list").hide().find("li").show();
@@ -475,6 +476,13 @@ function regexSearch(parent,txt){
                         } else {
                             left = $(this).offset().left + $(this).innerWidth();
                         }
+                        $("#search-result-text").html("");
+                        var hidden = $(this).attr("data-hidden").split(',');
+                        hidden.forEach(function(info){
+                            $("<p></p>", {
+                                text: info
+                            }).appendTo(dialog.find("#search-result-text"));
+                        });
                         dialog.css({
                             top: top > 0 ? top : 0,
                             left: left

@@ -140,13 +140,14 @@ function regexSearch(){
     $myFile = fopen("./data/places/data.csv", "r") or die("Unable to open file!");
     if ($myFile){
         $result = [];
-        while(! feof($myFile))
+        while(!feof($myFile))
         {
             $line = fgets($myFile). "<br />";
             $temp = explode(",", $line);
-            $head = $temp[1];
-            if (stripos($head, $text) !== false){
-                array_push($result, ['head'=>$head,'tag'=>$temp[3]]);
+            $head = $temp[0];
+            $head2 = $temp[1];
+            if (stripos($head, $text) !== false || stripos($head2, $text) !== false){
+                array_push($result, ['head'=>$head,'tag'=>$temp[2].", ".$temp[3].", ".$temp[4],'hidden'=>$temp[4].",".$temp[5]]);
             }
         }
         fclose($myFile);

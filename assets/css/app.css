@@ -112,6 +112,12 @@ input[type="checkbox"] {
     position:absolute;
     top:0;
 }
+.text-center{
+    text-align: center;
+}
+.text-right{
+    text-align: right;
+}
 /*button.float{*/
     /*background: linear-gradient(#ccc, #777);*/
     /*border-radius: 5px;*/
