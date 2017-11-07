@@ -147,7 +147,7 @@ function regexSearch(){
             $head = $temp[0];
             $head2 = $temp[1];
             if (stripos($head, $text) !== false || stripos($head2, $text) !== false){
-                array_push($result, ['head'=>$head,'tag'=>$temp[2].", ".$temp[3].", ".$temp[4],'hidden'=>$temp[4].",".$temp[5]]);
+                array_push($result, ['head'=>$head,'tag'=>$temp[2].", ".$temp[3].", ".$temp[4],'hidden'=>$temp[5].",".$temp[6]]);
             }
         }
         fclose($myFile);

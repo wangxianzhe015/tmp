@@ -68,6 +68,12 @@ input[type="checkbox"] {
 .no-padding{
     padding: 0!important;
 }
+.text-center{
+    text-align: center;
+}
+.text-right{
+    text-align: right;
+}
 .pull-right{
     float: right;
 }
@@ -111,12 +117,6 @@ input[type="checkbox"] {
 .canvas-container{
     position:absolute;
     top:0;
-}
-.text-center{
-    text-align: center;
-}
-.text-right{
-    text-align: right;
 }
 /*button.float{*/
     /*background: linear-gradient(#ccc, #777);*/
@@ -179,6 +179,9 @@ button .text{
 }
 .image-tooltip#searchTooltip .ttip{
     background-color: rgba(40,40,40,.2);
+}
+.image-tooltip#searchTooltip .tab-menu>li{
+    width: 50%;
 }
 .ttip{
     -webkit-box-sizing: content-box;
@@ -907,7 +910,7 @@ textarea.default-textarea{
     top: 0;
     right: 0;
 }
-#calendar-iframe, #integration-iframe{
+#calendar-iframe, #integration-iframe, #timeline-iframe{
     background-color: transparent;
     position: fixed;
     width: 100%;
@@ -916,12 +919,12 @@ textarea.default-textarea{
     text-align: center;
     display: none;
 }
-#calendar-iframe iframe, #integration-iframe iframe{
+#calendar-iframe iframe, #integration-iframe iframe, #timeline-iframe iframe{
     width: 100%;
     height: 100%;
     border: none;
 }
-#calendar-iframe .close-iframe, #integration-iframe .close-iframe{
+#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe{
     background-color: black;
     padding: 10px;
     color: white;

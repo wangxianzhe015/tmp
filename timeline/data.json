@@ -1,0 +1,44 @@
+{
+	"items": [
+		{
+			"content": "2008",
+			"subtitleIcon": true,
+			"subtitle": "This is a subtitle"
+		},{
+			
+		},{
+						"content": "Travel Supermarket",
+						"subtitle": "Affiliate Agreement 3/04/2012"
+		},{
+						"content": "Travel Supermarket",
+						"subtitle": "Ammendment 28/06/2012"
+
+		},{
+			"content": "Put HTML content inside me",
+			"subtitleIcon": false,
+			"subtitle": "This is a subtitle without an icon and LOOOOOONG TEXT LONG TEXT LONG TEXT"
+		},{
+			"content": "<img src=\"./assets/sample-image.jpg\" />",
+			"subtitleIcon": "code",
+			"subtitle": "With HTML content"
+		},{
+			"content": "You can choose a different icon",
+			"subtitleIcon": "bicycle",
+			"subtitle": "From FontAwesome library"
+		},{
+			"content": "2009"
+		},{
+			"content": "2010"
+		},{
+			"content": "2012"
+		},{
+			"content": "2013"
+		},{
+			"content": "2014"
+		},{
+			"content": "2015"
+		},{
+			"content": "2016"
+		}
+	]
+}

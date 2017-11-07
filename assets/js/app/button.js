@@ -68,6 +68,19 @@ function addChipButton(){
     }).appendTo("#left-sidebar");
 }
 
+function addTimelineButton(){
+    $("<img/>", {
+        id: "timeline-button",
+        src: "./assets/images/icons/timeline-40.png",
+        class: "icon-button"
+    }).on("mouseover", function(){
+        mouseOverElement = false;
+        removeImageTools();
+    }).on("click", function(){
+        showTimelineFrame();
+    }).appendTo("#left-sidebar");
+}
+
 function addCalendarButton(){
     $("<img/>", {
         id: "calendar-button",
@@ -368,5 +381,16 @@ function showIntegrationFrame(){
 function hideIntegrationFrame(){
     $(".sidebar").show();
     $("#integration-iframe").hide();
+}
+
+function showTimelineFrame(){
+    $(".image-tooltip").hide();
+    $(".sidebar").hide();
+    $("#timeline-iframe").show();
+}
+
+function hideTimelineFrame(){
+    $(".sidebar").show();
+    $("#timeline-iframe").hide();
 }
 

@@ -469,6 +469,8 @@ function regexSearch(parent,txt){
                         $(this).addClass("search-tooltip-object");
                         mouseOverElement = true;
                         var dialog = $("#searchTooltip");
+                        dialog.find(".tab-menu").find("a:first").text($(this).find(".regex-search-head").text());
+                        dialog.find("#search-result-description").find("span").text($(this).find(".regex-search-tagline").text().split(",")[0] + ", " + $(this).find(".regex-search-tagline").text().split(",")[1]);
                         var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 150;
                         var left;
                         if (dialog.innerWidth() < $(this).offset().left - window.scrollX){
@@ -476,13 +478,17 @@ function regexSearch(parent,txt){
                         } else {
                             left = $(this).offset().left + $(this).innerWidth();
                         }
-                        $("#search-result-text").html("");
+                        dialog.find("#search-result-text").html("");
                         var hidden = $(this).attr("data-hidden").split(',');
-                        hidden.forEach(function(info){
-                            $("<p></p>", {
-                                text: info
-                            }).appendTo(dialog.find("#search-result-text"));
-                        });
+                        dialog.find("#search-result-text").append($("<p></p>",{
+                            html: $(this).find(".regex-search-tagline").text().split(",")[2]
+                        }));
+                        dialog.find("#search-result-text").append($("<p></p>",{
+                            html: $(this).attr("data-hidden").split(",")[0]
+                        }));
+                        dialog.find("#search-result-text").append($("<p></p>",{
+                            html: $(this).attr("data-hidden").split(",")[1]
+                        }));
                         dialog.css({
                             top: top > 0 ? top : 0,
                             left: left
