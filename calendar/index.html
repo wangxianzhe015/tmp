@@ -47,8 +47,11 @@
     <script type="text/javascript">
 
 		$( '#accordion' ).cndceAccordion(  );
+        var innerWords = ["SUPREME COURT  WITNESS PREP  BARRISTER FORENSIC GIA EXAM","ALI ROWLING DYLAN GORDON YURY SHAR","STUART IAN MOORE VALERI TAMMY IRINA JASON IP ASSIGNME","44 Bay St  EIN Delaware LLC UK Ltd  ASIC 404"];
+        var outerWords = ["Reuters  Bloomberg  Yummmy Car  Medellin  Freelancer  Bing HR Policy  Delegates Sheet  Sophin TFN  APEC","SAP ADOBE IBM REED MICROSOFT GOOGLE ORACLE ATLASSIAN SALESFORCE DROPBOX 31","Kayak Trip Advisor Amoma Yandex Bing Google Intertrust VISA James Stavrou  Jason Vieges T & C  Love","..cn .de .ru .com .ko .co.r .uk redvat.com detectasum magnify"];
         $(document).ready(function(){
-            boundary(".section",["Reuters  Bloomberg  Yummmy Car  Medellin  Freelancer  Bing HR Policy  Delegates Sheet  Sophin TFN  APEC","SAP ADOBE IBM REED MICROSOFT GOOGLE ORACLE ATLASSIAN SALESFORCE DROPBOX 31","Kayak Trip Advisor Amoma Yandex Bing Google Intertrust VISA James Stavrou  Jason Vieges T & C  Love","..cn .de .ru .com .ko .co.r .uk redvat.com detectasum magnify"]);
+            boundary(".section",outerWords);
+            boundary(".section",innerWords);
         });
 
 	</script>

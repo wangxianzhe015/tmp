@@ -1,7 +1,30 @@
+@font-face
+{
+    font-family: SanFrancisco;
+    src: url('./fonts/SF-UI-Display-Ultralight.eot');
+    src: url('./fonts/SF-UI-Display-Ultralight.eot?#iefix') format('embedded-opentype'), url('./fonts/SF-UI-Display-Ultralight.woff') format('woff'), url('./fonts/SF-UI-Display-Ultralight.ttf') format('truetype'), url('./fonts/SF-UI-Display-Ultralight.svg') format('svg');
+}
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
 :active{
     outline: none;
 }
 .boundary-layout{
+    width: calc(100% - 60px);
+    height: calc(100% - 20px);
+    min-width: 100px;
+    min-height: 150px;
+    margin: 10px auto;
+    position: relative;
+    opacity: .7;
+}
+.boundary-layout.boundary-layout-content{
+    min-width: 50px;
+}
+.inner-boundary-layout{
     width: calc(100% - 60px);
     height: calc(100% - 20px);
     min-width: 130px;
@@ -16,7 +39,12 @@
 	word-wrap: break-word;
     overflow: hidden;
 }
-.left-boundary{
+.boundary-layout .inner-top-boundary,.boundary-layout .inner-left-boundary,.boundary-layout .inner-right-boundary,.boundary-layout .inner-bottom-boundary{
+    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-size: 18px;
+    overflow: hidden;
+}
+.left-boundary, .inner-left-boundary{
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
@@ -29,7 +57,7 @@
     float: left;
     margin-left:1.5em;
 }
-.boundary-layout-content{
+.boundary-layout-content, .inner-boundary-layout-content{
     font-family: SanFrancisco, Helvetica, sans-serif;
     font-size: 30px;
     float: left;
@@ -38,7 +66,7 @@
     overflow: hidden;
     margin: 0 42px;
 }
-.right-boundary{
+.right-boundary, .inner-right-boundary{
     -webkit-transform: rotate(90deg);
     -moz-transform: rotate(90deg);
     -o-transform: rotate(90deg);
@@ -51,7 +79,7 @@
     width: 10px;
     margin-right: 1.5em;
 }
-.top-boundary, .bottom-boundary{
+.top-boundary, .bottom-boundary, .inner-top-boundary, .inner-bottom-boundary{
     width: 99%;
     float: left;
 }
