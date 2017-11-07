@@ -2,9 +2,9 @@
     outline: none;
 }
 .boundary-layout{
-    width: calc(100% - 20px);
+    width: calc(100% - 60px);
     height: calc(100% - 20px);
-    min-width: 150px;
+    min-width: 130px;
     min-height: 150px;
     margin: 10px auto;
     position: relative;
@@ -48,6 +48,6 @@
     margin-right: 1.5em;
 }
 .top-boundary, .bottom-boundary{
-    width: 100%;
+    width: 99%;
     float: left;
 }
