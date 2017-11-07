@@ -2,14 +2,17 @@
     outline: none;
 }
 .boundary-layout{
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
     min-width: 150px;
     min-height: 150px;
-    margin: 0 auto;
+    margin: 10px auto;
     position: relative;
     opacity: .7;
 }
 .boundary-layout .top-boundary,.boundary-layout .left-boundary,.boundary-layout .right-boundary,.boundary-layout .bottom-boundary{
 	word-wrap: break-word;
+    overflow: hidden;
 }
 .left-boundary{
     -webkit-transform: rotate(90deg);

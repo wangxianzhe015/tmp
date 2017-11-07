@@ -9,7 +9,7 @@ function boundary(object, array){
             $object.find(".bottom-boundary").html(array[3]);
             return true;
         }
-        var defaultWidth = "100%", defaultHeight = "100%";
+        //var defaultWidth = "100%", defaultHeight = "100%";
         var $newObject = $("<div></div>", {
             class: "boundary-layout",
             id: "boundary-layout-" + parseInt(Math.random() * 100000000000)
@@ -31,7 +31,7 @@ function boundary(object, array){
         var $leftDiv = $("<div></div>", {
             class: "boundary left-boundary",
             text: array[0]
-        }).css("width", $object.innerHeight()).prependTo($newObject);
+        }).css("width", $object.innerHeight() - 3 * parseInt($object.css("font-size")) - 20).prependTo($newObject);
 
         var $topDiv = $("<div></div>", {
             class: "boundary top-boundary",
@@ -41,7 +41,7 @@ function boundary(object, array){
         var $rightDiv = $("<div></div>", {
             class: "boundary right-boundary",
             text: array[2]
-        }).css("width", $object.innerHeight() - 3 * parseInt($object.css("font-size"))).appendTo($newObject);
+        }).css("width", $object.innerHeight() - 3 * parseInt($object.css("font-size")) - 20).appendTo($newObject);
 
         var $bottomDiv = $("<div></div>", {
             class: "boundary bottom-boundary",
@@ -50,10 +50,10 @@ function boundary(object, array){
 
         // var width = array[1].length > array[3].length ? array[1].length * 7 : array[3].length * 7;
         // var height = array[0].length > array[2].length ? array[0].length * 6 : array[2].length * 6;
-        $newObject.css({
-            width: defaultWidth,
-            height: defaultHeight
-        });
+        //$newObject.css({
+        //    width: defaultWidth,
+        //    height: defaultHeight
+        //});
         //if ($object.hasClass("boundary")){
         //    $newObject.parent().css({
         //        width: defaultWidth + 60

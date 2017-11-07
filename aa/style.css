@@ -2,8 +2,6 @@ html {
     font-size: 10px;
     -webkit-tap-highlight-cellor: rgba(0,0,0,0);
     overflow: hidden;
-}
-html {
     font-family: sans-serif;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
@@ -12,6 +10,7 @@ body
 {
 	padding:0;
 	margin:0;
+    background-color: rgba(0,0,0,.5);
 }
 .main_1 {
     background-color: #212121;
@@ -48,7 +47,8 @@ img#fx_img {
     min-height: 475px !important;
     background: #212121;
     margin: 0;
-    height: 100%;
+    max-width: 308px;
+    height: 50%;
 }
 @media all and (min-width:960px) and (max-width: 1024px) {
 	.black-back {
@@ -105,7 +105,7 @@ img#fx_img {
     font-size: 14px;
     line-height: 1.42857143;
     color: #333;
-    background-color: #fff;
+    background-color: rgba(0,0,0,.5);
 }
 }
 html {

@@ -902,7 +902,7 @@ textarea.default-textarea{
     border: none;
 }
 #calendar-iframe .close-iframe, #integration-iframe .close-iframe{
-    background-color: #00bdff;
+    background-color: black;
     padding: 10px;
     color: white;
     position: absolute;
