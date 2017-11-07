@@ -469,7 +469,7 @@ function regexSearch(parent,txt){
                         $(this).addClass("search-tooltip-object");
                         mouseOverElement = true;
                         var dialog = $("#searchTooltip");
-                        var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 50;
+                        var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 150;
                         var left;
                         if (dialog.innerWidth() < $(this).offset().left - window.scrollX){
                             left = $(this).offset().left - dialog.innerWidth();

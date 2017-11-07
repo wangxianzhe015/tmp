@@ -19,7 +19,6 @@
     min-height: 150px;
     margin: 10px auto;
     position: relative;
-    opacity: .7;
 }
 .boundary-layout.boundary-layout-content{
     min-width: 50px;
@@ -31,11 +30,11 @@
     min-height: 150px;
     margin: 10px auto;
     position: relative;
-    opacity: .7;
 }
 .boundary-layout .top-boundary,.boundary-layout .left-boundary,.boundary-layout .right-boundary,.boundary-layout .bottom-boundary{
     font-family: VagRounded, Helvetica, sans-serif;
     font-size: 14px;
+    font-weight: 100;
 	word-wrap: break-word;
     overflow: hidden;
 }
@@ -43,6 +42,10 @@
     font-family: SanFrancisco, Helvetica, sans-serif;
     font-size: 18px;
     overflow: hidden;
+}
+.boundary-layout [class*='-boundary']{
+    text-align: justify;
+    text-align-last: justify;
 }
 .left-boundary, .inner-left-boundary{
     -webkit-transform: rotate(90deg);

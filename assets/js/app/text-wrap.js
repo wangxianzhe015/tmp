@@ -35,16 +35,16 @@ function boundary(object, array){
         $newObject.html("<div class='boundary " + classPrefix+ "boundary-layout-content'>" + words + "</div>");
         if (isMultiple){
             $object.find(".boundary-layout-content").replaceWith($newObject);
-            height = $newObject.innerHeight();
+            height = $newObject.innerHeight() - 3 * parseInt($object.css("font-size"));
         } else {
             $newObject.prependTo($object);
-            height = $object.innerHeight();
+            height = $object.innerHeight() - 3 * parseInt($object.css("font-size")) - 20;
         }
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "left-boundary",
             text: array[0]
-        }).css("width", height - 3 * parseInt($object.css("font-size")) - 20).prependTo($newObject);
+        }).css("width", height).prependTo($newObject);
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "top-boundary",
@@ -54,7 +54,7 @@ function boundary(object, array){
         $("<div></div>", {
             class: "boundary " + classPrefix+ "right-boundary",
             text: array[2]
-        }).css("width", height - 3 * parseInt($object.css("font-size")) - 20).appendTo($newObject);
+        }).css("width", height).appendTo($newObject);
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "bottom-boundary",
