@@ -18,6 +18,10 @@
 <img id="background-image" src=""/>
 <!--<img id="background-image" src="http://eskipaper.com/images/simple-dark-background-1.jpg"/>-->
 
+<div class="drawing" id="loading">
+    <div class="loading-dot"></div>
+</div>
+
 <canvas id="c"></canvas>
 <div id='imageDialog' class="image-tooltip">
     <ul class="top tab-menu">
@@ -609,10 +613,6 @@
 </div>
 
 <div id="right-sidebar" class="sidebar"></div>
-
-<div class="drawing" id="loading">
-    <div class="loading-dot"></div>
-</div>
 
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}

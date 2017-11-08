@@ -13,6 +13,8 @@ function initHandlers(){
                 el.style.top = "-" + window.pageYOffset + "px";
             }
         }
+    }).on("load", function(){
+        hideLoadingDiv();
     });
 
     $(document).on("mousemove", function(moveEventOptions){

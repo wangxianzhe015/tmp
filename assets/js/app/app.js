@@ -82,7 +82,6 @@ function init(){
 
     loadFormations();
     loadPeople();
-    setTimeout(hideLoadingDiv, 1000);
 }
 
 
