@@ -1001,8 +1001,9 @@ function initHandlers(){
     });
 
     $("#add-element-from-search").on("click", function(){
-        var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = obj.find(".regex-search-head").text(), text = obj.find(".regex-search-tagline").text();
-        addNewCircle(name, "", 0, obj.offset().left - radius, obj.offset().top - radius, text);
+        //var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = obj.find(".regex-search-head").text(), text = obj.find(".regex-search-tagline").text();
+        var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = $("#searchTooltip").find("#search-result-head").val(), text = $("#searchTooltip").find("#search-result-description").val();
+        addNewRectangle(name, "", 0, obj.offset().left - 75, obj.offset().top - 15, text);
         mouseOverElement = false;
         removeImageTools();
     });

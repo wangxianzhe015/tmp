@@ -326,7 +326,7 @@
             </div>
             <div class="form-group">
                 <label for="background-pattern">Pattern</label>
-                <input type="text" id="background-pattern" class="form-control" value="http://eskipaper.com/images/simple-dark-background-1.jpg"/>
+                <input type="text" id="background-pattern" class="form-control" value="http://localhost/assets/001.jpg"/>
                 <!--<input type="text" id="background-pattern" class="form-control" value="https://red-moristems.rhcloud.com/test.jpg"/>-->
             </div>
             <div class="form-group">
@@ -417,19 +417,17 @@
 </div>
 
 <div id='searchTooltip' class="image-tooltip">
-    <ul class="tab-menu">
-        <li class="active">
-            <a data-tab="#search-tab1" data-edit="true">Tab1</a>
-        </li>
-    </ul>
     <div class="ttip">
-        <div id="search-tab1" class="tab-pane active">
-            <div id="search-result-description">
-                <span></span>
-                <img class="pull-right" src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
-            </div>
-            <h3></h3>
-            <div id="search-result-text"></div>
+        <div class="form-group no-margin">
+            <input type="text" id="search-result-head" class="form-control no-margin width-half"/>
+            <img class="pull-right" src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
+        </div>
+        <div class="form-group no-margin">
+            <textarea id="search-result-description" class="form-control"></textarea>
+        </div>
+        <h3></h3>
+        <div class="form-group">
+            <span id="search-result-text" class="form-control"></span>
         </div>
     </div>
 </div>
@@ -611,6 +609,10 @@
 </div>
 
 <div id="right-sidebar" class="sidebar"></div>
+
+<div class="drawing" id="loading">
+    <div class="loading-dot"></div>
+</div>
 
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}

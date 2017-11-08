@@ -606,6 +606,82 @@ function addNewCircle(name, type, index, left, top, datatext){
     return element.id;
 }
 
+function addNewRectangle(name, type, index, left, top, datatext){
+    var myCircle = new fabric.Circle({radius: Math.sqrt(3) * (radius - border / 2) / 2, fill: elementColor, opacity:.5});
+    var rect = new fabric.Rect({
+        originX: "center",
+        originY: "center",
+        left: 0,
+        top: 0,
+        width: 150,
+        height: 30,
+        fill: "rgba(21,45,65,.8)"
+    });
+    var text = new fabric.IText(name, {
+        fontSize: 12,
+        textAlign: "center",
+        left: 0,
+        top: 0,
+        originX: "center",
+        originY: "center",
+        lineHeight: 12,
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold',
+        fill: '#FFF',
+        opacity:1
+    });
+
+    var formatted = wrapCanvasText(text, canvas, 150, 30, 'center');
+
+    var element = new fabric.Group([rect, formatted], {
+        originX: "center",
+        originY: "center",
+        hasBorders: false,
+        cornerStyle: 'circle',
+        cornerColor: 'white',
+        class: "element",
+        category: "circle",
+        id: nameElement('new',canvas.getObjects().length),
+        progress: '100',
+        tags: [],
+        comments: [],
+        checklistLabel: [],
+        checklistCheckbox: [],
+        jsonObjects: []
+    });
+    element.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: false,
+        mr: false,
+        tr: false,
+        tl: false,
+        br: false,
+        bl: false
+    });
+
+    if (type == "batch"){
+        element.left = downPoint.x;
+        element.top = downPoint.y + Math.sqrt(3) * radius * index;
+        element.cluster = "temp";
+        element.datatext = "Edit";
+    } else {
+        element.left = left;
+        element.top = top;
+        element.cluster = "";
+        element.datatext = datatext;
+    }
+
+    canvas.add(element);
+
+    elementsInfo[element.id] = {
+        x: element.left,
+        y: element.top
+    };
+
+    return element.id;
+}
+
 function addOneElement(object){
     var element = constructElement(object);
     canvas.add(element);
