@@ -417,7 +417,7 @@ function initHandlers(){
         } else {
             $('.canvas-container').css('background', '');
         }
-    }).click();
+    });
 
     $("#pattern-parallax-check").on("click", function(){
         if ($(this).prop('checked')){
@@ -444,7 +444,11 @@ function initHandlers(){
 
     $("#shape-heading").on("blur", function(){
         if (tooltipObject != null) {
-            tooltipObject.item(1).text = getWrappedCanvasText($(this).val(), canvas, radius, radius, 'center');
+            if (tooltipObject.category == "rect"){
+                tooltipObject.item(1).text = getWrappedCanvasText($(this).val(), canvas, radius, radius, 'center');
+            } else {
+                tooltipObject.item(1).text = getWrappedCanvasText($(this).val(), canvas, radius, radius, 'center');
+            }
             canvas.renderAll();
         }
     });

@@ -1,5 +1,7 @@
 <?php
 
+include_once('inc/simplexlsx.class.php');
+
 if (isset($_POST['action'])){
     $action = $_POST['action'];
 } else {
@@ -137,24 +139,37 @@ function saveFormations(){
 
 function regexSearch(){
     $text = $_POST['text'];
-    $myFile = fopen("./data/places/data.csv", "r") or die("Unable to open file!");
-    if ($myFile){
-        $result = [];
-        while(!feof($myFile))
-        {
-            $line = fgets($myFile). "<br />";
-            $temp = explode(",", $line);
-            $head = $temp[0];
-            $head2 = $temp[1];
-            if (stripos($head, $text) !== false || stripos($head2, $text) !== false){
-                array_push($result, ['head'=>$head,'tag'=>$temp[2]." | ".$temp[3]." | ".$temp[4],'hidden'=>$temp[5]." | ".$temp[6]]);
+    $xlsx = new SimpleXLSX('./data/places/data.xlsx');
+
+    $result = [];
+    try {
+        foreach ($xlsx->rows() as $row) {
+            $head = $row[0];
+            $head2 = $row[1];
+            if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
+                $tag = ""; $hidden = "";
+                if (isset($row[2])){
+                    $tag = $row[2];
+                }
+                if (isset($row[3])){
+                    $tag = $tag . " | ". $row[3];
+                }
+                if (isset($row[4])){
+                    $tag = $tag . " | ". $row[4];
+                }
+                if (isset($row[5])){
+                    $hidden = $row[5];
+                }
+                if (isset($row[6])){
+                    $hidden = $hidden . " | ". $row[6];
+                }
+                array_push($result, ['head' => $head, 'tag' => $tag, 'hidden' => $hidden]);
             }
         }
-        fclose($myFile);
-        echo json_encode($result);
-    } else {
-        echo "fail";
+    } catch (Exception $e) {
+        echo $e;
     }
+    echo json_encode($result);
 }
 
 function loadPeople(){

@@ -577,5 +577,8 @@ function hideRightSidebar(){
 }
 
 function hideLoadingDiv(){
-    $("#loading").fadeOut();
+    $("#loading").fadeOut(500);
+    setTimeout(function(){
+        $("#pattern-tint-check").click();
+    },500);
 }

@@ -117,6 +117,7 @@ input[type="checkbox"] {
 .canvas-container{
     position:absolute;
     top:0;
+    transition: all .5s;
 }
 .drawing{
     width: 100vw;
@@ -606,6 +607,7 @@ button .text{
 }
 .tab-pane{
     display:none;
+    height: 100%;
 }
 .tab-pane.active{
     display: block;

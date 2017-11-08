@@ -447,7 +447,16 @@ function getElementName(type){
                 }
             });
             $("#new-element-div").hide();
-            clusterElements('temp');
+            if (names.length == 1){
+                canvas.forEachObject(function(obj){
+                    if (obj.cluster = "temp"){
+                        obj.cluster = "";
+                    }
+                });
+                delete clusters.temp;
+            } else {
+                clusterElements('temp');
+            }
         }
     };
 
@@ -614,7 +623,7 @@ function addNewRectangle(name, type, index, left, top, datatext){
         top: 0,
         width: 150,
         height: 30,
-        fill: "rgba(21,45,65,.8)"
+        fill: rectColor
     });
     var text = new fabric.IText(name, {
         fontSize: 12,
@@ -809,7 +818,7 @@ function cloneElement(object){
             left: object._objects[0].left,
             top: object._objects[0].top
         });
-    } else {
+    } else if (object.category == "hexagon"){
         var points = regularPolygonPoints(6, radius - border / 2);
         poly = new fabric.Polygon(points, {
             stroke: object._objects[0].stroke,
@@ -820,6 +829,16 @@ function cloneElement(object){
             opacity:object._objects[0].opacity,
             fill: object._objects[0].fill
         }, false);
+    } else {
+        poly = new fabric.Rect({
+            originX: "center",
+            originY: "center",
+            left: object._objects[0].left,
+            top: object._objects[0].top,
+            width: object._objects[0].width,
+            height: object._objects[0].height,
+            fill: object._objects[0].fill
+        });
     }
 
     var text1 = new fabric.Text(object._objects[1].text, {
@@ -836,7 +855,12 @@ function cloneElement(object){
         opacity:object._objects[1].opacity
     });
 
-    var formatted = wrapCanvasText(text1, canvas, radius, radius, 'center');
+    var formatted;
+    if (object.category == "rect"){
+        formatted = wrapCanvasText(text1, canvas, 150, 30, 'center');
+    } else {
+        formatted = wrapCanvasText(text1, canvas, radius, radius, 'center');
+    }
 
     var newID = nameElement('clone',object.id);
     var element = new fabric.Group([poly, formatted], {

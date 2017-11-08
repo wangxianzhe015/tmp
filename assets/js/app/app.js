@@ -4,6 +4,7 @@ var border = 2;
 var effectDepth = 2;
 var gridColor = "rgb(24,25,27)";
 var elementColor = "rgba(255,255,255,.8)";
+var rectColor = "rgba(21,45,65,.8)";
 var borderColor = "rgba(13,13,13,0)";
 var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
