@@ -152,7 +152,7 @@ function regexSearch(){
                     $tag = $row[2];
                 }
                 if (isset($row[3])){
-                    $tag = $tag . " | ". $row[3];
+                    $tag = $tag . " | ". date("d-M-Y", ($row[3] - 25569) * 86400);
                 }
                 if (isset($row[4])){
                     $tag = $tag . " | ". $row[4];
