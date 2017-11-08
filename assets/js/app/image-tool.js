@@ -27,6 +27,12 @@ function showImageTools (e, parent) {
     dialog.find("#shape-datatext").val(txt.datatext);
     dialog.find("#bar").css('width',txt.progress+'%');
 
+    if (tooltipObject.category == "rect"){
+        dialog.addClass("second");
+    } else {
+        dialog.removeClass("second");
+    }
+
     composeTagsTab(txt);
 
     composeChecklistTab(txt);

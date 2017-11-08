@@ -420,18 +420,24 @@
     </div>
 </div>
 
-<div id='searchTooltip' class="image-tooltip">
+<div id='searchTooltip' class="image-tooltip second">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#search-result"></a>
+        </li>
+    </ul>
     <div class="ttip">
-        <div class="form-group no-margin">
-            <input type="text" id="search-result-head" class="form-control no-margin width-half"/>
-            <img class="pull-right" src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
-        </div>
-        <div class="form-group no-margin">
-            <textarea id="search-result-description" class="form-control"></textarea>
-        </div>
-        <h3></h3>
-        <div class="form-group">
-            <span id="search-result-text" class="form-control"></span>
+        <div id="search-result" class="tab-pane active">
+            <div class="form-group no-margin text-right">
+                <img src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
+            </div>
+            <div class="form-group no-margin">
+                <textarea id="search-result-description" class="form-control"></textarea>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <span id="search-result-text" class="form-control"></span>
+            </div>
         </div>
     </div>
 </div>

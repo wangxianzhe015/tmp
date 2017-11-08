@@ -607,7 +607,6 @@ function addNewCircle(name, type, index, left, top, datatext){
 }
 
 function addNewRectangle(name, type, index, left, top, datatext){
-    var myCircle = new fabric.Circle({radius: Math.sqrt(3) * (radius - border / 2) / 2, fill: elementColor, opacity:.5});
     var rect = new fabric.Rect({
         originX: "center",
         originY: "center",
@@ -640,7 +639,7 @@ function addNewRectangle(name, type, index, left, top, datatext){
         cornerStyle: 'circle',
         cornerColor: 'white',
         class: "element",
-        category: "circle",
+        category: "rect",
         id: nameElement('new',canvas.getObjects().length),
         progress: '100',
         tags: [],

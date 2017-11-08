@@ -469,7 +469,7 @@ function regexSearch(parent,txt){
                         $(this).addClass("search-tooltip-object");
                         mouseOverElement = true;
                         var dialog = $("#searchTooltip");
-                        dialog.find("#search-result-head").val($(this).find(".regex-search-head").text());
+                        dialog.find(".tab-menu").find("a").text($(this).find(".regex-search-head").text());
                         dialog.find("#search-result-description").val($(this).find(".regex-search-tagline").text().split(" | ")[0] + ", " + $(this).find(".regex-search-tagline").text().split(" | ")[1]);
                         var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 150;
                         var left;

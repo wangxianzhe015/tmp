@@ -14,7 +14,7 @@ function initHandlers(){
             }
         }
     }).on("load", function(){
-        hideLoadingDiv();
+        setTimeout(hideLoadingDiv, 2000);
     });
 
     $(document).on("mousemove", function(moveEventOptions){
@@ -409,7 +409,7 @@ function initHandlers(){
             //canvas.renderAll();
         }
 
-    });
+    }).click();
 
     $("#pattern-tint-check").on("click", function(){
         if ($(this).prop('checked')){
@@ -417,7 +417,7 @@ function initHandlers(){
         } else {
             $('.canvas-container').css('background', '');
         }
-    });
+    }).click();
 
     $("#pattern-parallax-check").on("click", function(){
         if ($(this).prop('checked')){
@@ -431,7 +431,7 @@ function initHandlers(){
                 height: 2 * window.innerHeight
             });
         }
-    });
+    }).click();
 
     $("#grid-show-check").on("click", function(){
         var check = $(this).prop('checked');
@@ -1004,8 +1004,8 @@ function initHandlers(){
 
     $("#add-element-from-search").on("click", function(){
         //var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = obj.find(".regex-search-head").text(), text = obj.find(".regex-search-tagline").text();
-        var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = $("#searchTooltip").find("#search-result-head").val(), text = $("#searchTooltip").find("#search-result-description").val();
-        addNewRectangle(name, "", 0, obj.offset().left - 75, obj.offset().top - 15, text);
+        var dialog = $("#searchTooltip"), obj = $("#" + dialog.attr("data-target")).find(".search-tooltip-object"), name = dialog.find(".tab-menu").find("a").text(), text = dialog.find("#search-result-description").val();
+        addNewRectangle(name, "", 0, dialog.offset().left + 75, dialog.offset().top + 15, text);
         mouseOverElement = false;
         removeImageTools();
     });

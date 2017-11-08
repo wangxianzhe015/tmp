@@ -479,9 +479,6 @@ button .text{
     font-size:10px;
     padding: 0 10px;
 }
-.image-tooltip#searchTooltip .ttip{
-    background-color: rgba(40,40,40,.2);
-}
 .image-tooltip#searchTooltip .tab-menu>li{
     width: 50%;
 }
@@ -509,6 +506,9 @@ button .text{
     filter: alpha(opacity=50);
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
     z-index: 2;
+}
+.second .ttip{
+    background-color: rgba(40,40,40,.2);
 }
 .ttip p, .ttip h3{
     /*font-family: "Abel", Helvetica, sans-serif;*/
