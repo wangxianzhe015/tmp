@@ -11,7 +11,7 @@ canvas.on('mouse:over', function(e) {
         return false;
     }
     if (e.target != null && e.target.class == "element") {
-        if (tooltipObject != null || mouseOverElement){
+        if ((tooltipObject != null && tooltipObject.id == e.target.id) || mouseOverElement){
             return false;
         }
         var coords = getObjPosition(e.target);

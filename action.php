@@ -45,6 +45,12 @@ switch ($action) {
     case 'save-tagger':
         saveTagger();
         break;
+    case 'load-tagger-names':
+        loadTaggerNames();
+        break;
+    case 'load-tagger-app':
+        loadTaggerApp();
+        break;
     case 'save-accordion':
         saveAccordion();
         break;
@@ -214,13 +220,33 @@ function savePeople(){
 
 function saveTagger(){
     $data = json_encode($_POST['data']);
-    $myFile = fopen("./data/tagger/data.json", "wr") or die("Unable to open file!");
+    $name = $_POST['name'];
+    $myFile = fopen("./data/tagger/$name", "wr") or die("Unable to open file!");
     if ($myFile) {
         fwrite($myFile, $data);
         fclose($myFile);
         echo "success";
     } else {
         echo 'fail';
+    }
+}
+
+function loadTaggerNames() {
+    $path = "./data/tagger/";
+    $files = scandir($path);
+
+    echo json_encode($files);
+}
+
+function loadTaggerApp(){
+    $name = $_POST['name'];
+    $myFile = fopen("./data/tagger/$name", "r") or die("Unable to open file!");
+    if ($myFile) {
+        $content = fread($myFile, filesize("./data/tagger/$name"));
+        fclose($myFile);
+        echo $content;
+    } else {
+        echo "fail";
     }
 }
 

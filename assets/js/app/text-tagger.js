@@ -148,7 +148,7 @@
             text: "X"
         }).on("click", function(e){
             $("#tagger-keyword-div").hide();
-            var sel = window.getSelection(), data = sel.toString(), $obj = $(sel.focusNode.parentNode), $container = $obj.parents(".tagger-container");
+            var sel = window.getSelection(), data = sel.toString(), $obj = $(sel.focusNode.parentNode), $container = $obj.parents(".tagger-content");
             if (data != "") {
                 $("#" + $obj.attr("id") + "-keyword").remove();
                 $obj.replaceWith(data);
@@ -183,6 +183,31 @@
         $obj.html($obj.html());
     }
 
+    function updateTaggerApps($obj){
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            data: {
+                action: "load-tagger-names"
+            },
+            success: function(res){
+                if (res != "fail") {
+                    var names = $.parseJSON(res);
+                    $obj.next().html("");
+                    names.forEach(function (name) {
+                        if (name != "." && name != ".." && name != ".gitignore") {
+                            $("<option></option>", {
+                                text: name,
+                                value: name
+                            }).appendTo($obj.next());
+                        }
+                    });
+                    $obj.next().show();
+                }
+            }
+        });
+    }
+
     $.fn.textTagger = function(options) {
         var playground = $("<div></div>", {
             class: "playground"
@@ -190,18 +215,20 @@
 
         $(this).addClass("tagger-container").appendTo(playground);
 
-        playground.append($("<div></div>", {
+        var rightPanel = $("<div></div>", {
             class: "tagger-keyword-right-panel"
-        })).prepend($("<div></div>", {
+        });
+        var leftPanel = $("<div></div>", {
             class: "tagger-keyword-left-panel"
-        }));
+        });
+        playground.append(rightPanel).prepend(leftPanel);
 
         keywords.forEach(function(word){
             $("<div></div>",{
                 id: word + "-keyword",
                 class: "tagger-highlight-keyword",
                 text: word
-            }).appendTo(".tagger-keyword-left-panel");
+            }).appendTo(leftPanel);
         });
 
         $("<div></div>", {
@@ -222,6 +249,15 @@
             //$(".tagger-highlight-keyword").each(function(i, obj){
             //    if ($(obj).html() == "Hint") hintCheck = true;
             //});
+            var app_name = $("#tagger-app-name").val();
+            if (app_name == ""){
+                $(".tagger-notification-panel").html("Input App Name!!!");
+                setTimeout(function(){
+                    $(".tagger-notification-panel").html("");
+                }, 3000);
+                return false;
+            }
+            $(this).prev().val("");
             if (!$("#Hint-keyword").hasClass("selected")){
                 $(".tagger-notification-panel").html("Hint Not Checked!!!");
                 setTimeout(function(){
@@ -253,7 +289,8 @@
                 url: "action.php",
                 data: {
                     "action": "save-tagger",
-                    data: list
+                    data: {"json": list, "full": $(this).parent().prev().find(".tagger-content").html()},
+                    name: app_name
                 },
                 type: "POST",
                 success: function(){
@@ -264,7 +301,83 @@
                 }
             });
             $(".tagger-icon-cut").show();
-        })).insertAfter(playground);
+        }).hide()).append($("<button></button>", {
+            class: "tagger-app-init-btn"
+        }).on("click", function(){
+            var playground = $(this).parent().prev();
+            playground.find(".tagger-content").html('By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse. Or you can open saved one by clicking "Open" button.').addClass("init");
+            playground.find(".tagger-loading-div").show();
+            playground.find(".tagger-keyword-left-panel").find(".tagger-highlight-keyword").removeClass("selected");
+            $(this).parent().find(".image-btn").hide();
+        }).hide()).insertAfter(playground);
+
+        var taggerLoadingDiv = $("<div></div>", {
+            class: "tagger-loading-div"
+        }).appendTo($(this));
+
+        $("<button></button>", {
+            class: "btn",
+            text: "Open"
+        }).on("click", function(){
+            updateTaggerApps($(this));
+        }).appendTo(taggerLoadingDiv);
+
+        $("<select></select>", {
+            class: "tagger-apps-select"
+        }).on("click", function(){
+            $(this).next().show();
+        }).appendTo(taggerLoadingDiv);
+
+        $("<button></button>", {
+            class: "btn tagger-app-load-confirm",
+            text: "Confirm"
+        }).on("click", function(){
+            var appName = $(this).prev().val();
+            var that = $(this);
+            $.ajax({
+                url: "action.php",
+                type: "POST",
+                data: {
+                    action: "load-tagger-app",
+                    name: appName
+                },
+                success: function(res){
+                    var text = $.parseJSON(res).full, obj = that.parents(".tagger-loading-div").prev();
+                    that.hide().prev().hide().parent().fadeOut();
+                    that.parents(".playground").next().find(".image-btn").show();
+                    obj.removeClass("init").html(text);
+                    obj.find("code").each(function(i, tag){
+                        $("#"+$(tag).attr("data-keyword")+"-keyword").addClass("selected");
+                        $(tag).on({
+                            click: function(){
+                                $("#"+$(this).attr("data-keyword")+"-keyword").addClass("selected");
+                                $("#tagger-keyword-div").attr("data-target", $(this).attr("id")).css({
+                                    left: this.getBoundingClientRect().left,
+                                    top: this.getBoundingClientRect().bottom
+                                }).show();
+                            },
+                            mouseover: function(e){
+                                if (window.getSelection().toString() != "") return false;
+                                var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                                $objects.each(function(i,el){
+                                    $obj = $("#"+$(el).attr("data-keyword")+"-keyword");
+                                    //if ($obj.html() == "") return false;
+                                    $obj.addClass("hover");
+                                });
+                            },
+                            mouseout: function(e){
+                                var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                                $objects.each(function(i,el){
+                                    $obj = $("#"+$(el).attr("data-keyword")+"-keyword");
+                                    //if ($obj.html() == "") return false;
+                                    $obj.removeClass("hover");
+                                });
+                            }
+                        });
+                    });
+                }
+            });
+        }).appendTo(taggerLoadingDiv);
 
         if ($(this).find(".tagger-icons-container").length == 0){
             addTaggerIcons($(this).attr("id"));
@@ -353,8 +466,12 @@
         }).on("paste", function(e){
             var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
             window.document.execCommand("insertText", false, clipboardData);
-
-            $(this).find(".tagger-instruction").remove();
+            if (clipboardData == "") return false;
+            $(this).parents(".playground").next().find(".image-btn").show();
+            if ($(this).find(".tagger-content").hasClass("init")){
+                $(this).find(".tagger-content").html("").removeClass("init");
+                $(this).find(".tagger-loading-div").fadeOut();
+            }
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range;
                 if (sel.rangeCount) {
@@ -375,7 +492,7 @@
                 document.selection.empty();
             }
 
-            $(this).html($(this).html());
+            //$(this).html($(this).html());
         });
     };
 

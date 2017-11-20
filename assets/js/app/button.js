@@ -113,7 +113,7 @@ function addFeedButton(){
         src: "./assets/images/icons/feed-24.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
+        mouseOverElement = true;
         removeImageTools();
         showFeedDiv();
     }).on("mouseleave", function(){
