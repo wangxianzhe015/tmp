@@ -1001,6 +1001,35 @@ function initHandlers(){
         placeholder: "Bcc"
     });
 
+    $("#message-send-btn").on("click", function(){
+        var message = {};
+        message.to = $("#message-to-address").val();
+        message.date = $("#message-date").val();
+        message.subject = $("#message-subject").val();
+        message.bcc = [];
+        message.content = $("#message-body").val();
+        var cc_list_tags = $("#message-cc-select").next().find("li.selected").find("input");
+        cc_list_tags.each(function(i,el){
+            message.bcc.push($(el).val());
+        });
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            data: {
+                action: "send-email",
+                data: message
+            },
+            success: function(res){
+                console.log(res);
+                if (res == "fail"){
+                    alert("Fail", "Sending E-mail failed");
+                } else {
+                    alert("Success", "Sending E-mail succeeded");
+                }
+            }
+        });
+    });
+
     $(".upload-plus").on("click", function(){
         $(this).parent().find("input[type='file']").click();
     });

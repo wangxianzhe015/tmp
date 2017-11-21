@@ -54,6 +54,9 @@ switch ($action) {
     case 'save-accordion':
         saveAccordion();
         break;
+    case 'send-email':
+        sendEmail();
+        break;
 }
 
 function save(){
@@ -266,4 +269,28 @@ function saveAccordion(){
     } else {
         echo 'fail';
     }
+}
+
+function sendEmail(){
+    $data = $_POST['data'];
+    $to = $data['to'];
+    $date = $data['date'];
+    $subject = $data['subject'];
+    $bcc = $data['bcc'];
+    $content = $data['content'];
+
+    $headers = "From: " . "test@yahoo.com" . "\r\n";
+    $headers .= "Reply-To: ". strip_tags($_POST['req-email']) . "\r\n";
+    foreach ($bcc as $addr) {
+        $headers .= "BCC: $addr\r\n";
+    }
+    $headers .= "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+    if (mail($to, $subject, $content, $headers)) {
+        echo 'success';
+    } else {
+        echo 'fail';
+    }
+
 }
