@@ -287,6 +287,12 @@ function sendEmail(){
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
+    ini_set("smtp_server", "smtp.mail.yahoo.com");
+    ini_set("smtp_port", 465);
+    ini_set("auth_username", "vipin_misura@yahoo.com");
+    ini_set("auth_password", "dreams@paradise23");
+    ini_set("force_sender", "vipin_misura@yahoo.com");
+
     if (mail($to, $subject, $content, $headers)) {
         echo 'success';
     } else {
