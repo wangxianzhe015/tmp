@@ -1,6 +1,10 @@
 <?php
 
 include_once('inc/simplexlsx.class.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\SMTP;
+require 'vendor/autoload.php';
 
 if (isset($_POST['action'])){
     $action = $_POST['action'];
@@ -279,24 +283,31 @@ function sendEmail(){
     $bcc = $data['bcc'];
     $content = $data['content'];
 
-    $headers = "From: " . "test@yahoo.com" . "\r\n";
-    $headers .= "Reply-To: ". strip_tags("test@yahoo.com") . "\r\n";
+    // PHPMailer
+    $mail = new PHPMailer();
+    $mail->isSMTP();                                    // Set mailer to use SMTP
+    $mail->Host = 'smtp.mail.yahoo.com';                // Specify main and backup SMTP servers
+    $mail->SMTPAuth = true;                             // Enable SMTP authentication
+    $mail->Username = 'newdream@yahoo.com';             // SMTP username
+    $mail->Password = 'qwert12345';                     // SMTP password
+    $mail->SMTPSecure = 'ssl';                          // Enable encryption, 'ssl' also accepted
+
+    $mail->From = 'newdream@yahoo.com';
+    $mail->FromName = 'New Dream Job Agency';
+    $mail->addAddress($to);                              // Add a recipient
+    $mail->addReplyTo('newdream@yahoo.com', 'Information');
     foreach ($bcc as $addr) {
-        $headers .= "BCC: $addr\r\n";
+        $mail->addBCC($addr);
     }
-    $headers .= "MIME-Version: 1.0\r\n";
-    $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    ini_set("SMTP", "smtp.mail.yahoo.com");
-    ini_set("smtp_port", 465);
-    ini_set("auth_username", "vipin_misura@yahoo.com");
-    ini_set("auth_password", "dreams@paradise23");
-    ini_set("force_sender", "vipin_misura@yahoo.com");
+    $mail->WordWrap = 50;                                 // Set word wrap to 50 characters
 
-    if (mail($to, $subject, $content, $headers)) {
-        echo 'success';
+    $mail->Subject = $subject;
+    $mail->Body    = $content;
+
+    if(!$mail->send()) {
+        echo 'Mailer Error: ' . $mail->ErrorInfo;
     } else {
-        echo error_get_last()['message'];;
+        echo 'success';
     }
-
 }
