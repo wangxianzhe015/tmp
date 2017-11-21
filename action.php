@@ -280,7 +280,7 @@ function sendEmail(){
     $content = $data['content'];
 
     $headers = "From: " . "test@yahoo.com" . "\r\n";
-    $headers .= "Reply-To: ". strip_tags($_POST['req-email']) . "\r\n";
+    $headers .= "Reply-To: ". strip_tags("test@yahoo.com") . "\r\n";
     foreach ($bcc as $addr) {
         $headers .= "BCC: $addr\r\n";
     }
@@ -290,7 +290,7 @@ function sendEmail(){
     if (mail($to, $subject, $content, $headers)) {
         echo 'success';
     } else {
-        echo 'fail';
+        echo error_get_last()['message'];;
     }
 
 }

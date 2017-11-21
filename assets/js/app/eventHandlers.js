@@ -1020,11 +1020,10 @@ function initHandlers(){
                 data: message
             },
             success: function(res){
-                console.log(res);
-                if (res == "fail"){
-                    alert("Fail", "Sending E-mail failed");
-                } else {
+                if (res == "success"){
                     alert("Success", "Sending E-mail succeeded");
+                } else {
+                    alert("Fail", res);
                 }
             }
         });
