@@ -154,14 +154,20 @@ function regexSearch(){
             $head2 = $row[1];
             if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
                 $tag = ""; $hidden = "";
-                if (isset($row[2])){
-                    $tag = $row[2];
-                }
                 if (isset($row[3])){
-                    $tag = $tag . " | ". date("d-M-Y", ($row[3] - 25569) * 86400);
+                    $tag = date("d-M-Y", ($row[3] - 25569) * 86400);
+                }
+                if (isset($row[2])){
+                    if ($tag == ""){
+                        $tag = $row[2];
+                    } else {
+                        $tag = $tag . " | " . $row[2];
+                    }
                 }
                 if (isset($row[4])){
-                    $tag = $tag . " | ". $row[4];
+                    $extra = $row[4];
+                } else {
+                    $extra = "";
                 }
                 if (isset($row[5])){
                     $hidden = $row[5];
@@ -169,7 +175,7 @@ function regexSearch(){
                 if (isset($row[6])){
                     $hidden = $hidden . " | ". $row[6];
                 }
-                array_push($result, ['head' => $head, 'tag' => $tag, 'hidden' => $hidden]);
+                array_push($result, ['head' => $head, 'tag' => $tag, 'extra' => $extra, 'hidden' => $hidden]);
             }
         }
     } catch (Exception $e) {

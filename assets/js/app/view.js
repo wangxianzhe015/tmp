@@ -49,7 +49,7 @@ function updateTagSelect(){
     tagSelect.multipleSelect('destroy').html("");
     tagList.forEach(function(tag){
         if (tag != '') {
-            tagSelect.append("<option value='" + tag + "'>" + tag + "</option>");
+            tagSelect.append("<option value='" + tag.trim() + "'>" + tag.trim() + "</option>");
         }
     });
     tagSelect.multipleSelect();

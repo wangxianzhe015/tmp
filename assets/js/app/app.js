@@ -39,7 +39,7 @@ var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
 
-var textClipboard = "";
+var foreignText = "输入文本！";
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({

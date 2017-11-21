@@ -229,10 +229,11 @@ function removeImageTools(){
 
 function composeTagsTab(obj){
     // Tag section
-    var tagList = $("#tags-list").val().split(","), tagSelect = $("#multi-select"), curTagList=[], existing;
+    var tagList = $("#tags-list").val().split(","), tagSelect = $("#multi-select"), curTagList=[], existing, tag;
     obj.tags.forEach(function(tag){curTagList.push(tag)});
     tagSelect.html("");
-    tagList.forEach(function(tag){
+    tagList.forEach(function(el){
+        tag = el.trim();
         if (tag != '') {
             existing = false;
             curTagList.forEach(function (el, index) {
@@ -256,11 +257,12 @@ function composeTagsTab(obj){
 }
 
 function composeChecklistTab(obj){
-    var labelPane = $("#checklist-labels");
+    var labelPane = $("#checklist-labels"),list;
     labelPane.html("");
     if (obj.checklistLabel.length == 0){
         var checklist = $("#label-list").val().split(",");
-        checklist.forEach(function(list,index){
+        checklist.forEach(function(el,index){
+            list = el.trim();
             var row = document.createElement("div"),
                 closeBtn = document.createElement("span"),
                 closeDiv = document.createElement("div"),
@@ -282,7 +284,6 @@ function composeChecklistTab(obj){
             $(labelDiv).append(labelSpan);
             textDiv.className = "column eight";
             var inputTag = document.createElement("input");
-            inputTag.placeholder = "<Type>";
             $(textDiv).append(inputTag);
             if (isDate){
                 $(inputTag).attr("readonly", true).datepicker({
@@ -292,6 +293,7 @@ function composeChecklistTab(obj){
                     buttonText: "Select date"
                 }).on("change", updateChecklist);
             }else{
+                inputTag.placeholder = "<Type>";
                 $(inputTag).on("focus keyup", function(){
                     var list = $("#checklist").find(".suggest-list").css('top',$(this).position().top + parseInt($(this).css('height')) + 5).css('left',$(this).position().left).show().find("li"), data = $(this).val();
                     list.each(function(i,str){
@@ -330,7 +332,6 @@ function composeChecklistTab(obj){
             $(labelDiv).append(labelSpan);
             textDiv.className = "column eight";
             var inputTag = document.createElement("input");
-            inputTag.placeholder = "<Type>";
             $(inputTag).val(list.text);
             $(textDiv).append(inputTag);
             if (isDate){
@@ -341,8 +342,9 @@ function composeChecklistTab(obj){
                     buttonText: "Select date"
                 }).on("change", updateChecklist);
             }else{
+                inputTag.placeholder = "<Type>";
                 $(inputTag).on("focus keyup", function(){
-                    var list = $("#checklist").find(".suggest-list").css('top',$(this).position().top + parseInt($(this).css('height')) + 5).css('left',$(this).position().left).show().find("li"), data = $(this).val();
+                    var list = $("#checklist").find(".suggest-list").css('top',this.getBoundingClientRect().bottom).css('left',this.getBoundingClientRect().left).show().find("li"), data = $(this).val();
                     list.each(function(i,str){
                         if ($(str).html().indexOf(data.substring(data.lastIndexOf(',')+1)) < 0){
                             $(this).hide();
@@ -358,7 +360,7 @@ function composeChecklistTab(obj){
         });
     }
 
-    $("#checklist-input").val("");
+    $("#checklist-input").val("").attr("placeholder", foreignText);
     $("#checklist-checkbox-list").html("");
     if (obj.checklistCheckbox.length > 0){
         obj.checklistCheckbox.forEach(function(el,index){
@@ -377,7 +379,7 @@ function composeChecklistTab(obj){
                 $(checkBox).attr("checked", true);
             }
             labelTag.innerHTML = el.label;
-            row.className = "form-group";
+            row.className = "form-group width-half";
             $(row).append(checkBox).append(labelTag);
             $("#checklist-checkbox-list").append(row);
         });
@@ -385,8 +387,9 @@ function composeChecklistTab(obj){
 
     $("#checklist").find(".suggest-list").html("").hide();
 
-    var suggestWords = $("#auto-suggest").val().split(",");
-    suggestWords.forEach(function(word){
+    var suggestWords = $("#auto-suggest").val().split(","),word;
+    suggestWords.forEach(function(str){
+        word = str.trim();
         if (word != ""){
             var liTag = document.createElement("li");
             $(liTag).html(word).on("click", function(){

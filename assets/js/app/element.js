@@ -428,22 +428,23 @@ function draw6() {
 }
 
 function getElementName(type){
-    var input = document.createElement('input');
+    var input = document.createElement('input'),title;
     input.type = "text";
     input.id = "new-element-name";
     input.placeholder = "Input New Element Name";
     input.onkeyup = function(event){
         if (event.keyCode == "13") {
-            var name = $("#new-element-name").val(),names = name.split(',');
+            var name = $("#new-element-name").val().trim(),names = name.split(',');
             if (name == '') {
                 return false;
             }
             clusters['temp'] = [];
             names.forEach(function(o,index){
+                title = o.trim();
                 if (type == 'hex') {
-                    clusters['temp'][index] = addNewHexagon(o,"batch",index);
+                    clusters['temp'][index] = addNewHexagon(title,"batch",index);
                 } else if (type == 'circle') {
-                    clusters['temp'][index] = addNewCircle(o,"batch",index);
+                    clusters['temp'][index] = addNewCircle(title,"batch",index);
                 }
             });
             $("#new-element-div").hide();

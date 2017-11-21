@@ -511,6 +511,10 @@ function regexSearch(parent,txt){
                         text: word.tag,
                         class: 'regex-search-tagline'
                     }).appendTo(liTag);
+                    $('<p></p>',{
+                        text: word.extra,
+                        class: 'regex-search-tagline'
+                    }).appendTo(liTag);
                 }
             });
             $(parent).find(".remove-suggest-list").show();

@@ -46,9 +46,9 @@ img#fx_img {
 .black-back {
     min-height: 475px !important;
     background: #212121;
-    margin: 0;
+    margin: 10% 0;
     max-width: 308px;
-    height: 50%;
+    height: 80%;
 }
 @media all and (min-width:960px) and (max-width: 1024px) {
 	.black-back {

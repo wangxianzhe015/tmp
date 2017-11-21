@@ -44,16 +44,20 @@
             <a data-tab="#json" data-edit="false">&gt;&gt;</a>
         </li>
         <li style="width:45px;">
-            <a data-tab="#documents" data-edit="false" style="padding-top:5px;padding-bottom: 1px;">
-                <img src="assets/images/icons/file.png" style="height:15px;"/>
+            <a data-tab="#documents" data-edit="false" style="padding: 4px 0;">
+                <img src="assets/images/icons/file.png" style="height:16px;vertical-align: middle"/>
             </a>
         </li>
     </ul>
     <div class="ttip">
         <div id="info"  class="tab-pane active">
-            <input type="text" id="shape-heading"/>
+            <div class="form-group">
+                <input type="text" id="shape-heading" class="form-control"/>
+            </div>
             <h3></h3>
-            <textarea id="shape-datatext" class="default-textarea"></textarea>
+            <div class="form-group">
+                <textarea id="shape-datatext" class="default-textarea"></textarea>
+            </div>
             <button id="set-info" class="normal-btn">OK</button>
         </div>
         <div id="form" class="tab-pane">
@@ -282,9 +286,6 @@
         <li>
             <a data-tab="#callback-tab">Callback</a>
         </li>
-        <li style="width: 90px;">
-            <a data-tab="#add-people">Add People</a>
-        </li>
     </ul>
     <div class="ttip">
         <div id="theme" class="tab-pane active">
@@ -370,19 +371,6 @@
             </div>
             <ul class="tags" id="callback-tags"></ul>
         </div>
-        <div id="add-people" class="tab-pane">
-            <div class="form-group">
-                <button id="browse-people-btn" class="normal-btn">Browse</button>
-            </div>
-            <h3></h3>
-            <div class="form-group">
-                <textarea id="people-list" class="form-control" style="min-height: 200px;overflow-y:auto;resize:none;"></textarea>
-            </div>
-            <div class="form-group">
-                <button id="add-people-btn" class="normal-btn">+</button>
-                <button id="people-invite-all-btn" class="normal-btn" style="display: none;">Invite All</button>
-            </div>
-        </div>
     </div>
 </div>
 <div id='tagDialog' class="image-tooltip">
@@ -428,15 +416,19 @@
     </ul>
     <div class="ttip">
         <div id="search-result" class="tab-pane active">
-            <div class="form-group no-margin text-right">
-                <img src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
-            </div>
             <div class="form-group no-margin">
-                <textarea id="search-result-description" class="form-control"></textarea>
+                <textarea id="search-result-description" class="form-control" readonly></textarea>
             </div>
-            <h3></h3>
+            <h3 class="white"></h3>
             <div class="form-group">
                 <span id="search-result-text" class="form-control"></span>
+            </div>
+            <div id="search-result-buttons" class="form-group no-margin text-right">
+                <img src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
+                <img src="assets/images/icons/pen-24.png" style="cursor: pointer;"/>
+                <img src="assets/images/icons/suitcase-24.png" style="cursor: pointer;"/>
+                <img src="assets/images/icons/pdf-24.png" style="cursor: pointer;"/>
+                <img src="assets/images/icons/file-24.png" style="cursor: pointer;"/>
             </div>
         </div>
     </div>
@@ -452,8 +444,29 @@
 </div>
 
 <div class="image-tooltip" id="contactDiv">
+    <ul class="tab-menu">
+        <li class="active">
+            <a data-tab="#people-list-div">People</a>
+        </li>
+        <li>
+            <a data-tab="#add-people">Add</a>
+        </li>
+    </ul>
     <div class="ttip">
-        <div id="people-list-div"></div>
+        <div id="people-list-div" class="tab-pane active"></div>
+        <div id="add-people" class="tab-pane">
+            <div class="form-group">
+                <button id="browse-people-btn" class="normal-btn">Browse</button>
+            </div>
+            <h3></h3>
+            <div class="form-group">
+                <textarea id="people-list" class="form-control" style="min-height: 200px;overflow-y:auto;resize:none;"></textarea>
+            </div>
+            <div class="form-group">
+                <button id="add-people-btn" class="normal-btn">+</button>
+                <button id="people-invite-all-btn" class="normal-btn" style="display: none;">Invite All</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -499,11 +512,12 @@
             <form id="message-fileupload" action="" method="POST" enctype="multipart/form-data">
                 <div class="fileupload-buttonbar">
                     <div class="fileupload-buttons">
-                        <span class="fileinput-button">
-                            <span>Add files...</span>
+                        <span id="message-upload-plus" class="upload-button upload-plus"></span>
+                        <span id="message-upload-cancel" class="upload-button upload-cancel"></span>
+                        <span class="fileinput-button" style="display: none;">
                             <input type="file" name="files[]" multiple>
                         </span>
-                        <button type="reset" class="cancel">Cancel upload</button>
+                        <button type="reset" class="cancel" style="display: none;">Cancel upload</button>
                         <!-- The global file processing state -->
                         <span class="fileupload-process"></span>
                     </div>
@@ -516,7 +530,7 @@
                     </div>
                 </div>
                 <!-- The table listing the files available for upload/download -->
-                <table role="presentation"><tbody class="files"></tbody></table>
+                <table role="presentation"><tbody class="download-files"></tbody></table>
             </form>
         </div>
         <div id="not-used-yet" class="tab-pane">

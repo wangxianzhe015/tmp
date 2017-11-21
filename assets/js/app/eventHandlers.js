@@ -215,6 +215,14 @@ function initHandlers(){
         keepOpen: true
     });
 
+    $("#imageDialog").find(".ms-parent").on("click", function(e){
+        e.preventDefault();
+        return false;
+    }).find(".ms-choice").on("click", function(e){
+        e.preventDefault();
+        return false;
+    });
+
     $("#tags").on("change", function(){
         var keywords = $(this).val();
         canvas.forEachObject(function(obj){
@@ -490,13 +498,14 @@ function initHandlers(){
     });
 
     $("#checklist-checkbox-add").on("click", function(){
-        var obj = $("#checklist-input"),labelList = obj.val();
+        var obj = $("#checklist-input"),labelList = obj.val(),newLabel;
         //var type = $("#checklist-select").val();
         //var datePicker = $("#date-picker"), date=datePicker.val();
         if (labelList == "") return false;
         obj.val("");
         //datePicker.val("");
-        labelList.split(",").forEach(function(newLabel){
+        labelList.split(",").forEach(function(el){
+            newLabel = el.trim();
             if (newLabel != "") {
                 var row = document.createElement("div"),
                     checkBox = document.createElement("input"),
@@ -510,7 +519,7 @@ function initHandlers(){
                     }
                 });
                 labelTag.innerHTML = newLabel;
-                row.className = "form-group";
+                row.className = "form-group width-half";
                 $(row).append(checkBox).append(labelTag);
                 $("#checklist-checkbox-list").append(row);
 
@@ -992,7 +1001,7 @@ function initHandlers(){
         placeholder: "Bcc"
     });
 
-    $("#upload-plus").on("click", function(){
+    $(".upload-plus").on("click", function(){
         $(this).parent().find("input[type='file']").click();
     });
 
@@ -1007,7 +1016,7 @@ function initHandlers(){
     $("#add-element-from-search").on("click", function(){
         //var obj = $("#" + $("#searchTooltip").attr("data-target")).find(".search-tooltip-object"), name = obj.find(".regex-search-head").text(), text = obj.find(".regex-search-tagline").text();
         var dialog = $("#searchTooltip"), obj = $("#" + dialog.attr("data-target")).find(".search-tooltip-object"), name = dialog.find(".tab-menu").find("a").text(), text = dialog.find("#search-result-description").val();
-        addNewRectangle(name, "", 0, dialog.offset().left + 75, dialog.offset().top + 15, text);
+        addNewRectangle(name, "", 0, dialog.offset().left + 75 + dialog.innerWidth() / 2, dialog.offset().top + 15, text);
         mouseOverElement = false;
         removeImageTools();
     });
@@ -1343,6 +1352,18 @@ $(function () {
         disableImageLoad: true,
         disableImageResize: true,
         autoUpload: true
+    });
+
+    obj.addClass('fileupload-processing');
+    $.ajax({
+        url: obj.fileupload('option', 'url'),
+        dataType: 'json',
+        context: obj[0]
+    }).always(function () {
+        $(this).removeClass('fileupload-processing');
+    }).done(function (result) {
+        $(this).fileupload('option', 'done')
+            .call(this, $.Event('done'), {result: result});
     });
 
 });

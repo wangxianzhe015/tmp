@@ -394,6 +394,7 @@ canvas.on('mouse:up',function(e){
 });
 
 canvas.on('mouse:dblclick', function (e) {
+    return false;
     var object = e.target;
     if (object != null) {
         if (object.class == 'element') {
