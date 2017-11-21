@@ -3,8 +3,9 @@
 include_once('inc/simplexlsx.class.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-use PHPMailer\PHPMailer\SMTP;
-require 'vendor/autoload.php';
+include_once('inc/phpmailer/Exception.php');
+include_once('inc/phpmailer/PHPMailer.php');
+include_once('inc/phpmailer/SMTP.php');
 
 if (isset($_POST['action'])){
     $action = $_POST['action'];

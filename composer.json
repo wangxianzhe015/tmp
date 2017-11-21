@@ -5,7 +5,6 @@
     "license": "MIT",
     "type": "project",
     "require": {
-      "phpmailer/phpmailer": "~6.0"
     },
     "require-dev": {
     },
