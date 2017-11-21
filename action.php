@@ -287,7 +287,7 @@ function sendEmail(){
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 
-    ini_set("smtp_server", "smtp.mail.yahoo.com");
+    ini_set("SMTP", "smtp.mail.yahoo.com");
     ini_set("smtp_port", 465);
     ini_set("auth_username", "vipin_misura@yahoo.com");
     ini_set("auth_password", "dreams@paradise23");
