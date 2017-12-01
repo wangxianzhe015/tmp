@@ -289,14 +289,15 @@ function sendEmail(){
     $mail->isSMTP();                                    // Set mailer to use SMTP
     $mail->Host = 'smtp.mail.yahoo.com';                // Specify main and backup SMTP servers
     $mail->SMTPAuth = true;                             // Enable SMTP authentication
+    $mail->Port = 587;
     $mail->Username = 'newdream@yahoo.com';             // SMTP username
     $mail->Password = 'qwert12345';                     // SMTP password
-    $mail->SMTPSecure = 'ssl';                          // Enable encryption, 'ssl' also accepted
+    $mail->SMTPSecure = 'tls';                          // Enable encryption, 'ssl' also accepted
 
     $mail->From = 'newdream@yahoo.com';
-    $mail->FromName = 'New Dream Job Agency';
+    $mail->FromName = 'Xianzhe Wang';
     $mail->addAddress($to);                              // Add a recipient
-    $mail->addReplyTo('newdream@yahoo.com', 'Information');
+    $mail->addReplyTo('g3p5k6v7e3d3f2p9@miron23.slack.com', 'Reply');
     foreach ($bcc as $addr) {
         $mail->addBCC($addr);
     }

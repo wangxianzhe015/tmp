@@ -264,12 +264,12 @@ function getObjPosition (e) {
     if (e.originX == "left") {
         left = offset._offset.left + e.getLeft();
     } else if (e.originX == "center"){
-        left = offset._offset.left + e.getLeft() - e.scaleX * e.getWidth() / 2;
+        left = offset._offset.left + e.getLeft() - e.getWidth() / 2;
     }
     if (e.originY == "top") {
         top = offset._offset.top + e.getTop();
     } else if (e.originY == "center"){
-        top = offset._offset.top + e.getTop() - e.scaleX * e.getHeight() / 2;
+        top = offset._offset.top + e.getTop() - e.getHeight() / 2;
     }
     var bottom = top + e.getHeight();
     var right = left + e.getWidth();
@@ -462,8 +462,7 @@ function regexSearch(parent,txt){
                     }).on("click", function(){
                         $(parent).find(".regex-search-input").val($(this).find(".regex-search-head").html()).focus();
                         $(parent).find(".suggest-list").hide().find("li").show();
-                        mouseOverElement = false;
-                        removeImageTools();
+                        removeImageTools(true);
                     }).on("mouseover", function(){
                         $(this).parent().find(".search-tooltip-object").removeClass("search-tooltip-object");
                         $(this).addClass("search-tooltip-object");
@@ -498,7 +497,7 @@ function regexSearch(parent,txt){
                         setTimeout(function(){
                             if (!mouseOverElement) {
                                 $("#searchTooltip").attr("data-target", "");
-                                removeImageTools();
+                                removeImageTools(false);
                                 //$("#" + target).find(".search-tooltip-object").removeClass("search-tooltip-object");
                             }
                         }, 1000);

@@ -153,7 +153,7 @@ function showTagTooltip(){
                 'data-key': key
             }).on("click", function(){
                 clusterElements($(this).attr('data-key'));
-                removeImageTools();
+                removeImageTools(true);
             }).appendTo("#cluster-list");
         }
     }
@@ -211,8 +211,8 @@ function moveImageTools (dialog,e,parent) {
     dialog.show().css({top: top, left: left});
 }
 
-function removeImageTools(){
-    if (mouseOverElement){
+function removeImageTools(param){
+    if (!param && mouseOverElement){
         return false;
     }
     if ($('.temp-textarea').length > 0) {
@@ -220,6 +220,7 @@ function removeImageTools(){
     }
     //$('#imageDialog').hide();
     $('.image-tooltip').hide();
+    $('.image-tooltip.text').show().removeClass("hover");
     $('#ui-datepicker-div').hide();
     $(".search-tooltip-object").removeClass("search-tooltip-object");
     tooltipObject = null;
@@ -485,4 +486,23 @@ function showUploadDiv(){
         top: top > 0 ? top : 0,
         left: left
     }).show();
+}
+
+
+function addTextTooltip(){
+    $("<div></div>", {
+        class: "image-tooltip second text"
+    }).on("mouseover", function(){
+        $(this).addClass("expanded");
+    }).on("mouseleave", function(){
+        $(this).removeClass("expanded");
+    }).append($("<div></div>", {
+        class: "ttip"
+    }).append($("<textarea></textarea>",{
+        class: "default-textarea",
+        text: "Some Text"
+    }))).css({
+        left: downPoint.x + 20,
+        top: downPoint.y
+    }).appendTo("body");
 }

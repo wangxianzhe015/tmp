@@ -441,6 +441,31 @@ function initHandlers(){
         }
     }).click();
 
+    $("#element-resizable-check").on("click", function(){
+        resizable = $(this).prop("checked");
+        if (canvas.getActiveObject()){
+            canvas.getActiveObject().setControlsVisibility({
+                mt: resizable,
+                mb: resizable,
+                ml: resizable,
+                mr: resizable,
+                tr: resizable,
+                tl: resizable,
+                br: resizable,
+                bl: resizable
+            });
+            canvas.renderAll();
+        }
+    });
+
+    $("#element-rotatable-check").on("click", function(){
+        rotatable = $(this).prop("checked");
+        if (canvas.getActiveObject()){
+            canvas.getActiveObject().set("hasRotatingPoint", rotatable);
+            canvas.renderAll();
+        }
+    });
+
     $("#grid-show-check").on("click", function(){
         var check = $(this).prop('checked');
         if (check){
@@ -609,7 +634,8 @@ function initHandlers(){
                     },
                     success: function(){
                         $("#move-panel").hide();
-                        $(".image-tooltip").hide();
+                        mouseOverElement = false;
+                        removeImageTools();
                         canvas.remove(tooltipObject);
                         tooltipObject = null;
                     }

@@ -29,8 +29,7 @@ function addHideButton(){
         src: "./assets/images/icons/hide-40.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
-        removeImageTools();
+        removeImageTools(true);
     }).on("click", function(){
         if (elementsStatus == 'show') {
             elementsStatus = 'hide';
@@ -61,8 +60,7 @@ function addChipButton(){
         src: "./assets/images/icons/microchip-40.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
-        removeImageTools();
+        removeImageTools(true);
     }).on("click", function(){
         showTaggerFrame();
     }).appendTo("#left-sidebar");
@@ -74,8 +72,7 @@ function addTimelineButton(){
         src: "./assets/images/icons/timeline-40.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
-        removeImageTools();
+        removeImageTools(true);
     }).on("click", function(){
         showTimelineFrame();
     }).appendTo("#left-sidebar");
@@ -87,8 +84,7 @@ function addCalendarButton(){
         src: "./assets/images/icons/calendar-white.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
-        removeImageTools();
+        removeImageTools(true);
     }).on("click", function(){
         showCalendarFrame();
     }).appendTo("#left-sidebar");
@@ -100,8 +96,7 @@ function addIntegrationButton(){
         src: "./assets/images/icons/plus-40.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = false;
-        removeImageTools();
+        removeImageTools(true);
     }).on("click", function(){
         showIntegrationFrame();
     }).appendTo("#left-sidebar");
@@ -113,8 +108,7 @@ function addFeedButton(){
         src: "./assets/images/icons/feed-24.png",
         class: "icon-button"
     }).on("mouseover", function(){
-        mouseOverElement = true;
-        removeImageTools();
+        removeImageTools(true);
         showFeedDiv();
     }).on("mouseleave", function(){
         mouseOverElement = false;
@@ -229,6 +223,7 @@ function addButtons() {
 function addAddButtons(left, top) {
     var plusImgSrc = "./assets/images/icons/plus-24.png";
     var circleImgSrc = "./assets/images/icons/circle-24.png";
+    var textImgSrc = "./assets/images/icons/text-24.png";
 
     fabric.Image.fromURL(plusImgSrc, function(oImg) {
         var rect = new fabric.Rect({
@@ -300,6 +295,40 @@ function addAddButtons(left, top) {
         }, 2000);
     });
 
+    fabric.Image.fromURL(textImgSrc, function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var addButton = new fabric.Group([rect, oImg], {
+            left: left + 80,
+            top: top,
+            id: 'add-new-text',
+            class: 'button',
+            isTemporary: true,
+            category: 'text',
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        canvas.add(addButton);
+        setTimeout(function(){
+            canvas.remove(addButton);
+            canvas.renderAll();
+        }, 2000);
+    });
+
 }
 
 function showChildButtons(){
@@ -313,7 +342,7 @@ function hideChildButtons(){
 }
 
 function showTaggerFrame(){
-    $(".image-tooltip").hide();
+    removeImageTools(true);
     var $obj = $("#tagger-iframe");
     $obj.css({
         top: window.scrollY + 150,
@@ -332,8 +361,7 @@ function hideFeedDiv(){
 }
 
 function showPeopleListDiv(){
-    $('.image-tooltip').hide();
-    mouseOverElement = true;
+    removeImageTools(true);
     $("#contactDiv").show();
 }
 
@@ -344,7 +372,7 @@ function hidePeopleListDiv(){
 }
 
 function showCalendarFrame(){
-    $(".image-tooltip").hide();
+    removeImageTools(true);
     $(".sidebar").hide();
     canvas.forEachObject(function(obj){
         if (obj.class == "element" && obj.visible){
@@ -373,7 +401,7 @@ function hideCalendarFrame(){
 }
 
 function showIntegrationFrame(){
-    $(".image-tooltip").hide();
+    removeImageTools(true);
     $(".sidebar").hide();
     $("#integration-iframe").show();
 }
@@ -384,7 +412,7 @@ function hideIntegrationFrame(){
 }
 
 function showTimelineFrame(){
-    $(".image-tooltip").hide();
+    removeImageTools(true);
     $(".sidebar").hide();
     $("#timeline-iframe").show();
 }

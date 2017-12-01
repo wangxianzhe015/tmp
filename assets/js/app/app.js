@@ -10,6 +10,8 @@ var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
 var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
 
+var resizable = false;
+var rotatable = true;
 var snapStatus = 'lock';
 var elementsStatus = 'show';
 var elementsInfo = [];
@@ -65,6 +67,7 @@ function init(){
     fabric.Object.prototype.transparentCorners = false;
 
     drawGrid();
+    drawQuadratic();
     initHandlers();
 
     addBrowseButton();

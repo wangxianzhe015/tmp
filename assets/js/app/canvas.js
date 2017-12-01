@@ -11,7 +11,7 @@ canvas.on('mouse:over', function(e) {
         return false;
     }
     if (e.target != null && e.target.class == "element") {
-        if ((tooltipObject != null && tooltipObject.id == e.target.id) || mouseOverElement){
+        if (tooltipObject != null && tooltipObject.id == e.target.id){
             return false;
         }
         var coords = getObjPosition(e.target);
@@ -117,8 +117,38 @@ canvas.on('mouse:down',function(e){
                     getElementName('circle');
                     //addNewCircle();
                 }
+            } else if (object.id == 'add-new-text') {
+                addTextTooltip();
             }
         }else if (object.class == 'element') {
+            if (resizable){
+                object.setControlsVisibility({
+                    mt: true,
+                    mb: true,
+                    ml: true,
+                    mr: true,
+                    tr: true,
+                    tl: true,
+                    br: true,
+                    bl: true
+                });
+            } else {
+                object.setControlsVisibility({
+                    mt: false,
+                    mb: false,
+                    ml: false,
+                    mr: false,
+                    tr: false,
+                    tl: false,
+                    br: false,
+                    bl: false
+                });
+            }
+            if (rotatable){
+                object.set("hasRotatingPoint", true);
+            } else {
+                object.set("hasRotatingPoint", false);
+            }
             if (targetElement == null) { // New Click
                 if (tempPoly == null && tempText == null) {
                     //clockID = setInterval(holdElement, 1);
@@ -404,33 +434,60 @@ canvas.on('mouse:dblclick', function (e) {
     }
 });
 
+canvas.on('before:selection:cleared', function(e){
+    if (e.target.class == "b-point") {
+        if (e.target.name == "p0" || e.target.name == "p2") {
+            e.target.control.animate('opacity', '0', {
+                duration: 200,
+                onChange: canvas.renderAll.bind(canvas)
+            });
+            e.target.control.selectable = false;
+        }
+        else if (e.target.name == "p1") {
+            e.target.animate('opacity', '0', {
+                duration: 200,
+                onChange: canvas.renderAll.bind(canvas)
+            });
+            e.target.selectable = false;
+        }
+    }
+});
+
 canvas.on('object:selected', function(e){
     var obj = null;
-    if (e.target.class != "group"){
-        obj = canvas.getActiveGroup();
-    } else if (e.target.class == "group"){
+    if (e.target.class == "group"){
         e.target.borderDashArray = [5, 5];
         addThreeDots(e.target);
+    } else if (e.target.class == "b-point"){
+        if (e.target.name == "p0" || e.target.name == "p2") {
+            e.target.control.animate('opacity', '1', {
+                duration: 200,
+                onChange: canvas.renderAll.bind(canvas)
+            });
+            e.target.control.selectable = true;
+        }
+    } else if (e.target.class != "group"){
+        obj = canvas.getActiveGroup();
+        if (obj != null){
+            obj.setControlsVisibility({
+                mt: false,
+                mb: false,
+                ml: false,
+                mr: false,
+                tr: false,
+                tl: false,
+                br: false,
+                bl: false
+            });
+
+            obj.hasRotatingPoint = false;
+            obj.borderColor = "white";
+            obj.borderDashArray = [5, 5];
+            addThreeDots(obj);
+        }
     }
     //var obj = e.target.class == "group" ? e.target : canvas.getActiveGroup();
     //var obj = canvas.getActiveGroup();
-    if (obj != null){
-        obj.setControlsVisibility({
-            mt: false,
-            mb: false,
-            ml: false,
-            mr: false,
-            tr: false,
-            tl: false,
-            br: false,
-            bl: false
-        });
-
-        obj.hasRotatingPoint = false;
-        obj.borderColor = "white";
-        obj.borderDashArray = [5, 5];
-        addThreeDots(obj);
-    }
 });
 
 canvas.on('object:moving', function(e){
@@ -481,6 +538,29 @@ canvas.on('object:moving', function(e){
     } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
         var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
         moveThreeDots(obj);
+    } else if (e.target.class == 'b-point'){
+        if (e.target.name == "p0") {
+
+            if (e.target.line) {
+                e.target.line.path[0][1] = e.target.left;
+                e.target.line.path[0][2] = e.target.top;
+            }
+            //e.target.line1 && e.target.line1.set({ 'x2': e.target.left, 'y2': e.target.top });
+            //e.target.line2 && e.target.line2.set({ 'x1': e.target.left, 'y1': e.target.top });
+            //e.target.line3 && e.target.line3.set({ 'x1': e.target.left, 'y1': e.target.top });
+
+        } else if (e.target.name == "p1") {
+
+            if (e.target.line) {
+                e.target.line.path[1][1] = e.target.left;
+                e.target.line.path[1][2] = e.target.top;
+            }
+        } else if (e.target.name == "p2"){
+            if (e.target.line) {
+                e.target.line.path[1][3] = e.target.left;
+                e.target.line.path[1][4] = e.target.top;
+            }
+        }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
@@ -494,8 +574,7 @@ canvas.on('object:moving', function(e){
     if (e.e.offsetX < window.scrollX + 30) {
         window.scrollTo(window.scrollX - radius, window.scrollY);
     }
-    mouseOverElement = false;
-    removeImageTools();
+    removeImageTools(true);
 });
 
 canvas.on('selection:cleared', function(e){
