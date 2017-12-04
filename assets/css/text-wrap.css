@@ -19,6 +19,7 @@
     min-height: 150px;
     margin: 10px auto;
     position: relative;
+    z-index: 100;
 }
 .boundary-layout.boundary-layout-content{
     min-width: 50px;
@@ -85,4 +86,37 @@
 .top-boundary, .bottom-boundary, .inner-top-boundary, .inner-bottom-boundary{
     width: 99%;
     float: left;
+}
+.tagger-tooltip{
+    display: none;
+    position: absolute;
+    height: 50%;
+    min-height: 400px;
+    width: 30%;
+    min-width: 450px;
+    top: 0;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    overflow-y:auto;
+    overflow-x:hidden;
+    margin: 0;
+    padding: 11px;
+    background-color: rgba(40,40,40,.8);
+    border-radius: 0;
+    border: none;
+    font: normal 12px/2 "Abel", Helvetica, sans-serif;
+    line-height:11px;
+    color: #FFF;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    filter: alpha(opacity=50);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+    z-index: 200;
+}
+div.tagger-word{
+    margin-right: .5em;
+    display: inline-block;
 }

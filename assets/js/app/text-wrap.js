@@ -1,8 +1,17 @@
+var enableHide = true;
+
 function boundary(object, array){
     var $object = $(object),isMultiple = false,classPrefix="",height;
     if ($object.find(".boundary-layout").length > 0){
         $object = $(object).find(".boundary-layout");
         isMultiple = true;
+    } else {
+        $("body").append($("<div></div>", {
+            class: "tagger-tooltip",
+            id: "image-tooltip"
+        }).on("mouseover", function(){
+            enableHide = false;
+        }));
     }
     $object.each(function(index,obj){
         $object = $(obj);
@@ -24,15 +33,26 @@ function boundary(object, array){
             classPrefix = "inner-";
         }
 
-        var words = "Jun-07 EUGDRP" +
-        "07 JETBLUE<br/>" +
-        "07 JETCOST<br/>" +
-        "08 OMANAIR<br/>" +
-        "11 ANNOUNCEMENT<br/>" +
-        "12 SCTI CLAIM<br/>" +
-        "13 DEXE-PHERIN<br/>" +
-        "15";
-        $newObject.html("<div class='boundary " + classPrefix+ "boundary-layout-content'>" + words + "</div>");
+        var words = "<span>Jun-07 EUGDRP</span><br/>" +
+        "<span>07 JETBLUE</span><br/>" +
+        "<span>07 JETCOST</span><br/>" +
+        "<span>08 OMANAIR</span><br/>" +
+        "<span>11 ANNOUNCEMENT</span><br/>" +
+        "<span>12 SCTI CLAIM</span><br/>" +
+        "<span>13 DEXE-PHERIN</span><br/>" +
+        "<span>15</span>";
+        $newObject.html("<div class='boundary " + classPrefix+ "boundary-layout-content'>" + words + "</div>").find("span").each(function(i,el){
+            $(el).on({
+                mouseover: function(){
+                    enableHide = false;
+                    showTooltip($(this));
+                },
+                mouseleave: function(){
+                    enableHide = true;
+                    setTimeout(hideTooltip, 500);
+                }
+            });
+        });
         if (isMultiple){
             $object.find(".boundary-layout-content").replaceWith($newObject);
             height = $newObject.innerHeight() - 3 * parseInt($object.css("font-size"));
@@ -43,25 +63,70 @@ function boundary(object, array){
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "left-boundary",
-            text: array[0]
+            html: makeTooltipText(array[0])
         }).css("width", height).prependTo($newObject);
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "top-boundary",
-            text: array[1]
+            html: makeTooltipText(array[1])
         }).prependTo($newObject);
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "right-boundary",
-            text: array[2]
+            html: makeTooltipText(array[2])
         }).css("width", height).appendTo($newObject);
 
         $("<div></div>", {
             class: "boundary " + classPrefix+ "bottom-boundary",
-            text: array[3]
+            html: makeTooltipText(array[3])
         }).appendTo($newObject);
 
     });
 
     return true;
+}
+
+function makeTooltipText(text){
+    var arr = text.split(" "), result = [], length = text.length;
+    arr.forEach(function(word){
+        if (word != ""){
+            result.push($("<div></div>", {
+                class: "tagger-word",
+                text: word
+            }).css({
+                width: parseInt(word.length / length * 100) + "%",
+                "min-width": word.length * 0.5 + "em"
+            }).on({
+                mouseover: function(){
+                    enableHide = false;
+                    showTooltip($(this));
+                },
+                mouseleave: function(){
+                    enableHide = true;
+                    setTimeout(hideTooltip, 500);
+                }
+            }));
+        }
+    });
+    return result
+}
+
+function showTooltip($obj){
+    var $tooltipObj = $("#image-tooltip"), left = $obj.offset().left + $obj.innerWidth(), top = $obj.offset().top;
+    if (left + $tooltipObj.innerWidth() > window.innerWidth){
+        left = $obj.offset().left - $tooltipObj.innerWidth();
+    }
+    if (top + $tooltipObj.innerHeight() > window.innerHeight){
+        top = window.innerHeight - $tooltipObj.innerHeight();
+    }
+    $tooltipObj.html($obj.text()).css({
+        left: left,
+        top: top
+    }).show();
+}
+
+function hideTooltip(){
+    if (enableHide){
+        $("#image-tooltip").hide();
+    }
 }

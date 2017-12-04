@@ -435,7 +435,7 @@ canvas.on('mouse:dblclick', function (e) {
 });
 
 canvas.on('before:selection:cleared', function(e){
-    if (e.target.class == "b-point") {
+    if (e.target != null && e.target.class == "b-point") {
         if (e.target.name == "p0" || e.target.name == "p2") {
             e.target.control.animate('opacity', '0', {
                 duration: 200,
