@@ -43,9 +43,9 @@ function boundary(object, array){
         "<span>15</span>";
         $newObject.html("<div class='boundary " + classPrefix+ "boundary-layout-content'>" + words + "</div>").find("span").each(function(i,el){
             $(el).on({
-                mouseover: function(){
+                mouseover: function(e){
                     enableHide = false;
-                    showTooltip($(this));
+                    showTooltip($(this), e.originalEvent);
                 },
                 mouseleave: function(){
                     enableHide = true;
@@ -97,9 +97,9 @@ function makeTooltipText(text){
                 width: parseInt(word.length / length * 100) + "%",
                 "min-width": word.length * 0.5 + "em"
             }).on({
-                mouseover: function(){
+                mouseover: function(e){
                     enableHide = false;
-                    showTooltip($(this));
+                    showTooltip($(this), e.originalEvent);
                 },
                 mouseleave: function(){
                     enableHide = true;
@@ -111,10 +111,10 @@ function makeTooltipText(text){
     return result
 }
 
-function showTooltip($obj){
-    var $tooltipObj = $("#image-tooltip"), left = $obj.offset().left + $obj.innerWidth(), top = $obj.offset().top;
+function showTooltip($obj, event){
+    var $tooltipObj = $("#image-tooltip"), left = event.clientX, top = event.clientY;
     if (left + $tooltipObj.innerWidth() > window.innerWidth){
-        left = $obj.offset().left - $tooltipObj.innerWidth();
+        left = event.clientX - $tooltipObj.innerWidth();
     }
     if (top + $tooltipObj.innerHeight() > window.innerHeight){
         top = window.innerHeight - $tooltipObj.innerHeight();
