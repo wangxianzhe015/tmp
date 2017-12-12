@@ -9,9 +9,67 @@ function boundary(object, array){
         $("body").append($("<div></div>", {
             class: "tagger-tooltip",
             id: "image-tooltip"
-        }).on("mouseover", function(){
-            enableHide = false;
+        }).append($("<div></div>", {
+            class: "tooltip-button-panel"
+        }).append($("<img/>", {
+            src: "../assets/images/icons/user-24.png"
+        }).on("click", function(){
+            showMessageTooltip();
+        })).append($("<img/>", {
+            src: "../assets/images/icons/plus-24.png"
+        }))).append($("<div></div>", {
+            id: "tooltip-text"
+        })).on({
+            mouseover: function(){
+                enableHide = false;
+            },
+            mouseleave: function(){
+                enableHide = true;
+                setTimeout(hideTooltip, 500);
+            }
+        })).append($("<div></div>", {
+            class: "tagger-tooltip",
+            id: "message-tooltip"
+        }).append($("<h3></h3>", {
+            text: "Title"
+        })).append($("<div></div>", {
+            class: "form-group"
+        }).append($("<input/>", {
+            type: "text",
+            class: "form-control",
+            placeholder: "Pick a date"
+        }).datepicker())).append($("<div></div>", {
+            class: "form-group"
+        }).append($("<label></label>", {
+            class: "from-control",
+            for: "tagger-message-select",
+            text: "Importance"
+        })).append($("<select></select>", {
+            id: "tagger-message-select",
+            class: "form-control"
+        }))).append($("<h3></h3>")).on({
+            mouseover: function(){
+                enableHide = false;
+            },
+            mouseleave: function(){
+                enableHide = true;
+                setTimeout(hideTooltip, 500);
+            }
         }));
+
+        // temporary data for select tag
+        var tempdata = ["Highest", "High", "Normal", "Low", "Lowest"];
+        $.each(tempdata, function(i, w){
+            $("<option></option>", {
+                value: w,
+                text: w
+            }).appendTo("#tagger-message-select");
+        });
+
+        // To stop hiding tooltip when moving on datepicker calendar
+        $(".ui-datepicker").on("mouseover", function(){
+            enableHide = false;
+        });
     }
     $object.each(function(index,obj){
         $object = $(obj);
@@ -51,7 +109,7 @@ function boundary(object, array){
                     enableHide = true;
                     setTimeout(hideTooltip, 500);
                 }
-            });
+            }).attr("id", "word-" + parseInt(Math.random() * 100000));
         });
         if (isMultiple){
             $object.find(".boundary-layout-content").replaceWith($newObject);
@@ -92,7 +150,8 @@ function makeTooltipText(text){
         if (word != ""){
             result.push($("<div></div>", {
                 class: "tagger-word",
-                text: word
+                text: word,
+                id: "word-" + parseInt(Math.random() * 100000)
             }).css({
                 width: parseInt(word.length / length * 100) + "%",
                 "min-width": word.length * 0.5 + "em"
@@ -112,6 +171,7 @@ function makeTooltipText(text){
 }
 
 function showTooltip($obj, event){
+    $("#message-tooltip").hide();
     var $tooltipObj = $("#image-tooltip"), left = event.clientX, top = event.clientY;
     if (left + $tooltipObj.innerWidth() > window.innerWidth){
         left = event.clientX - $tooltipObj.innerWidth();
@@ -119,14 +179,25 @@ function showTooltip($obj, event){
     if (top + $tooltipObj.innerHeight() > window.innerHeight){
         top = window.innerHeight - $tooltipObj.innerHeight();
     }
-    $tooltipObj.html($obj.text()).css({
+    $tooltipObj.css({
         left: left,
         top: top
-    }).show();
+    }).show().find("#tooltip-text").html($obj.text());
 }
 
 function hideTooltip(){
     if (enableHide){
-        $("#image-tooltip").hide();
+        $(".tagger-tooltip").hide();
     }
+}
+
+function showMessageTooltip(){
+    var $obj = $("#image-tooltip"), left = $obj.offset().left + $obj.innerWidth() + 5, top = $obj.offset().top, $tooltip = $("#message-tooltip");
+    if (left + $tooltip.innerWidth() > window.innerWidth){
+        left = $obj.offset().left - $tooltip.innerWidth() - 5;
+    }
+    $tooltip.css({
+        left: left,
+        top: top
+    }).show();
 }

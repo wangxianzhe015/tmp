@@ -9,7 +9,7 @@
     src: url('./fonts/VAGRoundedStd-Black.eot');
     src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
 }
-:active{
+:active, :focus{
     outline: none;
 }
 .boundary-layout{
@@ -87,13 +87,57 @@
     width: 99%;
     float: left;
 }
+div.tagger-word{
+    margin-right: .5em;
+    display: inline-block;
+}
+.form-group{
+    margin-bottom: 10px;
+}
+.form-group.ext-info{
+    display: none;
+}
+.form-control{
+    margin: 10px 0;
+    width: 100%;
+}
+input.form-control,select.form-control,textarea.form-control{
+    color: #aaa;
+    padding: 10px 0;
+    border-radius: 5px;
+    background-color: rgb(69,73,85);
+    font-size: 12px;
+    line-height: 11px;
+    border: none;
+    overflow: hidden;
+}
+textarea.form-control[readonly]{
+    resize: none;
+}
+.form-group.width-half{
+    width: 50%;
+    display: inline-block;
+}
+.form-control.width-half{
+    padding: 10px 0;
+    width: calc(50% - 15px);
+    display: inline-block;
+}
+textarea.form-control, input.form-control{
+    background: transparent;
+    color: white;
+}
+textarea.form-control{
+    margin: 0;
+    width: 100%;
+}
 .tagger-tooltip{
     display: none;
     position: absolute;
     height: 50%;
     min-height: 400px;
-    width: 30%;
-    min-width: 450px;
+    width: 25%;
+    min-width: 300px;
     top: 0;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -116,7 +160,18 @@
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
     z-index: 200;
 }
-div.tagger-word{
-    margin-right: .5em;
-    display: inline-block;
+.tagger-tooltip .tooltip-button-panel {
+    text-align: right;
+}
+.tagger-tooltip .tooltip-button-panel img{
+    cursor: pointer;
+}
+.tagger-tooltip h3{
+    border-bottom: solid 1px rgb(108,158,222);
+    font-size: 1em;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.tagger-tooltip h3.white{
+    border-color: white;
 }

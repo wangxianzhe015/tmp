@@ -456,11 +456,14 @@ button .text{
     padding: 0;
 }
 .image-tooltip.text{
-    height: 22px;
-    min-height: 22px;
-    width: 100px;
-    min-width: 100px;
-    transition: all 1s;
+    height: 33px;
+    min-height: 33px;
+    width: 200px;
+    min-width: 200px;
+    -webkit-transition: width 1s, height 1s;
+    -moz-transition: width 1s, height 1s;
+    -o-transition: width 1s, height 1s;
+    transition: width 1s, height 1s;
 }
 .image-tooltip.text.expanded{
     height: 50%;
@@ -468,13 +471,20 @@ button .text{
     width: 30%;
     min-width: 450px;
 }
-.image-tooltip.text .ttip *{
+.image-tooltip.text .ttip textarea{
     opacity: 0;
     position: absolute;
+    -webkit-transition: opacity .5s;
+    -moz-transition: opacity .5s;
+    -o-transition: opacity .5s;
     transition: opacity .5s;
 }
-.image-tooltip.text.expanded .ttip *{
+.image-tooltip.text.expanded .ttip textarea{
     opacity: 1;
+}
+.image-tooltip.text .ttip h3{
+    margin: 3px 0;
+    padding: 0 0 10px 0;
 }
 .image-tooltip#preview-box{
     height: 75%;

@@ -498,11 +498,14 @@ function addTextTooltip(){
         $(this).removeClass("expanded");
     }).append($("<div></div>", {
         class: "ttip"
-    }).append($("<textarea></textarea>",{
+    }).append($("<h3></h3>",{
+        text: "Text"
+    })).append($("<textarea></textarea>",{
         class: "default-textarea",
         text: "Some Text"
-    }))).css({
+    }))).draggable().css({
         left: downPoint.x + 20,
-        top: downPoint.y
+        top: downPoint.y,
+        position: "absolute"
     }).appendTo("body");
 }
