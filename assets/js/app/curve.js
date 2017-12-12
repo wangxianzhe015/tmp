@@ -16,23 +16,22 @@ function drawQuadratic() {
     p1.name = "p1";
     canvas.add(p1);
 
-    var p0 = makeCurveCircle(500, 300, line, p1);
-    p0.name = "p0";
+    var p0 = makeCurveCircle(500, 300, line, p1, "p0");
     canvas.add(p0);
 
-    var p2 = makeCurveCircle(700, 300, line, p1);
-    p2.name = "p2";
+    var p2 = makeCurveCircle(700, 300, line, p1, "p2");
     canvas.add(p2);
 
-    clipPath(p0, p2);
-
+    adjustLine(p0, "p0");
+    adjustLine(p2, "p2");
 }
 
-function makeCurveCircle(left, top, line, point) {
+function makeCurveCircle(left, top, line, point, name) {
     var c = new fabric.Circle({
         left: left,
         top: top,
         class: 'b-point',
+        name: name,
         strokeWidth: 0,
         radius: Math.sqrt(3) * (radius - border / 2) / 2,
         originX: 'center',
@@ -44,6 +43,7 @@ function makeCurveCircle(left, top, line, point) {
     c.hasBorders = c.hasControls = false;
 
     c.line = line;
+    point[name] = c;
     c.control = point;
 
     return c;
@@ -69,57 +69,23 @@ function makeCurvePoint(left, top, line) {
     return c;
 }
 
-function clipPath(p0, p2){
-    var leftPoint, rightPoint,
-        distance, angle, startAngle, endAngle, stepAngle = 10,
-        line = p0.line, control = p0.control, tmpLine,
-        edgePoint, points = [];
-    if (p0.left < p2.left){
-        leftPoint = p0;
-        rightPoint = p2;
-    } else {
-        leftPoint = p2;
-        rightPoint = p0;
-    }
+function adjustLine(point, category){
+    var line = point.line, control = point.control, distance, angle, factor = 1;
 
-    distance = Math.sqrt((control.left - leftPoint.left) * (control.left - leftPoint.left) + (control.top - leftPoint.top) * (control.top - leftPoint.top));
-    tmpLine = new fabric.Line([0, 0, distance, 0],{
-        left: control.left,
-        top: control.top,
-        stroke: 'black',
-        selectable: true
-    });
-    canvas.add(tmpLine);
-    startAngle = Math.asin((leftPoint.top - control.top) / distance) * 180 / Math.PI - 180;
-    endAngle = startAngle + 100;
-    for (angle = startAngle; angle < endAngle; angle += stepAngle){
-        console.log(angle);
-        //tmpLine = new fabric.Path(
-        //    'M ' +
-        //    Math.cos(angle) * Math.sqrt(3) * (radius - border / 2) / 2 + p0.left +
-        //    ' ' +
-        //    Math.sin(angle) * Math.sqrt(3) * (radius - border / 2) / 2 + p0.top +
-        //    ' L ' +
-        //    control.left +
-        //    ' ' +
-        //    control.top +
-        //    ' Z', {
-        //        opacity: 1,
-        //        stroke: "black",
-        //        selectable: true,
-        //        objectCaching: false,
-        //        perPixelTargetFind: true
-        //    });
-        tmpLine.set('angle', angle);
-        console.log(line.intersectsWithObject(tmpLine));
-        if (tmpLine.intersectsWithObject(line)) break;
+    distance = Math.sqrt((point.left - control.left) * (point.left - control.left) + (point.top - control.top) * (point.top - control.top));
+    if (control.top < point.top){
+        factor = -1;
     }
-    console.log(tmpLine);
-    //line.set({
-    //    clipTo: function(ctx) {
-    //        ctx.arc(0, 0, Math.sqrt(3) * (radius - border / 2) / 2, 0, Math.PI * 2, true);
-    //    }
-    //});
+    angle = factor * Math.atan((control.left - point.left) / (control.top - point.top));
+    if (category == "p0") {
+        // Starting point
+        line.path[0][1] = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+        line.path[0][2] = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    } else {
+        // Ending point
+        line.path[1][3] = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+        line.path[1][4] = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    }
 
     canvas.renderAll();
 }
