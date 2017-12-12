@@ -498,8 +498,12 @@ function addTextTooltip(){
         $(this).removeClass("expanded");
     }).append($("<div></div>", {
         class: "ttip"
-    }).append($("<h3></h3>",{
-        text: "Text"
+    }).append($("<input/>", {
+        type: "text",
+        class: "form-control no-margin no-padding",
+        value: "Text"
+    })).append($("<h3></h3>", {
+        class: "white"
     })).append($("<textarea></textarea>",{
         class: "default-textarea",
         text: "Some Text"
