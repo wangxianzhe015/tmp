@@ -538,33 +538,20 @@ canvas.on('object:moving', function(e){
     } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
         var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
         moveThreeDots(obj);
-    } else if (e.target.class == 'b-point'){
-        if (e.target.name == "p0") {
-
-            adjustLine(e.target, "p0")
-            //if (e.target.line) {
-            //    e.target.line.path[0][1] = e.target.left;
-            //    e.target.line.path[0][2] = e.target.top;
-            //}
-            //e.target.line1 && e.target.line1.set({ 'x2': e.target.left, 'y2': e.target.top });
-            //e.target.line2 && e.target.line2.set({ 'x1': e.target.left, 'y1': e.target.top });
-            //e.target.line3 && e.target.line3.set({ 'x1': e.target.left, 'y1': e.target.top });
-
-        } else if (e.target.name == "p1") {
-
-            if (e.target.line) {
-                e.target.line.path[1][1] = e.target.left;
-                e.target.line.path[1][2] = e.target.top;
-            }
-            adjustLine(e.target.p0, "p0");
-            adjustLine(e.target.p2, "p2");
-        } else if (e.target.name == "p2"){
-            adjustLine(e.target, "p2");
-            //if (e.target.line) {
-            //    e.target.line.path[1][3] = e.target.left;
-            //    e.target.line.path[1][4] = e.target.top;
-            //}
+    } else if (e.target.class == 'b-circle'){
+        if (e.target.leftControl != null) {
+            adjustLine(e.target.leftControl.line);
         }
+        if (e.target.rightControl != null) {
+            adjustLine(e.target.rightControl.line);
+        }
+    } else if (e.target.class == "b-point") {
+
+        if (e.target.line) {
+            e.target.line.path[1][1] = e.target.left;
+            e.target.line.path[1][2] = e.target.top;
+        }
+        adjustLine(e.target.line);
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
