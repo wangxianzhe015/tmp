@@ -43,6 +43,7 @@ function draw1() {
         originY: "center",
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         class: 'element',
         category: 'hexagon',
         position: '0-0',
@@ -112,6 +113,7 @@ function draw2() {
         top: Math.round(Math.sqrt(3) * radius),
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         id: 'tooltip 5',
         class: 'element',
         category: 'hexagon',
@@ -187,6 +189,7 @@ function draw3() {
         originY: "center",
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         class: 'element',
         category: 'hexagon',
         id: 'tooltip 4',
@@ -259,6 +262,7 @@ function draw4() {
         class: 'element',
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         category: 'hexagon',
         originX: "center",
         originY: "center",
@@ -321,6 +325,7 @@ function draw5() {
         class: 'element',
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         category: 'circle',
         originX: "center",
         originY: "center",
@@ -392,6 +397,7 @@ function draw6() {
         category: 'circle',
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         position: '6-1',
         originX: 'center',
         originY: 'center',
@@ -502,6 +508,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         height: 2* radius,
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         originX: "center",
         originY: "center",
         hasBorders: false,
@@ -573,6 +580,7 @@ function addNewCircle(name, type, index, left, top, datatext){
         hasBorders: false,
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         class: "element",
         category: "circle",
         id: nameElement('new',canvas.getObjects().length),
@@ -648,6 +656,7 @@ function addNewRectangle(name, type, index, left, top, datatext){
         hasBorders: false,
         cornerStyle: 'circle',
         cornerColor: 'white',
+        cornerSize: 10,
         class: "element",
         category: "rect",
         id: nameElement('new',canvas.getObjects().length),
@@ -782,7 +791,7 @@ function addElements(newElements){
                         collapseGroup(newgroup);
                     }
                 },
-                ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'cluster', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects']
+                ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'cornerSize', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'cluster', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects']
             );
         } else if (object.class == 'canvas'){
             document.body.className = object.backgroundColor;
@@ -870,6 +879,7 @@ function cloneElement(object){
         class: object.class,
         cornerStyle: object.cornerStyle,
         cornerColor: object.cornerColor,
+        cornerSize: object.cornerSize,
         category: object.category,
         originX: object.originX,
         originY: object.originY,
