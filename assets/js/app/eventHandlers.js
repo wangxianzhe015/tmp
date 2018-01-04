@@ -272,6 +272,18 @@ function initHandlers(){
     updateTagSelect();
     $(".datepicker").datepicker();
 
+    $("#add-new-hex-btn").on("click", function(){
+        getElementName('hex');
+    });
+
+    $("#add-new-circle-btn").on("click", function(){
+        getElementName('circle');
+    });
+
+    $("#add-new-text").on("click", function(){
+        addTextTooltip();
+    });
+
     $("#app-theme").on("change", function(){
         var value = $(this).val();
         document.body.className = value;
@@ -464,6 +476,10 @@ function initHandlers(){
             canvas.getActiveObject().set("hasRotatingPoint", rotatable);
             canvas.renderAll();
         }
+    });
+
+    $("#toggle-always-visible-menu").on("click", function(){
+        $("#always-visible-menu").toggle();
     });
 
     $("#grid-show-check").on("click", function(){

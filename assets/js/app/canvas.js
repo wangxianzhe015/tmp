@@ -111,14 +111,12 @@ canvas.on('mouse:down',function(e){
         if (object.class == 'button') {
             if (object.id == 'add-new-shape') {
                 if (object.category == 'hexagon') {
-                    getElementName('hex');
-                    //addNewHexagon();
+                    //getElementName('hex');
                 } else if (object.category == 'circle'){
-                    getElementName('circle');
-                    //addNewCircle();
+                    //getElementName('circle');
                 }
             } else if (object.id == 'add-new-text') {
-                addTextTooltip();
+                //addTextTooltip();
             }
         }else if (object.class == 'element') {
             if (resizable){
@@ -326,7 +324,7 @@ canvas.on('mouse:up',function(e){
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
             } else if (Math.abs(downPoint.x - upPoint.x) > 20 && Math.abs(downPoint.y - upPoint.y) > 20) {
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
-                addAddButtons(downPoint.x, downPoint.y);
+                //addAddButtons(downPoint.x, downPoint.y);
 
                 regexSearchCount++;
                 var box = $('<div/>', {
@@ -415,6 +413,11 @@ canvas.on('mouse:up',function(e){
             }
         }
     }
+
+    setTimeout(function(){
+        $(".regex-search-box.empty").remove();
+    }, 2000);
+
     var obj = e.target;
     if (obj != null && obj.class == 'dot'){
         obj.setOpacity(0);

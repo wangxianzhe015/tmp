@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="assets/css/lib/multi-select.css"/>
     <link rel="stylesheet" href="assets/css/lib/jquery.fileupload.css">
     <link rel="stylesheet" href="assets/css/lib/jquery.fileupload-ui.css">
+    <link rel="stylesheet" href="assets/css/lib/font-awesome.css">
 </head>
 <body>
 
@@ -350,6 +351,10 @@
                 <input type="checkbox" id="element-rotatable-check" checked/>
                 <label for="element-rotatable-check">Shape rotatable</label>
             </div>
+            <div class="form-group">
+                <input type="checkbox" id="toggle-always-visible-menu" checked/>
+                <label for="toggle-always-visible-menu">Navigation Icons Visible</label>
+            </div>
         </div>
         <div id="tag-edit" class="tab-pane">
             <h3>Tags</h3>
@@ -641,6 +646,21 @@
 </div>
 
 <div id="right-sidebar" class="sidebar"></div>
+
+<div id="always-visible-menu">
+    <button class="circle-btn" id="add-new-hex-btn">
+        <i class="fa fa-plus fa-2x"></i>
+    </button>
+    <button class="circle-btn" id="add-new-circle-btn">
+        <i class="fa fa-circle-o fa-2x"></i>
+    </button>
+    <button class="circle-btn" id="add-new-text">
+        <i class="fa fa-text fa-2x"></i>
+    </button>
+    <button class="circle-btn">
+        <i class="fa fa-glass fa-2x"></i>
+    </button>
+</div>
 
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}

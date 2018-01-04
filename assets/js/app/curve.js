@@ -5,6 +5,7 @@ function drawQuadratic() {
         stroke: 'white',
         opacity: .5,
         selectable: true,
+        strokeDashArray: [5, 5],
         class: "line",
         objectCaching: false,
         perPixelTargetFind: true
@@ -15,6 +16,7 @@ function drawQuadratic() {
         stroke: 'white',
         opacity: .5,
         selectable: true,
+        strokeDashArray: [3, 7],
         class: "line",
         objectCaching: false,
         perPixelTargetFind: true
@@ -25,6 +27,7 @@ function drawQuadratic() {
         stroke: 'white',
         opacity: .5,
         selectable: true,
+        strokeDashArray: [7, 3],
         class: "line",
         objectCaching: false,
         perPixelTargetFind: true
