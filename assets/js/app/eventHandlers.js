@@ -272,12 +272,12 @@ function initHandlers(){
     updateTagSelect();
     $(".datepicker").datepicker();
 
-    $("#add-new-hex-btn").on("click", function(){
-        getElementName('hex');
+    $("#add-new-hex-btn").on("click", function(e){
+        getElementName('hex', e.originalEvent.clientX, e.originalEvent.clientY);
     });
 
-    $("#add-new-circle-btn").on("click", function(){
-        getElementName('circle');
+    $("#add-new-circle-btn").on("click", function(e){
+        getElementName('circle', e.originalEvent.clientX, e.originalEvent.clientY);
     });
 
     $("#add-new-text").on("click", function(e){

@@ -433,7 +433,7 @@ function draw6() {
     }
 }
 
-function getElementName(type){
+function getElementName(type, x, y){
     var input = document.createElement('input'),title;
     input.type = "text";
     input.id = "new-element-name";
@@ -469,8 +469,8 @@ function getElementName(type){
 
     $("#new-element-content").html(input);
     $("#new-element-div").css({
-        'left': downPoint.x + 80,
-        'top': downPoint.y
+        'left': window.scrollX + x,
+        'top': window.scrollY + y + 30
     }).show();
 }
 
