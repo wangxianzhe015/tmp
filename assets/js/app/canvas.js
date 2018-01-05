@@ -312,6 +312,11 @@ canvas.on('mouse:down',function(e){
                 });
             }
         }
+
+        if (addingTextCell){
+            addTextTooltip(downPoint.x, downPoint.y);
+            addingTextCell = false;
+        }
     }
 });
 

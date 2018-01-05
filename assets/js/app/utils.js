@@ -19,6 +19,7 @@ function showNotification(content){
 
 function removeNotifiation(){
     $("#notification").hide();
+    addingTextCell = false;
 }
 
 function wrapCanvasText(t, canvas, maxW, maxH, justify) {

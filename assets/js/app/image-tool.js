@@ -514,16 +514,15 @@ function addTextTooltip(left, top){
         var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
         $.each(rows, function(i, row){
             elements = row.split("\t");
-            console.log(elements);
             if (i == 0) {
                 $.each(elements, function (j, elem) {
                     header.push({title: elem})
                 });
-            } else {
+            } else if (elements != "") {
                 dataSet.push(elements);
             }
         });
-console.log(header);
+
         var $table = $('<table></table>');
         $(this).replaceWith($table);
         $table.DataTable( {

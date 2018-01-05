@@ -281,7 +281,9 @@ function initHandlers(){
     });
 
     $("#add-new-text").on("click", function(e){
-        addTextTooltip(window.scrollX + e.originalEvent.clientX, window.scrollY + e.originalEvent.clientY);
+        //addTextTooltip(window.scrollX + e.originalEvent.clientX, window.scrollY + e.originalEvent.clientY);
+        showNotification("Click where to put text cell.");
+        addingTextCell = true;
     });
 
     $("#app-theme").on("change", function(){
@@ -716,6 +718,7 @@ function initHandlers(){
             $("body").append(inputTag);
         }
     });
+
     $("body").on("mousemove", function(e){
         if (tempInputMoving){
             $("#temp-moving-input").css({

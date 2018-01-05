@@ -1052,7 +1052,7 @@ span#ungroup-all{
     color: blue;
     cursor: pointer;
 }
-#notification, #new-element-div{
+#new-element-div{
     position: absolute;
     z-index: 10000;
     display: none;

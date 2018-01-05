@@ -41,6 +41,8 @@ var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
 
+var addingTextCell = false;
+
 var foreignText = "输入文本！";
 
 // This is for fuzzy font problem fix
