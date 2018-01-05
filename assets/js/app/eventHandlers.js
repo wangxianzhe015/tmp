@@ -280,8 +280,8 @@ function initHandlers(){
         getElementName('circle');
     });
 
-    $("#add-new-text").on("click", function(){
-        addTextTooltip();
+    $("#add-new-text").on("click", function(e){
+        addTextTooltip(window.scrollX + e.originalEvent.clientX, window.scrollY + e.originalEvent.clientY);
     });
 
     $("#app-theme").on("change", function(){

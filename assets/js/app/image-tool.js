@@ -489,7 +489,7 @@ function showUploadDiv(){
 }
 
 
-function addTextTooltip(){
+function addTextTooltip(left, top){
     $("<div></div>", {
         class: "image-tooltip second text"
     }).on("mouseover", function(){
@@ -507,9 +507,33 @@ function addTextTooltip(){
     })).append($("<textarea></textarea>",{
         class: "default-textarea",
         text: "Some Text"
+    }).on("paste", function(e){
+        var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
+        window.document.execCommand("insertText", false, clipboardData);
+        if (clipboardData == "") return false;
+        var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
+        $.each(rows, function(i, row){
+            elements = row.split("\t");
+            console.log(elements);
+            if (i == 0) {
+                $.each(elements, function (j, elem) {
+                    header.push({title: elem})
+                });
+            } else {
+                dataSet.push(elements);
+            }
+        });
+console.log(header);
+        var $table = $('<table></table>');
+        $(this).replaceWith($table);
+        $table.DataTable( {
+            data: dataSet,
+            columns: header
+        });
+
     }))).draggable().css({
-        left: downPoint.x + 20,
-        top: downPoint.y,
+        left: left + 20,
+        top: top,
         position: "absolute"
     }).appendTo("body");
 }

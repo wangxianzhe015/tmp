@@ -549,7 +549,8 @@ button .text{
     background-color: rgba(40,40,40,.2);
 }
 .text .ttip{
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .ttip h3{
     border-bottom: solid 1px rgb(108,158,222);
