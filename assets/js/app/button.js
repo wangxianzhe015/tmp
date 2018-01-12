@@ -116,6 +116,17 @@ function addFeedButton(){
     }).appendTo("#right-sidebar");
 }
 
+function addRingButton(){
+    $("<img/>", {
+        id: "ring-button",
+        src: "./assets/images/icons/ring-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        removeImageTools(true);
+        showRing();
+    }).appendTo("#right-sidebar");
+}
+
 function addUserButton(){
     $("<img/>", {
         id: "user-button",
@@ -422,3 +433,46 @@ function hideTimelineFrame(){
     $("#timeline-iframe").hide();
 }
 
+function showRing(){
+    var ringRadius = window.innerHeight / 2, texts = ["100%", "99%", "95%", "90%", "85%"];
+
+    for (var i = 0; i < 5; i ++){
+        makeOneRing(texts[i], ringRadius * Math.pow(0.8, i));
+    }
+}
+
+function makeOneRing(title, ringRadius){
+
+    var myCircle = new fabric.Circle({radius: ringRadius, fill: "transparent", opacity:.5, strokeWidth: 3, stroke: "white"});
+
+    var text = new fabric.IText(title, {
+        fontSize: 12,
+        textAlign: "center",
+        left: ringRadius,
+        top: 0,
+        originX: "center",
+        originY: "center",
+        class: "ring-text",
+        lineHeight: 12,
+        fontFamily: "Helvetica Neue",
+        fontWeight: 'bold',
+        fill: '#FFF',
+        opacity:1
+    });
+
+    var ring = new fabric.Group([myCircle, text], {
+        originX: "center",
+        originY: "center",
+        hasBorders: false,
+        selectable: false,
+        perPixelTargetFind: true,
+        class: "ring",
+        left: window.scrollX + window.innerWidth / 2,
+        top: window.scrollY + window.innerHeight / 2,
+        id: "ring-1"
+    });
+
+    canvas.add(ring);
+    canvas.sendBackwards(ring);
+
+}

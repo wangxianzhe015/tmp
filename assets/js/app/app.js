@@ -79,6 +79,7 @@ function init(){
     addUploadButton();
     addChipButton();
     addFeedButton();
+    addRingButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();

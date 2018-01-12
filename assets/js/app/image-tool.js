@@ -531,7 +531,7 @@ function addTextTooltip(left, top){
         });
 
     }))).draggable().css({
-        left: left + 20,
+        left: left,
         top: top,
         position: "absolute"
     }).appendTo("body");

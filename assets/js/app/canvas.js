@@ -203,42 +203,42 @@ canvas.on('mouse:down',function(e){
             initTargetElement();
 
         } else if (object.class == "dot") {
-            if (object.id == "dot1"){
-                if (groupTarget != null && groupTarget.class == "group"){
-                    if (groupTarget.expanded){
+            if (object.id == "dot1") {
+                if (groupTarget != null && groupTarget.class == "group") {
+                    if (groupTarget.expanded) {
                         collapseGroup(groupTarget);
                     } else {
                         expandGroup(groupTarget);
                     }
                 }
-            } else if (object.id == "dot2"){
-                if (groupTarget != null && groupTarget.class == "group"){
+            } else if (object.id == "dot2") {
+                if (groupTarget != null && groupTarget.class == "group") {
                     unGroup(groupTarget);
                     if (groupTargetClock == 0) {
                         groupTargetClock = setInterval(highlightGroup, 600);
                     }
                     showNotification("Select an element to ungroup or <span id='ungroup-all'>Ungroup All</span>");
-                    $("#ungroup-all").on("click", function(){
+                    $("#ungroup-all").on("click", function () {
                         unhighlightGroup();
                         ungrouping = false;
                     });
                     ungrouping = true;
                 } else {
                     var objects;
-                    if (groupTarget.type == "group"){
+                    if (groupTarget.type == "group") {
                         objects = groupTarget.getObjects();
                     } else {
                         objects = groupTarget;
                     }
                     groupTarget = [];
-                    objects.forEach(function(el){
-                        if (el.class != "group"){
+                    objects.forEach(function (el) {
+                        if (el.class != "group") {
                             groupTarget.push(el);
                             el.set({
                                 status: ""
                             });
                         } else {
-                            el.forEachObject(function(ell){
+                            el.forEachObject(function (ell) {
                                 ell.set({
                                     status: ""
                                 });
@@ -253,7 +253,7 @@ canvas.on('mouse:down',function(e){
                     showNotification("Select an element to be parent");
                 }
             } else if (object.id == "dot3") {
-                if (groupTarget != null && groupTarget.class == "group"){
+                if (groupTarget != null && groupTarget.class == "group") {
                     groupTarget.cornerStyle = 'circle';
                     groupTarget.cornerColor = 'white';
                     groupTarget.setControlsVisibility({
@@ -267,7 +267,7 @@ canvas.on('mouse:down',function(e){
                         bl: true
                     });
                     groupTarget.hasRotatingPoint = true;
-                    setTimeout(function(){
+                    setTimeout(function () {
                         groupTarget.setControlsVisibility({
                             mt: false,
                             mb: false,
@@ -280,7 +280,7 @@ canvas.on('mouse:down',function(e){
                         });
                         groupTarget.hasRotatingPoint = false;
                         canvas.renderAll();
-                    },5000);
+                    }, 5000);
                     expandGroup(groupTarget);
                     canvas.setActiveObject(groupTarget);
                     canvas.renderAll();
@@ -290,6 +290,8 @@ canvas.on('mouse:down',function(e){
             removeDotTooltip();
             removeThreeDots();
             canvas.renderAll();
+        } else if (object.class == "ring-text"){
+            console.log("ring-text clicked");
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
