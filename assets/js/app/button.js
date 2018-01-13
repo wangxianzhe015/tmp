@@ -122,6 +122,7 @@ function addRingButton(){
         src: "./assets/images/icons/ring-24.png",
         class: "icon-button"
     }).on("click", function(){
+        if (rings.length > 0) return false;
         removeImageTools(true);
         showRing();
     }).appendTo("#right-sidebar");
@@ -439,6 +440,82 @@ function showRing(){
     for (var i = 0; i < 5; i ++){
         makeOneRing(texts[i], ringRadius * Math.pow(0.8, i));
     }
+
+    $("<select></select>", {
+        id: "ring-tags"
+    }).on("change", function(){
+        selectedRing._objects[1].text = $(this).val();
+        canvas.renderAll();
+        $(this).hide();
+        selectedRing = null;
+    }).appendTo("body");
+
+    $("<button></button>", {
+        id: "ring-tween-btn",
+        text: "Tween"
+    }).on({
+        click: function(){
+            if ($(this).text() == "Tween"){
+                var elements = [];
+                canvas.forEachObject(function(obj){
+                    if (obj.class == "element"){
+                        elements.push(obj);
+                    }
+                });
+                console.log(elements);
+                // First process rings with "%"
+                rings.forEach(function(ring){
+                    var tag = ring._objects[1].text, count = 0;
+                    if (parseInt(tag) + "%" == tag){
+                        elements.forEach(function(element, j){
+                            console.log(element.progress);
+                            console.log(element._objects[1].text);
+                            if (element.progress == parseInt(tag)){
+                                element.animate({
+                                    scale: 0.75,
+                                    top: ring.top - Math.cos(ring.angleUnit * (count + 1)) * ring._objects[0].radius,
+                                    left: ring.left + Math.sin(ring.angleUnit * (count + 1)) * ring._objects[0].radius
+                                }, {
+                                    duration: 1000,
+                                    onChange: canvas.renderAll.bind(canvas),
+                                    easing: fabric.util.ease.easeOutCirc
+                                });
+                                elements.splice(j, 1);
+                                count ++;
+                            }
+                        });
+                    }
+                });
+                // Next process rings with tag
+                rings.forEach(function(ring){
+                    var tag = ring._objects[1].text, count = 0;
+                    if (parseInt(tag) + "%" != tag){
+                        elements.forEach(function(element, j){
+                            if (element.tags.indexOf(tag)){
+                                element.animate({
+                                    scale: 0.75,
+                                    top: ring.top - Math.cos(ring.angleUnit * (count + 1)) * ring._objects[0].radius,
+                                    left: ring.left + Math.sin(ring.angleUnit * (count + 1)) * ring._objects[0].radius
+                                }, {
+                                    duration: 1000,
+                                    onChange: canvas.renderAll.bind(canvas),
+                                    easing: fabric.util.ease.easeOutCirc
+                                });
+                                elements.splice(j, 1);
+                                count ++;
+                            }
+                        });
+                    }
+                });
+                $(this).text("Untween");
+            } else {
+                $(this).text("Tween");
+            }
+        }
+    }).css({
+        left: window.scrollX + window.innerWidth / 2 - 32,
+        top: window.scrollY + window.innerHeight / 2 - 17
+    }).appendTo("body");
 }
 
 function makeOneRing(title, ringRadius){
@@ -454,7 +531,7 @@ function makeOneRing(title, ringRadius){
         originY: "center",
         class: "ring-text",
         lineHeight: 12,
-        fontFamily: "Helvetica Neue",
+        fontFamily: "Helvetica",
         fontWeight: 'bold',
         fill: '#FFF',
         opacity:1
@@ -472,6 +549,9 @@ function makeOneRing(title, ringRadius){
         id: "ring-1"
     });
 
+    ring.angleUnit = 2 * radius / ringRadius;
+
+    rings.push(ring);
     canvas.add(ring);
     canvas.sendBackwards(ring);
 

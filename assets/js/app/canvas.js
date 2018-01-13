@@ -106,6 +106,8 @@ canvas.on('mouse:down',function(e){
     mouseDown = true;
     downPoint = {x: e.e.pageX, y: e.e.pageY};
     $("#new-element-div").hide();
+    $("#ring-tags").hide();
+    selectedRing = null;
     var object = e.target;
     if (object != null) {
         if (object.class == 'button') {
@@ -290,8 +292,21 @@ canvas.on('mouse:down',function(e){
             removeDotTooltip();
             removeThreeDots();
             canvas.renderAll();
-        } else if (object.class == "ring-text"){
-            console.log("ring-text clicked");
+        } else if (object.class == "ring"){
+            //var textPos = {left: object.left + object._objects[1].left, top: object.top + object._objects[1].top};
+            selectedRing = object;
+            var $select = $("#ring-tags");
+            $select.html("<option>Select tag</option>");
+            $("#tags-list").val().split(",").forEach(function(word){
+                $("#ring-tags").append($("<option></option>", {
+                    text: word.trim(),
+                    value: word.trim()
+                }));
+            });
+            $select.css({
+                left: object.left - 30,
+                top: object.top + object._objects[1].top - 10
+            }).show();
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;

@@ -215,13 +215,13 @@ function initHandlers(){
         keepOpen: true
     });
 
-    $("#imageDialog").find(".ms-parent").on("click", function(e){
-        e.preventDefault();
-        return false;
-    }).find(".ms-choice").on("click", function(e){
-        e.preventDefault();
-        return false;
-    });
+    //$("#imageDialog").find(".ms-parent").on("click", function(e){
+    //    e.preventDefault();
+    //    return false;
+    //}).find(".ms-choice").on("click", function(e){
+    //    e.preventDefault();
+    //    return false;
+    //});
 
     $("#tags").on("change", function(){
         var keywords = $(this).val();

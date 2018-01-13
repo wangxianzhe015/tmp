@@ -1627,3 +1627,22 @@ textarea.default-textarea{
     color: white;
     transform: translateX(-50%);
 }
+
+#ring-tags{
+    width: 100px;
+    margin: 0 50px;
+    background-color: #191919;
+    color: white;
+    border-color: #191919;
+    font-size: 12px;
+    border-radius: 3px;
+    position: absolute;
+    display: none;
+}
+
+#ring-tween-btn{
+    position: absolute;
+    width: 60px;
+    height: 30px;
+    padding: 4px;
+}
