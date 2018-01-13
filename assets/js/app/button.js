@@ -472,7 +472,8 @@ function showRing(){
                             console.log(element._objects[1].text);
                             if (element.progress == parseInt(tag)){
                                 element.animate({
-                                    scale: 0.75,
+                                    scaleX: 0.75,
+                                    scaleY: 0.75,
                                     top: ring.top - Math.cos(ring.angleUnit * (count + 1)) * ring._objects[0].radius,
                                     left: ring.left + Math.sin(ring.angleUnit * (count + 1)) * ring._objects[0].radius
                                 }, {
@@ -497,7 +498,8 @@ function showRing(){
                                     top: ring.top - Math.cos(ring.angleUnit * (count + 1)) * ring._objects[0].radius,
                                     left: ring.left + Math.sin(ring.angleUnit * (count + 1)) * ring._objects[0].radius
                                 }, {
-                                    duration: 1000,
+                                    scaleX: 0.75,
+                                    scaleY: 0.75,
                                     onChange: canvas.renderAll.bind(canvas),
                                     easing: fabric.util.ease.easeOutCirc
                                 });
