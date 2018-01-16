@@ -1,72 +1,16 @@
 function drawQuadratic() {
 
-    var line1 = new fabric.Path('M 500 300 Q 600 300 700 300', {
-        fill: '',
-        stroke: 'white',
-        opacity: .5,
-        selectable: true,
-        strokeDashArray: [5, 5],
-        class: "line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var line2 = new fabric.Path('M 700 300 Q 800 300 900 300', {
-        fill: '',
-        stroke: 'white',
-        opacity: .5,
-        selectable: true,
-        strokeDashArray: [3, 7],
-        class: "line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var line3 = new fabric.Path('M 900 300 Q 1000 300 1100 300', {
-        fill: '',
-        stroke: 'white',
-        opacity: .5,
-        selectable: true,
-        strokeDashArray: [7, 3],
-        class: "line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    canvas.add(line1);
-    canvas.add(line2);
-    canvas.add(line3);
-
-    var control1 = makeCurvePoint(600, 300, line1);
-    control1.name = "control-1";
-    line1.control = control1;
-    canvas.add(control1);
-
-    var control2 = makeCurvePoint(800, 300, line2);
-    control2.name = "control-2";
-    line2.control = control2;
-    canvas.add(control2);
-
-    var control3 = makeCurvePoint(1000, 300, line3);
-    control3.name = "control-3";
-    line3.control = control3;
-    canvas.add(control3);
-
-    var p0 = makeCurveCircle(500, 300, null, control1);
+    var p0 = makeCurveCircle(500, 300);
     canvas.add(p0);
 
-    var p1 = makeCurveCircle(700, 300, control1, control2);
+    var p1 = makeCurveCircle(700, 300);
     canvas.add(p1);
 
-    var p2 = makeCurveCircle(900, 300, control2, control3);
+    var p2 = makeCurveCircle(900, 300);
     canvas.add(p2);
 
-    var p3 = makeCurveCircle(1100, 300, control3, null);
+    var p3 = makeCurveCircle(1100, 300);
     canvas.add(p3);
-
-    adjustLine(line1);
-    adjustLine(line2);
-    adjustLine(line3);
 }
 
 /**
@@ -77,7 +21,7 @@ function drawQuadratic() {
  * @param rightControl
  * @returns {fabric.Circle}
  */
-function makeCurveCircle(x, y, leftControl, rightControl) {
+function makeCurveCircle(x, y) {
     var c = new fabric.Circle({
         left: x,
         top: y,
@@ -86,21 +30,30 @@ function makeCurveCircle(x, y, leftControl, rightControl) {
         radius: Math.sqrt(3) * (radius - border / 2) / 2,
         originX: 'center',
         originY: 'center',
+        lines: [],
         fill: elementColor,
         opacity:.5
     });
 
     c.hasBorders = c.hasControls = false;
 
-    c.leftControl = leftControl;
-    c.rightControl = rightControl;
+    var newPoint = new fabric.Circle({
+        left: x,
+        top: y - Math.sqrt(3) * (radius - border / 2) / 2,
+        class: 'new-bezier-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 2,
+        stroke: 'white',
+        radius: 5,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        fill: 'transparent'
+    });
 
-    if (leftControl != null) {
-        leftControl.rightCircle = c;
-    }
-    if (rightControl != null) {
-        rightControl.leftCircle = c;
-    }
+    canvas.add(newPoint);
+    c.newPoint = newPoint;
+    newPoint.master = c;
 
     return c;
 }
@@ -121,8 +74,6 @@ function makeCurvePoint(x, y, line) {
         radius: 5,
         originX: 'center',
         originY: 'center',
-        leftCircle: null,
-        rightCircle: null,
         fill: '#fff',
         opacity: 0,
         stroke: '#f00'
@@ -131,33 +82,105 @@ function makeCurvePoint(x, y, line) {
     c.hasBorders = c.hasControls = false;
 
     c.line = line;
+    line.control = c;
 
     return c;
 }
 
+function addBezierLine(leftElement, rightElement){
+    var startX = leftElement.left, startY = leftElement.top, endX = rightElement.left, endY = rightElement.top;
+
+    var bLine = new fabric.Path('M ' + startX + ' ' + startY + ' Q ' + (startX + endX) / 2 + ' ' + (startY + endY) / 2 + ' ' + endX + ' ' + endY, {
+        fill: '',
+        stroke: 'white',
+        opacity: .5,
+        selectable: false,
+        strokeDashArray: [7, 3],
+        class: "line",
+        leftElement: leftElement,
+        rightElement: rightElement,
+        objectCaching: false,
+        perPixelTargetFind: true
+    });
+
+    canvas.add(bLine);
+
+    var leftCircle = new fabric.Circle({
+        left: 0,
+        top: 0,
+        class: 'bezier-start-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 2,
+        stroke: 'white',
+        radius: 5,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        fill: 'transparent'
+    });
+    canvas.add(leftCircle);
+    bLine.leftCircle = leftCircle;
+
+    var rightCircle = new fabric.Circle({
+        left: 0,
+        top: 0,
+        class: 'bezier-end-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 2,
+        stroke: 'white',
+        radius: 5,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        fill: 'transparent'
+    });
+    canvas.add(rightCircle);
+    bLine.rightCircle = rightCircle;
+
+    var controlPoint = makeCurvePoint(600, 300, bLine);
+    canvas.add(controlPoint);
+
+    leftElement.lines.push(bLine);
+    rightElement.lines.push(bLine);
+
+    adjustLine(bLine);
+}
+
 function adjustLine(line){
-    var control = line.control, point, distance, angle, factor = 1;
+    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY;
 
     // Starting point
-    point = control.leftCircle;
+    point = line.leftElement;
     distance = Math.sqrt((point.left - control.left) * (point.left - control.left) + (point.top - control.top) * (point.top - control.top));
     if (control.top < point.top) {
         factor = -1;
     }
     angle = factor * Math.atan((control.left - point.left) / (control.top - point.top));
-    line.path[0][1] = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
-    line.path[0][2] = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+    tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    line.path[0][1] = tmpX;
+    line.path[0][2] = tmpY;
+    line.leftCircle.set({
+        left: tmpX,
+        top: tmpY
+    });
 
     // Ending point
-    point = control.rightCircle;
+    point = line.rightElement;
     factor = 1;
     distance = Math.sqrt((point.left - control.left) * (point.left - control.left) + (point.top - control.top) * (point.top - control.top));
     if (control.top < point.top) {
         factor = -1;
     }
     angle = factor * Math.atan((control.left - point.left) / (control.top - point.top));
-    line.path[1][3] = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
-    line.path[1][4] = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+    tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+    line.path[1][3] = tmpX;
+    line.path[1][4] = tmpY;
+    line.rightCircle.set({
+        left: tmpX,
+        top: tmpY
+    });
 
     canvas.renderAll();
 }

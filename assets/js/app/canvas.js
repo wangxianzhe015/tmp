@@ -50,6 +50,11 @@ canvas.on('mouse:over', function(e) {
     } else if (e.target != null && e.target.class == "dot") {
         removeDotTooltip();
         addDotTooltip(e.target);
+    } else if (e.target != null && e.target.class == "b-circle"){
+        if (newBezierLine != null){
+            newBezierLine.set("stroke", "white");
+        }
+        canvas.renderAll();
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -60,6 +65,12 @@ canvas.on('mouse:out', function(e){
     if (e.target!= null){
         mouseOverElement = false;
     }
+    if (e.target != null && e.target.class == "b-circle") {
+        if (newBezierLine != null){
+            newBezierLine.set("stroke", "red");
+        }
+    }
+    canvas.renderAll();
 });
 
 canvas.on('mouse:move',function(moveEventOptions){
@@ -69,6 +80,24 @@ canvas.on('mouse:move',function(moveEventOptions){
 
     if (mouseDown){
         mouseDrag = true;
+    }
+
+    if (newBezierLine != null){
+        canvas.selectionBorderColor = 'transparent';
+        var xPos = moveEventOptions.e.pageX, yPos = moveEventOptions.e.pageY, startX, startY, startElement = newBezierLine.startElement, distance, angle, factor = yPos>startElement.top?-1:1;
+        distance = Math.sqrt(Math.pow(xPos - startElement.left, 2) + Math.pow(yPos - startElement.top, 2));
+        angle = Math.acos((xPos - startElement.left) / distance);
+        var circleRadius = Math.sqrt(3) * (radius - border / 2) / 2;
+        newBezierLine.set({
+            x1: startElement.left + circleRadius * Math.cos(angle),
+            y1: startElement.top - circleRadius * Math.sin(angle) * factor,
+            x2: xPos,
+            y2: yPos
+        });
+        canvas.renderAll();
+        return false;
+    } else {
+        canvas.selectionBorderColor = 'white';
     }
 
     if (moveEventOptions.target != null && moveEventOptions.target.class == "group") {
@@ -292,12 +321,12 @@ canvas.on('mouse:down',function(e){
             removeDotTooltip();
             removeThreeDots();
             canvas.renderAll();
-        } else if (object.class == "ring"){
+        } else if (object.class == "ring") {
             //var textPos = {left: object.left + object._objects[1].left, top: object.top + object._objects[1].top};
             selectedRing = object;
             var $select = $("#ring-tags");
             $select.html("<option>Select tag</option>");
-            $("#tags-list").val().split(",").forEach(function(word){
+            $("#tags-list").val().split(",").forEach(function (word) {
                 $("#ring-tags").append($("<option></option>", {
                     text: word.trim(),
                     value: word.trim()
@@ -307,6 +336,18 @@ canvas.on('mouse:down',function(e){
                 left: object.left - 30,
                 top: object.top + object._objects[1].top - 10
             }).show();
+        } else if (e.target.class == "new-bezier-point") {
+            newBezierLine = new fabric.Line([ downPoint.x, downPoint.y, downPoint.x, downPoint.y ], {
+                fill: 'red',
+                stroke: 'red',
+                strokeWidth: 2,
+                selectable: false,
+                opacity: 0.5
+            });
+            newBezierLine.startElement = e.target.master;
+            canvas.add(newBezierLine);
+            canvas.discardActiveObject();
+            canvas.renderAll();
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
@@ -340,6 +381,12 @@ canvas.on('mouse:down',function(e){
 canvas.on('mouse:up',function(e){
     mouseDown = false;
     if (mouseDrag && e.target == null){
+        if (newBezierLine != null){
+            canvas.remove(newBezierLine);
+            newBezierLine = null;
+            canvas.renderAll();
+            return false;
+        }
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
         if (canvas.getActiveGroup() == null && canvas.getActiveObject() == null) {
             if (Math.abs(downPoint.x - upPoint.x) < 20 && Math.abs(downPoint.y - upPoint.y) < 20) {
@@ -445,6 +492,15 @@ canvas.on('mouse:up',function(e){
         obj.setOpacity(0);
     }
     mouseDrag = false;
+
+    if (e.target != null && newBezierLine != null){
+        if (e.target.class == 'b-circle'){
+            addBezierLine(newBezierLine.startElement, e.target);
+        }
+        canvas.remove(newBezierLine);
+        newBezierLine = null;
+    }
+
     canvas.renderAll();
 });
 
@@ -483,7 +539,7 @@ canvas.on('object:selected', function(e){
     if (e.target.class == "group"){
         e.target.borderDashArray = [5, 5];
         addThreeDots(e.target);
-    } else if (e.target.class == "b-point"){
+    } else if (e.target.class == "b-point") {
         if (e.target.name == "p0" || e.target.name == "p2") {
             e.target.control.animate('opacity', '1', {
                 duration: 200,
@@ -491,6 +547,11 @@ canvas.on('object:selected', function(e){
             });
             e.target.control.selectable = true;
         }
+    } else if (e.target.class == "b-circle"){
+        //e.target.newPoint.set({
+        //    opacity: 1
+        //});
+        //canvas.renderAll();
     } else if (e.target.class != "group"){
         obj = canvas.getActiveGroup();
         if (obj != null){
@@ -511,8 +572,6 @@ canvas.on('object:selected', function(e){
             addThreeDots(obj);
         }
     }
-    //var obj = e.target.class == "group" ? e.target : canvas.getActiveGroup();
-    //var obj = canvas.getActiveGroup();
 });
 
 canvas.on('object:moving', function(e){
@@ -564,12 +623,15 @@ canvas.on('object:moving', function(e){
         var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
         moveThreeDots(obj);
     } else if (e.target.class == 'b-circle'){
-        if (e.target.leftControl != null) {
-            adjustLine(e.target.leftControl.line);
-        }
-        if (e.target.rightControl != null) {
-            adjustLine(e.target.rightControl.line);
-        }
+        e.target.newPoint.setCoords();
+        e.target.newPoint.set({
+            left: e.target.left,
+            top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
+        });
+        e.target.lines.forEach(function(line){
+            adjustLine(line);
+        });
+        canvas.discardActiveObject();
     } else if (e.target.class == "b-point") {
 
         if (e.target.line) {
@@ -610,6 +672,11 @@ canvas.on('selection:cleared', function(e){
         });
         e.target.hasRotatingPoint = false;
         canvas.renderAll();
+    } else if (e.target != null && e.target.class == 'b-circle'){
+        //e.target.newPoint.set({
+        //    opacity: 0
+        //});
+        //canvas.renderAll();
     }
 });
 

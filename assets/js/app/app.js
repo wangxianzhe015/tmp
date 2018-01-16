@@ -47,6 +47,8 @@ var foreignText = "输入文本！";
 
 var rings = [], selectedRing = null, positionBeforeRing = null;
 
+var newBezierLine = null;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false
