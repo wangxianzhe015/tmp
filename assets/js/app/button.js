@@ -455,22 +455,22 @@ function showRing(){
         text: "Tween"
     }).on({
         click: function(){
+            var elements = [];
             if ($(this).text() == "Tween"){
-                var elements = [];
+                positionBeforeRing = {};
                 canvas.forEachObject(function(obj){
                     if (obj.class == "element"){
                         elements.push(obj);
                     }
                 });
-                console.log(elements);
                 // First process rings with "%"
                 rings.forEach(function(ring){
                     var tag = ring._objects[1].text, count = 0;
                     if (parseInt(tag) + "%" == tag){
-                        elements.forEach(function(element, j){
-                            console.log(element.progress);
-                            console.log(element._objects[1].text);
+                        for (var j = elements.length - 1; j >= 0; j --){
+                            var element = elements[j];
                             if (element.progress == parseInt(tag)){
+                                positionBeforeRing[element.id] = {left: element.left, top: element.top};
                                 element.animate({
                                     scaleX: 0.75,
                                     scaleY: 0.75,
@@ -484,33 +484,53 @@ function showRing(){
                                 elements.splice(j, 1);
                                 count ++;
                             }
-                        });
+                        }
                     }
                 });
                 // Next process rings with tag
                 rings.forEach(function(ring){
                     var tag = ring._objects[1].text, count = 0;
                     if (parseInt(tag) + "%" != tag){
-                        elements.forEach(function(element, j){
-                            if (element.tags.indexOf(tag)){
+                        for (var j = elements.length - 1; j >= 0; j --){
+                            var element = elements[j];
+                            if (element.tags.indexOf(tag) > -1){
+                                positionBeforeRing[element.id] = {left: element.left, top: element.top};
                                 element.animate({
-                                    scale: 0.75,
+                                    scaleX: 0.75,
+                                    scaleY: 0.75,
                                     top: ring.top - Math.cos(ring.angleUnit * (count + 1)) * ring._objects[0].radius,
                                     left: ring.left + Math.sin(ring.angleUnit * (count + 1)) * ring._objects[0].radius
                                 }, {
-                                    scaleX: 0.75,
-                                    scaleY: 0.75,
+                                    duration: 1000,
                                     onChange: canvas.renderAll.bind(canvas),
                                     easing: fabric.util.ease.easeOutCirc
                                 });
                                 elements.splice(j, 1);
                                 count ++;
                             }
-                        });
+                        }
                     }
                 });
                 $(this).text("Untween");
             } else {
+                canvas.forEachObject(function(obj){
+                    if (obj.class == "element"){
+                        elements.push(obj);
+                    }
+                });
+                elements.forEach(function(element){
+                    element.animate({
+                        scaleX: 1,
+                        scaleY: 1,
+                        top: positionBeforeRing[element.id].top,
+                        left: positionBeforeRing[element.id].left
+                    }, {
+                        duration: 1000,
+                        onChange: canvas.renderAll.bind(canvas),
+                        easing: fabric.util.ease.easeOutCirc
+                    });
+                });
+                positionBeforeRing = null;
                 $(this).text("Tween");
             }
         }

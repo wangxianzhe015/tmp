@@ -45,7 +45,7 @@ var addingTextCell = false;
 
 var foreignText = "输入文本！";
 
-var rings = [], selectedRing = null;
+var rings = [], selectedRing = null, positionBeforeRing = null;
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
