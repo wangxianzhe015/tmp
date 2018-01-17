@@ -478,11 +478,11 @@ function initHandlers(){
             canvas.getActiveObject().set("hasRotatingPoint", rotatable);
             canvas.renderAll();
         }
-    });
+    }).click();
 
     $("#toggle-always-visible-menu").on("click", function(){
         $("#always-visible-menu").toggle();
-    });
+    }).click();
 
     $("#grid-show-check").on("click", function(){
         var check = $(this).prop('checked');

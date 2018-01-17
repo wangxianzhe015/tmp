@@ -548,7 +548,7 @@ button .text{
 .second .ttip{
     background-color: rgba(40,40,40,.2);
 }
-.text .ttip{
+.text.expanded .ttip{
     overflow-x: hidden;
     overflow-y: auto;
 }

@@ -118,6 +118,7 @@ function addBezierLine(leftElement, rightElement){
         fill: 'transparent'
     });
     canvas.add(leftCircle);
+    leftCircle.setCoords();
     bLine.leftCircle = leftCircle;
     leftCircle.master = bLine;
 
@@ -133,6 +134,7 @@ function addBezierLine(leftElement, rightElement){
         fill: 'transparent'
     });
     canvas.add(rightCircle);
+    rightCircle.setCoords();
     bLine.rightCircle = rightCircle;
     rightCircle.master = bLine;
 

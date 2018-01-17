@@ -435,11 +435,14 @@ function hideTimelineFrame(){
 }
 
 function showRing(){
-    var ringRadius = window.innerHeight / 2, texts = ["100%", "99%", "95%", "90%", "85%"];
+    var ringRadius = window.innerWidth / 2;
 
-    for (var i = 0; i < 5; i ++){
-        makeOneRing(texts[i], ringRadius * Math.pow(0.8, i));
-    }
+    makeOneRing("100%", ringRadius, 5, 0.25);
+    makeOneRing("99%", ringRadius * 0.85, 30, 0.25, [5,5]);
+    makeOneRing("95%", ringRadius * 0.75, 5, 0.25);
+    makeOneRing("90%", ringRadius * 0.5, 3, 0.5);
+    makeOneRing("85%", ringRadius * 0.45, 1, 0.25);
+    makeOneRing("80%", ringRadius * 0.35, 2, 0.25);
 
     $("<select></select>", {
         id: "ring-tags"
@@ -535,14 +538,27 @@ function showRing(){
             }
         }
     }).css({
-        left: window.scrollX + window.innerWidth / 2 - 32,
-        top: window.scrollY + window.innerHeight / 2 - 17
+        left: window.innerWidth,
+        top: window.innerHeight,
+        transform: "translateX(-50%) translateY(-50%)"
     }).appendTo("body");
+
+    $("html, body").animate({
+        scrollLeft: window.innerWidth / 2,
+        scrollTop: window.innerHeight / 2
+    });
 }
 
-function makeOneRing(title, ringRadius){
+function makeOneRing(title, ringRadius, width, opacity, dashPattern){
+    dashPattern = typeof dashPattern !== 'undefined' ? dashPattern : [1, 0];
 
-    var myCircle = new fabric.Circle({radius: ringRadius, fill: "transparent", opacity:.5, strokeWidth: 3, stroke: "white"});
+    var myCircle = new fabric.Circle({
+        radius: ringRadius,
+        fill: "transparent",
+        opacity: opacity,
+        strokeWidth: width,
+        stroke: "white",
+        strokeDashArray: dashPattern});
 
     var text = new fabric.IText(title, {
         fontSize: 12,
@@ -566,8 +582,8 @@ function makeOneRing(title, ringRadius){
         selectable: false,
         perPixelTargetFind: true,
         class: "ring",
-        left: window.scrollX + window.innerWidth / 2,
-        top: window.scrollY + window.innerHeight / 2,
+        left: window.innerWidth,
+        top: window.innerHeight,
         id: "ring-1"
     });
 
