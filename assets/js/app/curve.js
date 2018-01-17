@@ -97,6 +97,7 @@ function addBezierLine(leftElement, rightElement){
         selectable: false,
         strokeDashArray: [7, 3],
         class: "line",
+        id: "bezier-line-" + parseInt(Math.random() * 1000000000000),
         leftElement: leftElement,
         rightElement: rightElement,
         objectCaching: false,

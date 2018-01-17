@@ -355,9 +355,20 @@ canvas.on('mouse:down',function(e){
                 class: "normal-btn"
             }).on("click", function(){
                 if (rmBezierLine != null){
+                    rmBezierLine.leftElement.lines.forEach(function(line, i){
+                        if (line.id == rmBezierLine.id){
+                            rmBezierLine.leftElement.lines.splice(i,1);
+                        }
+                    });
+                    rmBezierLine.rightElement.lines.forEach(function(line, i){
+                        if (line.id == rmBezierLine.id){
+                            rmBezierLine.rightElement.lines.splice(i,1);
+                        }
+                    });
                     canvas.remove(rmBezierLine.leftCircle);
                     canvas.remove(rmBezierLine.rightCircle);
                     canvas.remove(rmBezierLine);
+                    rmBezierLine = null;
                     canvas.renderAll();
                 }
                 $(this).remove();
