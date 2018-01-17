@@ -106,8 +106,6 @@ function addBezierLine(leftElement, rightElement){
     canvas.add(bLine);
 
     var leftCircle = new fabric.Circle({
-        left: 0,
-        top: 0,
         class: 'bezier-start-point',
         hoverCursor: 'pointer',
         strokeWidth: 2,
@@ -120,10 +118,9 @@ function addBezierLine(leftElement, rightElement){
     });
     canvas.add(leftCircle);
     bLine.leftCircle = leftCircle;
+    leftCircle.master = bLine;
 
     var rightCircle = new fabric.Circle({
-        left: 0,
-        top: 0,
         class: 'bezier-end-point',
         hoverCursor: 'pointer',
         strokeWidth: 2,
@@ -136,8 +133,9 @@ function addBezierLine(leftElement, rightElement){
     });
     canvas.add(rightCircle);
     bLine.rightCircle = rightCircle;
+    rightCircle.master = bLine;
 
-    var controlPoint = makeCurvePoint(600, 300, bLine);
+    var controlPoint = makeCurvePoint((startX + endX) / 2, (startY + endY) / 2, bLine);
     canvas.add(controlPoint);
 
     leftElement.lines.push(bLine);
@@ -160,6 +158,7 @@ function adjustLine(line){
     tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
     line.path[0][1] = tmpX;
     line.path[0][2] = tmpY;
+    line.leftCircle.setCoords();
     line.leftCircle.set({
         left: tmpX,
         top: tmpY
@@ -177,6 +176,7 @@ function adjustLine(line){
     tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
     line.path[1][3] = tmpX;
     line.path[1][4] = tmpY;
+    line.rightCircle.setCoords();
     line.rightCircle.set({
         left: tmpX,
         top: tmpY

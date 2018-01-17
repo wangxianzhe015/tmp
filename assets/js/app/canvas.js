@@ -337,7 +337,7 @@ canvas.on('mouse:down',function(e){
                 top: object.top + object._objects[1].top - 10
             }).show();
         } else if (e.target.class == "new-bezier-point") {
-            newBezierLine = new fabric.Line([ downPoint.x, downPoint.y, downPoint.x, downPoint.y ], {
+            newBezierLine = new fabric.Line([downPoint.x, downPoint.y, downPoint.x, downPoint.y], {
                 fill: 'red',
                 stroke: 'red',
                 strokeWidth: 2,
@@ -348,6 +348,29 @@ canvas.on('mouse:down',function(e){
             canvas.add(newBezierLine);
             canvas.discardActiveObject();
             canvas.renderAll();
+        } else if (e.target.class == "bezier-start-point" || e.target.class == "bezier-end-point"){
+            rmBezierLine = e.target.master;
+            $("<button>Remove</button>").attr({
+                id: "bezier-line-rm-btn",
+                class: "normal-btn"
+            }).on("click", function(){
+                if (rmBezierLine != null){
+                    canvas.remove(rmBezierLine.leftCircle);
+                    canvas.remove(rmBezierLine.rightCircle);
+                    canvas.remove(rmBezierLine);
+                    canvas.renderAll();
+                }
+                $(this).remove();
+            }).css({
+                left: e.e.pageX,
+                top: e.e.pageY,
+                position: "absolute"
+            }).appendTo("body");
+
+            setTimeout(function(){
+                $("#bezier-line-rm-btn").remove();
+                rmBezierLine = null;
+            }, 2000);
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
@@ -494,8 +517,9 @@ canvas.on('mouse:up',function(e){
     mouseDrag = false;
 
     if (e.target != null && newBezierLine != null){
-        if (e.target.class == 'b-circle'){
+        if (e.target.class == 'b-circle' && newBezierLine.startElement != e.target){
             addBezierLine(newBezierLine.startElement, e.target);
+            canvas.discardActiveObject();
         }
         canvas.remove(newBezierLine);
         newBezierLine = null;
