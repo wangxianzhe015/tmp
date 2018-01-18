@@ -427,7 +427,7 @@ canvas.on('mouse:up',function(e){
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
             } else if (Math.abs(downPoint.x - upPoint.x) > 20 && Math.abs(downPoint.y - upPoint.y) > 20) {
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
-                //addAddButtons(downPoint.x, downPoint.y);
+                addAddButtons(downPoint.x, downPoint.y);
 
                 regexSearchCount++;
                 var box = $('<div/>', {

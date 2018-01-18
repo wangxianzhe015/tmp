@@ -460,6 +460,7 @@ button .text{
     min-height: 33px;
     width: 200px;
     min-width: 200px;
+    cursor: move;
     -webkit-transition: width 1s, height 1s;
     -moz-transition: width 1s, height 1s;
     -o-transition: width 1s, height 1s;

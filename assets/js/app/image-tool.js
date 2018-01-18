@@ -491,13 +491,18 @@ function showUploadDiv(){
 
 function addTextTooltip(left, top){
     $("<div></div>", {
-        class: "image-tooltip second text"
+        class: "image-tooltip second text",
+        id: "text-box-" + parseInt(Math.random() * 10000000000)
     }).on("mouseover", function(){
-        $(this).addClass("expanded");
+        if (mouseDrag) return false;
+        $(this).addClass("expanded").attr("data-hidden", false);
     }).on("mouseleave", function(){
         var that = this;
+        $(this).attr("data-hidden", true);
         setTimeout(function() {
-            $(that).removeClass("expanded")
+            if ($(that).attr("data-hidden") == "true") {
+                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0}, 500);
+            }
         }, 10000);
     }).append($("<div></div>", {
         class: "ttip"
