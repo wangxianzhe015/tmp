@@ -142,12 +142,13 @@ canvas.on('mouse:down',function(e){
         if (object.class == 'button') {
             if (object.id == 'add-new-shape') {
                 if (object.category == 'hexagon') {
-                    //getElementName('hex');
+                    getElementName('hex', e.e.pageX, e.e.pageY);
                 } else if (object.category == 'circle'){
-                    //getElementName('circle');
+                    getElementName('circle', e.e.pageX, e.e.pageY);
                 }
             } else if (object.id == 'add-new-text') {
-                //addTextTooltip();
+                showNotification("Click where to put text cell.");
+                addingTextCell = true;
             }
         }else if (object.class == 'element') {
             if (resizable){
