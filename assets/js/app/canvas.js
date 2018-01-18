@@ -142,9 +142,9 @@ canvas.on('mouse:down',function(e){
         if (object.class == 'button') {
             if (object.id == 'add-new-shape') {
                 if (object.category == 'hexagon') {
-                    getElementName('hex', e.e.pageX, e.e.pageY);
+                    getElementName('hex', object.left, object.top);
                 } else if (object.category == 'circle'){
-                    getElementName('circle', e.e.pageX, e.e.pageY);
+                    getElementName('circle', object.left, object.top);
                 }
             } else if (object.id == 'add-new-text') {
                 showNotification("Click where to put text cell.");

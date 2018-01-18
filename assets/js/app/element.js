@@ -469,8 +469,8 @@ function getElementName(type, x, y){
 
     $("#new-element-content").html(input);
     $("#new-element-div").css({
-        'left': window.scrollX + x,
-        'top': window.scrollY + y + 30
+        'left': x,
+        'top': y + 30
     }).show();
 }
 
