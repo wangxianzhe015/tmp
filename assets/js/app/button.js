@@ -122,6 +122,11 @@ function addRingButton(){
         src: "./assets/images/icons/ring-24.png",
         class: "icon-button"
     }).on("click", function(){
+        $("html, body").animate({
+            scrollLeft: window.innerWidth / 2,
+            scrollTop: window.innerHeight / 2
+        });
+
         if (rings.length > 0) return false;
         removeImageTools(true);
         showRing();
@@ -453,13 +458,14 @@ function showRing(){
         selectedRing = null;
     }).appendTo("body");
 
-    $("<button></button>", {
+    $("<img/>", {
         id: "ring-tween-btn",
-        text: "Tween"
+        src: "./assets/images/icons/ring-24.png",
+        "data-status": "tween"
     }).on({
         click: function(){
             var elements = [];
-            if ($(this).text() == "Tween"){
+            if ($(this).attr("data-status") == "tween"){
                 positionBeforeRing = {};
                 canvas.forEachObject(function(obj){
                     if (obj.class == "element"){
@@ -514,7 +520,7 @@ function showRing(){
                         }
                     }
                 });
-                $(this).text("Untween");
+                $(this).attr("data-status", "untween");
             } else {
                 canvas.forEachObject(function(obj){
                     if (obj.class == "element"){
@@ -534,19 +540,13 @@ function showRing(){
                     });
                 });
                 positionBeforeRing = null;
-                $(this).text("Tween");
+                $(this).attr("data-status", "tween");
             }
         }
     }).css({
         left: window.innerWidth,
-        top: window.innerHeight,
-        transform: "translateX(-50%) translateY(-50%)"
+        top: window.innerHeight
     }).appendTo("body");
-
-    $("html, body").animate({
-        scrollLeft: window.innerWidth / 2,
-        scrollTop: window.innerHeight / 2
-    });
 }
 
 function makeOneRing(title, ringRadius, width, opacity, dashPattern){

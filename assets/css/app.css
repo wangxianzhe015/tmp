@@ -547,7 +547,24 @@ button .text{
 }
 .second .ttip{
     background-color: rgba(40,40,40,.2);
+    overflow: hidden;
 }
+/* for Datatables */
+.second .ttip .dataTables_wrapper *{
+    color: white;
+}
+.second .ttip .dataTables_wrapper input, .second .ttip .dataTables_wrapper select{
+    background-color: transparent;
+    border: solid 1px gray;
+}
+.second .ttip .dataTables_wrapper option{
+    background-color: rgba(0,0,0,0.5);
+}
+.second .ttip .dataTables_wrapper input::placeholder{
+    color: white;
+    font-style: italic;
+}
+
 .text.expanded .ttip{
     overflow-x: hidden;
     overflow-y: auto;
@@ -1642,7 +1659,6 @@ textarea.default-textarea{
 
 #ring-tween-btn{
     position: absolute;
-    width: 60px;
-    height: 30px;
-    padding: 4px;
+    cursor: pointer;
+    transform: translateX(-50%) translateY(-50%);
 }

@@ -495,7 +495,10 @@ function addTextTooltip(left, top){
     }).on("mouseover", function(){
         $(this).addClass("expanded");
     }).on("mouseleave", function(){
-        $(this).removeClass("expanded");
+        var that = this;
+        setTimeout(function() {
+            $(that).removeClass("expanded")
+        }, 10000);
     }).append($("<div></div>", {
         class: "ttip"
     }).append($("<input/>", {
