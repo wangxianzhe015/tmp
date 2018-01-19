@@ -148,7 +148,7 @@ function addBezierLine(leftElement, rightElement){
 }
 
 function adjustLine(line){
-    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY;
+    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines;
 
     // Starting point
     point = line.leftElement;
@@ -161,11 +161,35 @@ function adjustLine(line){
     tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
     line.path[0][1] = tmpX;
     line.path[0][2] = tmpY;
-    line.leftCircle.setCoords();
     line.leftCircle.set({
         left: tmpX,
         top: tmpY
     });
+    line.leftCircle.setCoords();
+
+    newPoint = point.newPoint;
+    point.lines.forEach(function (line) {
+        if (line.leftCircle.intersectsWithObject(newPoint) || line.rightCircle.intersectsWithObject(newPoint)){
+            overlap = true;
+            angleOffset = 0;
+        }
+    });
+    lines = point.lines;
+    while(overlap) {
+        angleOffset += 5 / actualRadius;
+        toggleDirection *= -1;
+        newPoint.set({
+            left: point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
+            top: point.top - Math.cos(angleOffset) * actualRadius
+        });
+        newPoint.setCoords();
+        overlap = false;
+        lines.forEach(function (line) {
+            if (line.leftCircle.intersectsWithObject(newPoint) || line.rightCircle.intersectsWithObject(newPoint)){
+                overlap = true;
+            }
+        });
+    }
 
     // Ending point
     point = line.rightElement;
@@ -184,6 +208,30 @@ function adjustLine(line){
         left: tmpX,
         top: tmpY
     });
+
+    newPoint = point.newPoint;
+    point.lines.forEach(function (line) {
+        if (line.leftCircle.intersectsWithObject(newPoint) || line.rightCircle.intersectsWithObject(newPoint)){
+            overlap = true;
+            angleOffset = 0;
+        }
+    });
+    lines = point.lines;
+    while(overlap) {
+        angleOffset += 5 / actualRadius;
+        toggleDirection *= -1;
+        newPoint.set({
+            left: point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
+            top: point.top - Math.cos(angleOffset) * actualRadius
+        });
+        newPoint.setCoords();
+        overlap = false;
+        lines.forEach(function (line) {
+            if (line.leftCircle.intersectsWithObject(newPoint) || line.rightCircle.intersectsWithObject(newPoint)){
+                overlap = true;
+            }
+        });
+    }
 
     canvas.renderAll();
 }

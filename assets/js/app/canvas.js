@@ -661,8 +661,10 @@ canvas.on('object:moving', function(e){
     } else if (e.target.class == 'b-circle'){
         e.target.newPoint.setCoords();
         e.target.newPoint.set({
-            left: e.target.left,
-            top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
+            left: e.target.newPoint.left + e.e.movementX,
+            top: e.target.newPoint.top + e.e.movementY
+            //left: e.target.left,
+            //top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
         });
         e.target.lines.forEach(function(line){
             adjustLine(line);
