@@ -30,6 +30,7 @@ function makeCurveCircle(x, y) {
         radius: Math.sqrt(3) * (radius - border / 2) / 2,
         originX: 'center',
         originY: 'center',
+        perPixelTargetFind: true,
         lines: [],
         fill: elementColor,
         opacity:.5
@@ -52,6 +53,7 @@ function makeCurveCircle(x, y) {
     });
 
     canvas.add(newPoint);
+    newPoint.bringForward();
     c.newPoint = newPoint;
     newPoint.master = c;
 
