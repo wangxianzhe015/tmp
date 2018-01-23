@@ -493,17 +493,44 @@ function addTextTooltip(left, top){
     $("<div></div>", {
         class: "image-tooltip second text",
         id: "text-box-" + parseInt(Math.random() * 10000000000)
-    }).on("mouseover", function(){
+    }).data("lines", []).on("mouseover", function(){
+        if (newBezierLine != null){
+            newBezierLine.set("stroke", "white");
+            canvas.renderAll();
+        }
         if (mouseDrag) return false;
         $(this).addClass("expanded").attr("data-hidden", false);
+        $(this).data("lines").forEach(function(line){
+            adjustLine(line);
+        });
     }).on("mouseleave", function(){
+        if (newBezierLine != null){
+            newBezierLine.set("stroke", "red");
+            canvas.renderAll();
+        }
         var that = this;
         $(this).attr("data-hidden", true);
         setTimeout(function() {
             if ($(that).attr("data-hidden") == "true") {
                 $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0}, 500);
+                $(that).data("lines").forEach(function(line){
+                    adjustLine(line);
+                });
             }
         }, 10000);
+    }).on("mouseup", function(){
+        if (newBezierLine != null){
+            addBezierLine(newBezierLine.startElement, $(this).attr("id"));
+            canvas.discardActiveObject();
+        }
+        canvas.remove(newBezierLine);
+        newBezierLine = null;
+        canvas.renderAll();
+
+    }).on("drag", function(){
+        $(this).data("lines").forEach(function(line){
+            adjustLine(line);
+        });
     }).append($("<div></div>", {
         class: "ttip"
     }).append($("<input/>", {

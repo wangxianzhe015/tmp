@@ -51,11 +51,23 @@ function clusterElements(key){
                     onChange: canvas.renderAll.bind(canvas),
                     easing: fabric.util.ease.easeOutCirc
                 });
+                obj.newPoint.animate({
+                    top: offsetToMove[obj.id].y - Math.sqrt(3) * (radius - border / 2) / 2,
+                    left: offsetToMove[obj.id].x
+                }, {
+                    duration: 2000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
             } else {
                 obj.set({
                     top: offsetToMove[obj.id].y,
                     left: offsetToMove[obj.id].x,
                     cluster: ''
+                }).setCoords();
+                obj.newPoint.set({
+                    top: offsetToMove[obj.id].y - Math.sqrt(3) * (radius - border / 2) / 2,
+                    left: offsetToMove[obj.id].x
                 }).setCoords();
             }
         }

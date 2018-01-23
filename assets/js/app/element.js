@@ -515,6 +515,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         class: "element",
         category: "hexagon",
         id: nameElement('new',canvas.getObjects().length),
+        lines: [],
         progress: '100',
         tags: [],
         comments: [],
@@ -544,8 +545,25 @@ function addNewHexagon(name, type, index, left, top, datatext){
         element.cluster = "";
         element.datatext = datatext;
     }
+    var newPoint = new fabric.Circle({
+        left: element.left,
+        top: element.top - Math.sqrt(3) * (radius - border / 2) / 2,
+        class: 'new-bezier-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 2,
+        stroke: 'white',
+        radius: 5,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        fill: 'transparent'
+    });
 
     canvas.add(element);
+    canvas.add(newPoint);
+    newPoint.bringForward();
+    element.newPoint = newPoint;
+    newPoint.master = element;
 
     elementsInfo[element.id] = {
         x: element.left,
@@ -584,6 +602,7 @@ function addNewCircle(name, type, index, left, top, datatext){
         class: "element",
         category: "circle",
         id: nameElement('new',canvas.getObjects().length),
+        lines: [],
         progress: '100',
         tags: [],
         comments: [],
@@ -615,6 +634,24 @@ function addNewCircle(name, type, index, left, top, datatext){
     }
 
     canvas.add(element);
+    var newPoint = new fabric.Circle({
+        left: element.left,
+        top: element.top - Math.sqrt(3) * (radius - border / 2) / 2,
+        class: 'new-bezier-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 2,
+        stroke: 'white',
+        radius: 5,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        fill: 'transparent'
+    });
+
+    canvas.add(newPoint);
+    newPoint.bringForward();
+    element.newPoint = newPoint;
+    newPoint.master = element;
 
     elementsInfo[element.id] = {
         x: element.left,

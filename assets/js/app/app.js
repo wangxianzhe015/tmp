@@ -73,7 +73,6 @@ function init(){
     fabric.Object.prototype.transparentCorners = false;
 
     drawGrid();
-    drawQuadratic();
     initHandlers();
 
     addBrowseButton();
