@@ -1662,3 +1662,7 @@ textarea.default-textarea{
     cursor: pointer;
     transform: translateX(-50%) translateY(-50%);
 }
+
+.bezier-line-control-btn{
+    cursor: pointer;
+}

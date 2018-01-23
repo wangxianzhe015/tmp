@@ -116,6 +116,7 @@ function addBezierLine(leftElement, rightElement){
         opacity: .5,
         selectable: false,
         strokeDashArray: [7, 3],
+        type: "dashed",
         class: "line",
         id: "bezier-line-" + parseInt(Math.random() * 1000000000000),
         leftElement: leftElement,

@@ -505,7 +505,7 @@ function addTextTooltip(left, top){
         });
     }).on("mouseleave", function(){
         if (newBezierLine != null){
-            newBezierLine.set("stroke", "red");
+            newBezierLine.set("stroke", "gray");
             canvas.renderAll();
         }
         var that = this;

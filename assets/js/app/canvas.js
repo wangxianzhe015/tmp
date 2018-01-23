@@ -16,6 +16,7 @@ canvas.on('mouse:over', function(e) {
         }
         if (newBezierLine != null){
             newBezierLine.set("stroke", "white");
+            return false;
         }
 
         var coords = getObjPosition(e.target);
@@ -67,7 +68,7 @@ canvas.on('mouse:out', function(e){
     }
     if (e.target != null && e.target.class == "element") {
         if (newBezierLine != null){
-            newBezierLine.set("stroke", "red");
+            newBezierLine.set("stroke", "gray");
         }
     }
     canvas.renderAll();
@@ -339,8 +340,8 @@ canvas.on('mouse:down',function(e){
             }).show();
         } else if (e.target.class == "new-bezier-point") {
             newBezierLine = new fabric.Line([downPoint.x, downPoint.y, downPoint.x, downPoint.y], {
-                fill: 'red',
-                stroke: 'red',
+                fill: 'gray',
+                stroke: 'gray',
                 strokeWidth: 2,
                 selectable: false,
                 opacity: 0.5
@@ -351,9 +352,9 @@ canvas.on('mouse:down',function(e){
             canvas.renderAll();
         } else if (e.target.class == "bezier-start-point" || e.target.class == "bezier-end-point"){
             rmBezierLine = e.target.master;
-            $("<button>Remove</button>").attr({
-                id: "bezier-line-rm-btn",
-                class: "normal-btn"
+            $("<img/>").attr({
+                class: "bezier-line-control-btn",
+                src: "./assets/images/icons/cancel-24.png"
             }).on("click", function(){
                 if (rmBezierLine != null){
                     rmBezierLine.leftElement.lines.forEach(function(line, i){
@@ -372,15 +373,37 @@ canvas.on('mouse:down',function(e){
                     rmBezierLine = null;
                     canvas.renderAll();
                 }
-                $(this).remove();
+                $(".bezier-line-control-btn").remove();
             }).css({
-                left: e.e.pageX,
+                left: e.e.pageX + 20,
+                top: e.e.pageY,
+                position: "absolute"
+            }).appendTo("body");
+
+            $("<img/>").attr({
+                class: "bezier-line-control-btn",
+                src: "./assets/images/icons/line-type-24.png"
+            }).on("click", function(){
+                if (rmBezierLine != null){
+                    if (rmBezierLine.type == "dashed"){
+                        rmBezierLine.strokeDashArray = [1, 0];
+                        rmBezierLine.type = "solid";
+                    } else {
+                        rmBezierLine.strokeDashArray = [5, 5];
+                        rmBezierLine.type = "dashed";
+                    }
+                    rmBezierLine = null;
+                    canvas.renderAll();
+                }
+                $(".bezier-line-control-btn").remove();
+            }).css({
+                left: e.e.pageX + 54,
                 top: e.e.pageY,
                 position: "absolute"
             }).appendTo("body");
 
             setTimeout(function(){
-                $("#bezier-line-rm-btn").remove();
+                $(".bezier-line-control-btn").remove();
                 rmBezierLine = null;
             }, 2000);
         } else {
