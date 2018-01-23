@@ -456,8 +456,8 @@ button .text{
     padding: 0;
 }
 .image-tooltip.text{
-    height: 33px;
-    min-height: 33px;
+    height: 36px;
+    min-height: 36px;
     width: 200px;
     min-width: 200px;
     cursor: move;
@@ -567,8 +567,7 @@ button .text{
 }
 
 .text.expanded .ttip{
-    overflow-x: hidden;
-    overflow-y: auto;
+    overflow: auto;
 }
 .ttip h3{
     border-bottom: solid 1px rgb(108,158,222);

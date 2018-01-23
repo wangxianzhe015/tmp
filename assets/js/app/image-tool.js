@@ -512,9 +512,10 @@ function addTextTooltip(left, top){
         $(this).attr("data-hidden", true);
         setTimeout(function() {
             if ($(that).attr("data-hidden") == "true") {
-                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0}, 500);
-                $(that).data("lines").forEach(function(line){
-                    adjustLine(line);
+                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500).on("transitionend", function(){
+                    $(that).data("lines").forEach(function(line){
+                        adjustLine(line);
+                    });
                 });
             }
         }, 10000);
@@ -537,7 +538,7 @@ function addTextTooltip(left, top){
         type: "text",
         class: "form-control no-margin no-padding",
         value: "Text"
-    })).append($("<h3></h3>", {
+    }).css("font-size", "1.2em")).append($("<h3></h3>", {
         class: "white"
     })).append($("<textarea></textarea>",{
         class: "default-textarea",

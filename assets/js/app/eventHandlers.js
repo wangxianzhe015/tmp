@@ -104,6 +104,11 @@ function initHandlers(){
         }
     });
 
+    downloadCSVFile();
+    $("#csv-file-path").on("change", function(){
+        downloadCSVFile();
+    });
+
     $("#tagger-iframe").draggable();
 
     $("#close-top-sidebar").on("click", function(){

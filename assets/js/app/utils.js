@@ -428,6 +428,17 @@ function iframeHandler(e){
     // End of callback part
 }
 
+function downloadCSVFile() {
+    $.ajax({
+        url: 'action.php',
+        type: 'POST',
+        data: {
+            action: 'download-csv',
+            path: $("#csv-file-path").val()
+        }
+    });
+}
+
 function regexSearch(parent,txt){
     var suggestList = $(parent).find('.suggest-list');
 

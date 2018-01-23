@@ -38,6 +38,9 @@ switch ($action) {
     case 'save-formations':
         saveFormations();
         break;
+    case 'download-csv':
+        downloadCSV();
+        break;
     case 'regex-search':
         regexSearch();
         break;
@@ -151,13 +154,53 @@ function saveFormations(){
     }
 }
 
-function regexSearch(){
-    $text = $_POST['text'];
-    $xlsx = new SimpleXLSX('./data/places/data.xlsx');
+function downloadCSV(){
+    $path = $_POST['path'];
+    file_put_contents("./data/places/download.csv", fopen($path, 'r'));
+    echo "success";
+}
 
+function regexSearch(){
+//    $xlsx = new SimpleXLSX('./data/places/data.xlsx');
+//
+//    $result = [];
+//    try {
+//        foreach ($xlsx->rows() as $row) {
+//            $head = $row[0];
+//            $head2 = $row[1];
+//            if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
+//                $tag = ""; $hidden = "";
+//                if (isset($row[3])){
+//                    $tag = date("d-M-Y", ($row[3] - 25569) * 86400);
+//                }
+//                if (isset($row[2])){
+//                    if ($tag == ""){
+//                        $tag = $row[2];
+//                    } else {
+//                        $tag = $tag . " | " . $row[2];
+//                    }
+//                }
+//                if (isset($row[4])){
+//                    $extra = $row[4];
+//                } else {
+//                    $extra = "";
+//                }
+//                if (isset($row[5])){
+//                    $hidden = $row[5];
+//                }
+//                if (isset($row[6])){
+//                    $hidden = $hidden . " | ". $row[6];
+//                }
+//                array_push($result, ['head' => $head, 'tag' => $tag, 'extra' => $extra, 'hidden' => $hidden]);
+//            }
+//        }
+//    } catch (Exception $e) {
+//        echo $e;
+//    }
+    $text = $_POST['text'];
     $result = [];
-    try {
-        foreach ($xlsx->rows() as $row) {
+    if (($handle = fopen("./data/places/download.csv", "r")) !== FALSE) {
+        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $head = $row[0];
             $head2 = $row[1];
             if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
@@ -186,8 +229,7 @@ function regexSearch(){
                 array_push($result, ['head' => $head, 'tag' => $tag, 'extra' => $extra, 'hidden' => $hidden]);
             }
         }
-    } catch (Exception $e) {
-        echo $e;
+        fclose($handle);
     }
     echo json_encode($result);
 }
