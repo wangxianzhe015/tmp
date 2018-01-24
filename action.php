@@ -156,8 +156,9 @@ function saveFormations(){
 
 function downloadCSV(){
     $path = $_POST['path'];
+    $ip = getUserIP();
     if (fopen($path, 'r')) {
-        file_put_contents("./data/places/" . $_SERVER['REMOTE_ADDR'] . "-data.csv", fopen($path, 'r'));
+        file_put_contents("./data/places/" . $ip . "-data.csv", fopen($path, 'r'));
         echo "CSV file download success";
     } else {
         echo "CSV file download fail";
@@ -203,7 +204,8 @@ function regexSearch(){
 //    }
     $text = $_POST['text'];
     $result = [];
-    if (($handle = fopen("./data/places/". $_SERVER['REMOTE_ADDR'] . "-data.csv", "r")) !== FALSE) {
+    $ip = getUserIP();
+    if (($handle = fopen("./data/places/". $ip . "-data.csv", "r")) !== FALSE) {
         while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $head = $row[0];
             $head2 = $row[1];
@@ -358,4 +360,26 @@ function sendEmail(){
     } else {
         echo 'success';
     }
+}
+
+function getUserIP()
+{
+    $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP))
+    {
+        $ip = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP))
+    {
+        $ip = $forward;
+    }
+    else
+    {
+        $ip = $remote;
+    }
+
+    return $ip;
 }
