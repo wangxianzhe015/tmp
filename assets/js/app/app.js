@@ -47,7 +47,7 @@ var foreignText = "输入文本！";
 
 var rings = [], selectedRing = null, positionBeforeRing = null;
 
-var newBezierLine = null, rmBezierLine = null;
+var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
@@ -83,6 +83,7 @@ function init(){
     addChipButton();
     addFeedButton();
     addRingButton();
+    addBLineCircleButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();

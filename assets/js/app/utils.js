@@ -435,6 +435,9 @@ function downloadCSVFile() {
         data: {
             action: 'download-csv',
             path: $("#csv-file-path").val()
+        },
+        success: function(r){
+            console.log(r);
         }
     });
 }

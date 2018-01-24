@@ -689,6 +689,16 @@ canvas.on('object:moving', function(e){
     } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
         var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
         moveThreeDots(obj);
+        obj._objects.forEach(function(shape){
+            shape.newPoint.set({
+                left: obj.left + obj.width / 2 + shape.left,
+                top: obj.top + obj.height / 2 + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
+            });
+            shape.newPoint.setCoords();
+            shape.lines.forEach(function(line){
+                adjustLine(line);
+            });
+        });
     } else if (e.target.class == "b-point") {
 
         if (e.target.line) {

@@ -127,9 +127,24 @@ function addRingButton(){
             scrollTop: window.innerHeight / 2
         });
 
-        if (rings.length > 0) return false;
+        if (rings.length == 0) showRing();
         removeImageTools(true);
-        showRing();
+    }).appendTo("#right-sidebar");
+}
+
+function addBLineCircleButton(){
+    $("<img/>", {
+        id: "bline-circle-button",
+        src: "./assets/images/icons/linkify-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        bLineCircleOpacity = (bLineCircleOpacity + 1) % 2;
+        canvas.forEachObject(function(obj){
+            if (obj.class == "new-bezier-point" || obj.class == "bezier-start-point" || obj.class == "bezier-end-point") {
+                obj.set("opacity", bLineCircleOpacity);
+            }
+        });
+        canvas.renderAll();
     }).appendTo("#right-sidebar");
 }
 

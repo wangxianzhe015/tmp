@@ -156,8 +156,12 @@ function saveFormations(){
 
 function downloadCSV(){
     $path = $_POST['path'];
-    file_put_contents("./data/places/download.csv", fopen($path, 'r'));
-    echo "success";
+    if (fopen($path, 'r')) {
+        file_put_contents("./data/places/" . $_SERVER['REMOTE_ADDR'] . "-data.csv", fopen($path, 'r'));
+        echo "CSV file download success";
+    } else {
+        echo "CSV file download fail";
+    }
 }
 
 function regexSearch(){
@@ -199,7 +203,7 @@ function regexSearch(){
 //    }
     $text = $_POST['text'];
     $result = [];
-    if (($handle = fopen("./data/places/download.csv", "r")) !== FALSE) {
+    if (($handle = fopen("./data/places/". $_SERVER['REMOTE_ADDR'] . "-data.csv", "r")) !== FALSE) {
         while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $head = $row[0];
             $head2 = $row[1];

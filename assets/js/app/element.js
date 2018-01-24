@@ -512,6 +512,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         originX: "center",
         originY: "center",
         hasBorders: false,
+        perPixelTargetFind: true,
         class: "element",
         category: "hexagon",
         id: nameElement('new',canvas.getObjects().length),
@@ -545,6 +546,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         element.cluster = "";
         element.datatext = datatext;
     }
+
     var newPoint = new fabric.Circle({
         left: element.left,
         top: element.top - Math.sqrt(3) * (radius - border / 2) / 2,
@@ -556,6 +558,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         originX: 'center',
         originY: 'center',
         selectable: false,
+        opacity: bLineCircleOpacity,
         fill: 'transparent'
     });
 
@@ -596,6 +599,7 @@ function addNewCircle(name, type, index, left, top, datatext){
         originX: "center",
         originY: "center",
         hasBorders: false,
+        perPixelTargetFind: true,
         cornerStyle: 'circle',
         cornerColor: 'white',
         cornerSize: 10,
@@ -645,6 +649,7 @@ function addNewCircle(name, type, index, left, top, datatext){
         originX: 'center',
         originY: 'center',
         selectable: false,
+        opacity: bLineCircleOpacity,
         fill: 'transparent'
     });
 
@@ -949,6 +954,12 @@ function cloneElement(object){
     });
 
     canvas.add(element);
+
+    var newPoint = fabric.util.object.clone(object.newPoint);
+    canvas.add(newPoint);
+    canvas.bringForward(newPoint);
+
+    element.newPoint = newPoint;
 
     elementsInfo[newID] = {
         x: element.left,

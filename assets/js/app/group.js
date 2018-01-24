@@ -40,7 +40,7 @@ function group(activeObject){
             collapseGroup(newgroup);
             groups.push(newgroup);
         },
-        ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects']
+        ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects', 'lines', 'newPoint']
     );
 }
 
