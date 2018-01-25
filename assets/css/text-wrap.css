@@ -139,26 +139,34 @@ textarea.form-control{
     width: 25%;
     min-width: 300px;
     top: 0;
+    background-color: transparent;
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
     box-sizing: content-box;
-    overflow-y:auto;
+    overflow-y:hidden;
     overflow-x:hidden;
     margin: 0;
-    padding: 11px;
+    padding: 0;
+    z-index: 200;
+}
+.tagger-tooltip .ttip{
     background-color: rgba(40,40,40,.8);
     border-radius: 0;
     border: none;
     font: normal 12px/2 "Abel", Helvetica, sans-serif;
     line-height:11px;
     color: #FFF;
+    padding: 11px;
+    height: calc(100% - 22px);
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     -moz-text-overflow: ellipsis;
     -webkit-text-overflow: ellipsis;
     filter: alpha(opacity=50);
     text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
-    z-index: 200;
+}
+.ttip li:before{
+    content: "";
 }
 .tagger-tooltip .tooltip-button-panel {
     text-align: right;
@@ -174,4 +182,122 @@ textarea.form-control{
 }
 .tagger-tooltip h3.white{
     border-color: white;
+}
+.tab-menu{
+    list-style: none;
+    border-top: solid 2px transparent;
+    border-bottom: solid 2px transparent;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+.tab-menu>li{
+    opacity: 1;
+    z-index: 1;
+}
+.tab-menu>li:before{
+    content: "";
+}
+.tab-menu>li>a{
+    background-color: rgba(40,40,40,.8);
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 5px 15px;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 0;
+    text-align: center;
+}
+.tab-menu>li.active>a{
+    cursor: default;
+    background-color: rgba(21,45,65,.8);
+    border-bottom-color: transparent;
+}
+.tab-pane{
+    display:none;
+    height: 100%;
+}
+.tab-pane.active{
+    display: block;
+}
+option[disabled]{
+    display: none;
+}
+.normal-btn{
+    background-color: rgb(92,183,92);
+    color: white;
+    cursor: pointer;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    width: 80px;
+}
+#tooltip-text{
+    text-transform: uppercase;
+}
+#message-tooltip #message-content{
+    height: 100%;
+}
+#message-tooltip #message-date{
+    text-align: right;
+}
+#message-tooltip #message-send-btn{
+    position: absolute;
+    bottom: 10px;
+}
+#message-tooltip #message-body{
+    height: calc(100% - 224px);
+}
+#message-tooltip #message-bcc-check{
+    height: 26px;
+    vertical-align: middle;
+}
+/* file upload */
+.fileupload-buttons{
+    padding: 20px 0;
+    border-bottom: solid 1px white;
+}
+.fileupload-buttons .upload-button{
+    color: #ffffff;
+    cursor: pointer;
+    margin: 0 10px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+.fileupload-buttons .upload-plus{
+    background-image: url(../images/icons/plus-outline-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons .upload-start{
+    background-image: url(../images/icons/play-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons .upload-cancel{
+    background-image: url(../images/icons/cancel-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons table{
+    width: 100%;
+}
+.fileupload-progress {
+    margin: 10px 0;
+}
+.fileupload-progress .progress-extended {
+    margin-top: 5px;
+}
+.fileupload-progress .ui-progressbar-value{
+    /*background: url('lib/images/progressbar.gif');*/
+    background: #4ca20b;
 }

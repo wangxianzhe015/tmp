@@ -120,14 +120,33 @@ function addRingButton(){
     $("<img/>", {
         id: "ring-button",
         src: "./assets/images/icons/ring-24.png",
-        class: "icon-button"
+        class: "icon-button",
+        "data-status": "hidden"
     }).on("click", function(){
         $("html, body").animate({
             scrollLeft: window.innerWidth / 2,
             scrollTop: window.innerHeight / 2
         });
 
-        if (rings.length == 0) showRing();
+        if (rings.length == 0) {
+            showRing();
+            $(this).attr("data-status", "shown");
+        } else {
+            if ($(this).attr("data-status") == "hidden"){
+                $(this).attr("data-status", "shown");
+                $("#ring-tween-btn").show();
+                rings.forEach(function(ring){
+                    ring.set("opacity", 1);
+                });
+            } else {
+                $(this).attr("data-status", "hidden");
+                $("#ring-tween-btn").hide();
+                rings.forEach(function(ring){
+                    ring.set("opacity", 0);
+                });
+            }
+            canvas.renderAll();
+        }
         removeImageTools(true);
     }).appendTo("#right-sidebar");
 }

@@ -512,11 +512,12 @@ function addTextTooltip(left, top){
         $(this).attr("data-hidden", true);
         setTimeout(function() {
             if ($(that).attr("data-hidden") == "true") {
-                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500).on("transitionend", function(){
+                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500);
+                setTimeout(function(){
                     $(that).data("lines").forEach(function(line){
                         adjustLine(line);
                     });
-                });
+                }, 500);
             }
         }, 10000);
     }).on("mouseup", function(){

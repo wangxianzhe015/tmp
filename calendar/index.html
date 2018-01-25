@@ -16,6 +16,9 @@
     <!-- jQuery UI -->
     <link rel="stylesheet" href="../assets/css/lib/jquery-ui.min.css">
 
+    <!-- Multi select -->
+    <link rel="stylesheet" href="../assets/css/lib/multi-select.css">
+
     <!-- text wrap -->
     <link rel="stylesheet" href="../assets/css/text-wrap.css">
 </head>
@@ -29,7 +32,122 @@
 		<div class="section"></div>
 	</div>
 
-	<!-- jQuery -->
+    <div class="tagger-tooltip" id="message-tooltip">
+        <ul class="tab-menu">
+            <li class="active">
+                <a data-tab="#message-content">Content</a>
+            </li>
+            <li>
+                <a data-tab="#message-attachments">Attachments</a>
+            </li>
+            <li>
+                <a data-tab="#not-used-yet">[]</a>
+            </li>
+        </ul>
+        <div class="ttip">
+            <div id="message-content" class="tab-pane active">
+                <div class="row">
+                    <div class="column six">
+                        <div class="form-group no-margin">
+                            <input type="text" class="form-control width-half no-margin" id="message-to-address" placeholder="<Address>" style="font-weight: bold;"/>
+                            <input type="text" class="form-control width-half no-margin pull-right" id="message-date" placeholder="<Date>" />
+                        </div>
+                    </div>
+                    <div class="column six"></div>
+                </div>
+                <div class="form-group">
+                    <input class="form-control no-margin" id="message-subject" type="text" placeholder="<Subject>"/>
+                </div>
+                <div class="row">
+                    <div class="column six">
+                        <div class="form-group">
+                            <select multiple="multiple" class="form-control no-padding no-margin" id="message-cc-select">
+                                <option value="1">test1@example.com</option>
+                                <option value="2">test2@example.com</option>
+                                <option value="3">test3@example.com</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="column six"></div>
+                </div>
+                <h3></h3>
+                <textarea class="form-control no-margin" id="message-body" placeholder="<Type...>"></textarea>
+                <button id="message-send-btn" class="normal-btn">Send</button>
+            </div>
+            <div id="message-attachments" class="tab-pane">
+                <form id="message-fileupload" action="" method="POST" enctype="multipart/form-data">
+                    <div class="fileupload-buttonbar">
+                        <div class="fileupload-buttons">
+                            <span id="message-upload-plus" class="upload-button upload-plus"></span>
+                            <span id="message-upload-cancel" class="upload-button upload-cancel"></span>
+                        <span class="fileinput-button" style="display: none;">
+                            <input type="file" name="files[]" multiple>
+                        </span>
+                            <button type="reset" class="cancel" style="display: none;">Cancel upload</button>
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process"></span>
+                        </div>
+                        <!-- The global progress state -->
+                        <div class="fileupload-progress fade" style="display:none">
+                            <!-- The global progress bar -->
+                            <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+                            <!-- The extended global progress state -->
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <!-- The table listing the files available for upload/download -->
+                    <table role="presentation"><tbody class="download-files"></tbody></table>
+                </form>
+            </div>
+            <div id="not-used-yet" class="tab-pane">
+
+            </div>
+        </div>
+    </div>
+
+    <script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-upload fade">
+            <td>
+                <p class="name">{%=file.name%}</p>
+                <strong class="error"></strong>
+            </td>
+            <td>
+                <div class="progress"></div>
+            </td>
+            <td>
+                {% if (!i && !o.options.autoUpload) { %}
+                    <span class="upload-button upload-start one"></span>
+                    <button class="start" disabled style="display:none;"></button>
+                {% } %}
+                {% if (!i) { %}
+                    <span class="upload-button upload-cancel one"></span>
+                    <button class="cancel" style="display:none;"></button>
+                {% } %}
+            </td>
+        </tr>
+    {% } %}
+    </script>
+    <!-- The template to display files available for download -->
+    <script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+        <tr class="template-download fade">
+            <td colspan='2'>
+                <p class="name">
+                    <a title="{%=o.formatFileSize(file.size)%}" href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                </p>
+                {% if (file.error) { %}
+                    <div><span class="error">Error</span> {%=file.error%}</div>
+                {% } %}
+            </td>
+            <td class="file-date">
+                {%=file.time %}
+            </td>
+        </tr>
+    {% } %}
+    </script>
+
+    <!-- jQuery -->
 	<script src="../assets/js/lib/jquery.js"></script>
 
 	<!-- jQuery UI -->
@@ -41,7 +159,18 @@
     <!-- CNDCE Accordion -->
     <script type="text/javascript" src="../assets/js/lib/cndce-accordion.js"></script>
 
-    <!-- CNDCE Accordion -->
+    <!-- Multiple select -->
+    <script type="text/javascript" src="../assets/js/lib/multi-select.js"></script>
+
+    <!-- File upload -->
+    <script type="text/javascript" src="../assets/js/lib/tmpl.min.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/jquery.fileupload-validate.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/jquery.fileupload-ui.js"></script>
+    <script type="text/javascript" src="../assets/js/lib/jquery.fileupload-jquery-ui.js"></script>
+
+    <!-- Text wrap -->
     <script type="text/javascript" src="../assets/js/app/text-wrap.js"></script>
 
     <script type="text/javascript">

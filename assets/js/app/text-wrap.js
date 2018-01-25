@@ -10,6 +10,8 @@ function boundary(object, array){
             class: "tagger-tooltip",
             id: "image-tooltip"
         }).append($("<div></div>", {
+            class: "ttip"
+        }).append($("<div></div>", {
             class: "tooltip-button-panel"
         }).append($("<img/>", {
             src: "../assets/images/icons/user-24.png"
@@ -17,37 +19,27 @@ function boundary(object, array){
             showMessageTooltip();
         })).append($("<img/>", {
             src: "../assets/images/icons/plus-24.png"
-        }))).append($("<div></div>", {
-            id: "tooltip-text"
-        })).on({
-            mouseover: function(){
-                enableHide = false;
-            },
-            mouseleave: function(){
-                enableHide = true;
-                setTimeout(hideTooltip, 500);
-            }
-        })).append($("<div></div>", {
-            class: "tagger-tooltip",
-            id: "message-tooltip"
-        }).append($("<h3></h3>", {
+        }))).append($("<h3></h3>", {
+            id: "tooltip-text",
+            class: "white",
             text: "Title"
         })).append($("<div></div>", {
             class: "form-group"
         }).append($("<input/>", {
             type: "text",
-            class: "form-control",
-            placeholder: "Pick a date"
-        }).datepicker())).append($("<div></div>", {
-            class: "form-group"
-        }).append($("<label></label>", {
-            class: "from-control",
-            for: "tagger-message-select",
-            text: "Importance"
-        })).append($("<select></select>", {
+            id: "event-date",
+            class: "form-control width-half",
+            placeholder: "Event Date"
+        }).on("change", function(){
+            $(".active-party").data("date", $(this).val());
+        }).datepicker()).append($("<select></select>", {
             id: "tagger-message-select",
-            class: "form-control"
-        }))).append($("<h3></h3>")).on({
+            class: "form-control width-half"
+        }).on("change", function(){
+            $(".active-party").data("importance", $(this).val());
+        }))).append($("<h3></h3>", {
+            class: "white"
+        }))).on({
             mouseover: function(){
                 enableHide = false;
             },
@@ -57,8 +49,66 @@ function boundary(object, array){
             }
         }));
 
+        $("#message-tooltip").on({
+            mouseover: function(){
+                enableHide = false;
+            },
+            mouseleave: function(){
+                enableHide = true;
+                setTimeout(hideTooltip, 500);
+            }
+        });
+
+        $(".tab-menu>li>a").on("click", function(event){
+            event.preventDefault();
+            $(this).parent().parent().parent().find(".tab-menu>li").removeClass("active");
+            $(this).parent().addClass("active");
+            $(this).parent().parent().parent().find(".tab-pane").removeClass("active");
+            $($(this).attr("data-tab")).addClass("active");
+        });
+
+        $("#message-date").datepicker();
+        $("#message-cc-select").multipleSelect({
+            placeholder: "Bcc"
+        });
+
+        /* file upload */
+        var obj = $('#message-fileupload');
+        obj.fileupload({
+            url: 'calendar/files/',
+            disableImageLoad: true,
+            disableImageResize: true,
+            autoUpload: true
+        });
+
+        obj.addClass('fileupload-processing');
+        $.ajax({
+            url: obj.fileupload('option', 'url'),
+            dataType: 'json',
+            context: obj[0]
+        }).always(function () {
+            $(this).removeClass('fileupload-processing');
+        }).done(function (result) {
+            $(this).fileupload('option', 'done')
+                .call(this, $.Event('done'), {result: result});
+        });
+        $(".upload-plus").on("click", function(){
+            $(this).parent().find("input[type='file']").click();
+        });
+
+        $(".upload-cancel").on("click", function(){
+            $(this).parent().find(".cancel").click();
+        });
+
+        $(".upload-start").on("click", function(){
+            $(this).parent().find(".start").click();
+        });
+
+        /* end file upload */
+
         // temporary data for select tag
         var tempdata = ["Highest", "High", "Normal", "Low", "Lowest"];
+        $("#tagger-message-select").append("<option value='' disabled selected>Importance</option>")
         $.each(tempdata, function(i, w){
             $("<option></option>", {
                 value: w,
@@ -103,6 +153,8 @@ function boundary(object, array){
             $(el).on({
                 mouseover: function(e){
                     enableHide = false;
+                    $(".active-party").removeClass("active-party");
+                    $(this).addClass("active-party");
                     showTooltip($(this), e.originalEvent);
                 },
                 mouseleave: function(){
@@ -155,9 +207,14 @@ function makeTooltipText(text){
             }).css({
                 width: parseInt(word.length / length * 100) + "%",
                 "min-width": word.length * 0.5 + "em"
+            }).data({
+                date: "",
+                importance: ""
             }).on({
                 mouseover: function(e){
                     enableHide = false;
+                    $(".active-party").removeClass("active-party");
+                    $(this).addClass("active-party");
                     showTooltip($(this), e.originalEvent);
                 },
                 mouseleave: function(){
@@ -179,6 +236,13 @@ function showTooltip($obj, event){
     if (top + $tooltipObj.innerHeight() > window.innerHeight){
         top = window.innerHeight - $tooltipObj.innerHeight();
     }
+    $tooltipObj.find("#event-date").val($obj.data("date"));
+    if ($obj.data("importance") == ""){
+        //$tooltipObj.find("#tagger-message-select").
+    } else {
+        $tooltipObj.find("#tagger-message-select").val($obj.data("importance"));
+    }
+    $tooltipObj.find("#tagger-message-select").val($obj.data("importance"));
     $tooltipObj.css({
         left: left,
         top: top
@@ -188,6 +252,7 @@ function showTooltip($obj, event){
 function hideTooltip(){
     if (enableHide){
         $(".tagger-tooltip").hide();
+        $(".ui-datepicker").hide();
     }
 }
 
