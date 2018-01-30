@@ -75,7 +75,7 @@ function boundary(object, array){
         /* file upload */
         var obj = $('#message-fileupload');
         obj.fileupload({
-            url: 'calendar/files/',
+            url: 'files/',
             disableImageLoad: true,
             disableImageResize: true,
             autoUpload: true
