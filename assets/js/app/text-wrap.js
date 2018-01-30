@@ -19,10 +19,13 @@ function boundary(object, array){
             showMessageTooltip();
         })).append($("<img/>", {
             src: "../assets/images/icons/plus-24.png"
-        }))).append($("<h3></h3>", {
+        }))).append($("<input/>", {
             id: "tooltip-text",
-            class: "white",
-            text: "Title"
+            class: "form-control no-margin no-padding"
+        }).on("keyup", function(){
+            $(".active-party").html($(this).val());
+        })).append($("<h3></h3>", {
+            class: "white"
         })).append($("<div></div>", {
             class: "form-group"
         }).append($("<input/>", {
@@ -246,7 +249,7 @@ function showTooltip($obj, event){
     $tooltipObj.css({
         left: left,
         top: top
-    }).show().find("#tooltip-text").html($obj.text());
+    }).show().find("#tooltip-text").val($obj.text());
 }
 
 function hideTooltip(){
