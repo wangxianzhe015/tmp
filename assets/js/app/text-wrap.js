@@ -42,6 +42,12 @@ function boundary(object, array){
             $(".active-party").data("importance", $(this).val());
         }))).append($("<h3></h3>", {
             class: "white"
+        })).append($("<textarea></textarea>", {
+            id: "tooltip-description",
+            class: "form-control no-margin",
+            placeholder: "<Type...>"
+        }).on("keyup", function(){
+            $(".active-party").data("description", $(this).val());
         }))).on({
             mouseover: function(){
                 enableHide = false;
@@ -212,7 +218,8 @@ function makeTooltipText(text){
                 "min-width": word.length * 0.5 + "em"
             }).data({
                 date: "",
-                importance: ""
+                importance: "",
+                description: ""
             }).on({
                 mouseover: function(e){
                     enableHide = false;
@@ -246,6 +253,7 @@ function showTooltip($obj, event){
         $tooltipObj.find("#tagger-message-select").val($obj.data("importance"));
     }
     $tooltipObj.find("#tagger-message-select").val($obj.data("importance"));
+    $tooltipObj.find("#tooltip-description").val($obj.data("description"));
     $tooltipObj.css({
         left: left,
         top: top

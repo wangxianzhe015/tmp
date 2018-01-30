@@ -258,7 +258,7 @@ option[disabled]{
     bottom: 10px;
 }
 #message-tooltip #message-body{
-    height: calc(100% - 224px);
+    height: calc(100% - 294px);
 }
 #message-tooltip #message-bcc-check{
     height: 26px;
