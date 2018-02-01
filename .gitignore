@@ -1,4 +1,5 @@
 data/places/*
+!data/places/.gitignore
 !data/places/data.csv
 data/accordion/*
-!data/places/data.json
+!data/accordion/.gitignore
