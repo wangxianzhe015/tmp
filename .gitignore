@@ -1,0 +1,4 @@
+data/places/*
+!data/places/data.csv
+data/accordion/*
+!data/places/data.json
