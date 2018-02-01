@@ -212,7 +212,8 @@ function regexSearch(){
             if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
                 $tag = ""; $hidden = "";
                 if (isset($row[3])){
-                    $tag = date("d-M-Y", ($row[3] - 25569) * 86400);
+                    $tag = $row[3];
+//                    $tag = date("d-M-Y", ($row[3] - 25569) * 86400);
                 }
                 if (isset($row[2])){
                     if ($tag == ""){
