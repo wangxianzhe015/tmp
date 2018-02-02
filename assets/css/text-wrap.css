@@ -12,6 +12,9 @@
 :active, :focus{
     outline: none;
 }
+p{
+    margin: 0;
+}
 .no-margin{
     margin: 0!important;
 }
@@ -188,6 +191,9 @@ textarea.form-control{
 }
 .tagger-tooltip h3.white{
     border-color: white;
+}
+.tagger-tooltip #tooltip-description{
+    height: calc(100% - 180px);
 }
 .tab-menu{
     list-style: none;
