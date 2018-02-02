@@ -11,13 +11,13 @@ function boundary(object){
         if (cookieExist){
             array = $.parseJSON(getCookie("wrapper-words"))["outer"];
         } else {
-            array = {"left": "SUPREME COURT:::,WITNESS PREP:::,BARRISTER:::,FORENSIC:::,GIA EXAM:::", "top": "ALI:::,ROWLING:::,DYLAN GORDON:::,YURY SHAR:::", "right": "STUART:::,IAN MOORE:::,VALERI:::,TAMMY:::,IRINA:::,JASON:::,IP ASSIGNME:::", "bottom": "44 Bay St:::,EIN Delaware:::,LLC UK Ltd:::,ASIC 404:::"};
+            array = {"left": "SUPREME COURT:::<_?_>WITNESS PREP:::<_?_>BARRISTER:::<_?_>FORENSIC:::<_?_>GIA EXAM:::", "top": "ALI:::<_?_>ROWLING:::<_?_>DYLAN GORDON:::<_?_>YURY SHAR:::", "right": "STUART:::<_?_>IAN MOORE:::<_?_>VALERI:::<_?_>TAMMY:::<_?_>IRINA:::<_?_>JASON:::<_?_>IP ASSIGNME:::", "bottom": "44 Bay St:::<_?_>EIN Delaware:::<_?_>LLC UK Ltd:::<_?_>ASIC 404:::"};
         }
     } else {
         if (cookieExist){
             array = $.parseJSON(getCookie("wrapper-words"))["inner"];
         } else {
-            array = {"left": "Reuters:::,Bloomberg:::,Yummmy Car:::,Medellin:::,Freelancer:::,Bing:::,HR Policy:::,Delegates Sheet:::,Sophin:::,TFN:::,APEC:::", "top": "SAP:::,ADOBE:::,IBM:::,REED:::,MICROSOFT:::,GOOGLE:::,ORACLE:::,ATLASSIAN:::,SALESFORCE:::,DROPBOX:::,31:::","right": "Kayak Trip Advisor:::,Amoma:::,Yandex:::,Bing:::,Google:::,Intertrust:::,VISA:::,James Stavrou:::,Jason Vieges:::,T & C Love:::", "bottom": "..cn:::,.de:::,.ru:::,.com:::,.ko:::,.co.r:::,.uk:::,redvat.com:::,detectasum magnify:::"};
+            array = {"left": "Reuters:::<_?_>Bloomberg:::<_?_>Yummmy Car:::<_?_>Medellin:::<_?_>Freelancer:::<_?_>Bing:::<_?_>HR Policy:::<_?_>Delegates Sheet:::<_?_>Sophin:::<_?_>TFN:::<_?_>APEC:::", "top": "SAP:::<_?_>ADOBE:::<_?_>IBM:::<_?_>REED:::<_?_>MICROSOFT:::<_?_>GOOGLE:::<_?_>ORACLE:::<_?_>ATLASSIAN:::<_?_>SALESFORCE:::<_?_>DROPBOX:::<_?_>31:::","right": "Kayak Trip Advisor:::<_?_>Amoma:::<_?_>Yandex:::<_?_>Bing:::<_?_>Google:::<_?_>Intertrust:::<_?_>VISA:::<_?_>James Stavrou:::<_?_>Jason Vieges:::<_?_>T & C Love:::", "bottom": "..cn:::<_?_>.de:::<_?_>.ru:::<_?_>.com:::<_?_>.ko:::<_?_>.co.r:::<_?_>.uk:::<_?_>redvat.com:::<_?_>detectasum magnify:::"};
         }
         $("body").append($("<div></div>", {
             class: "tagger-tooltip",
@@ -165,12 +165,12 @@ function boundary(object){
     if (cookieExist){
         words = $.parseJSON(getCookie("wrapper-words"))["body"];
     } else {
-        words = "Jun-07 EUGDRP:::,07 JETBLUE:::,07 JETCOST:::,08 OMANAIR:::,11 ANNOUNCEMENT:::,12 SCTI CLAIM:::,13 DEXE-PHERIN:::,15:::";
+        words = "Jun-07 EUGDRP:::<_?_>07 JETBLUE:::<_?_>07 JETCOST:::<_?_>08 OMANAIR:::<_?_>11 ANNOUNCEMENT:::<_?_>12 SCTI CLAIM:::<_?_>13 DEXE-PHERIN:::<_?_>15:::";
     }
     var $bodyDiv = $("<div></div>", {
         class: "boundary " + classPrefix+ "boundary-layout-content"
     }).appendTo($newObject);
-    words.split(",").forEach(function(word){
+    words.split("<_?_>").forEach(function(word){
         tmp = word.split(":");
         $("<p></p>", {
             "class": "wrapper-body-word " + "word-" + parseInt(Math.random() * 100000),
@@ -233,7 +233,7 @@ function boundary(object){
 }
 
 function makeTooltipText(text){
-    var arr = text.split(","), result = [], length = text.length, wordData;
+    var arr = text.split("<_?_>"), result = [], length = text.length, wordData;
     arr.forEach(function(word){
         if (word != ""){
             wordData = word.split(":");
@@ -303,42 +303,42 @@ function showMessageTooltip(){
 function updateCookieWords(){
     var $obj = $($(".boundary-layout")[0]), words = {}, outerWords = {left: "", top: "", right: "", bottom: ""}, innerWords = {left: "", top: "", right: "", bottom: ""}, bodyWords = "", tmp;
     $obj.find(".left-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         outerWords.left += tmp;
     });
     $obj.find(".top-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         outerWords.top += tmp;
     });
     $obj.find(".right-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         outerWords.right += tmp;
     });
     $obj.find(".bottom-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         outerWords.bottom += tmp;
     });
 
 
     $obj.find(".inner-left-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         innerWords.left += tmp;
     });
     $obj.find(".inner-top-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         innerWords.top += tmp;
     });
     $obj.find(".inner-right-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         innerWords.right += tmp;
     });
     $obj.find(".inner-bottom-boundary").find(".tagger-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         innerWords.bottom += tmp;
     });
 
     $obj.find(".wrapper-body-word").each(function(i, el){
-        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + ",";
+        tmp = $(el).text() + ":" + $(el).data("date") + ":" + $(el).data("importance") + ":" + $(el).data("description") + "<_?_>";
         bodyWords += tmp;
     });
 
