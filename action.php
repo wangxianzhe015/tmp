@@ -65,6 +65,12 @@ switch ($action) {
     case 'send-email':
         sendEmail();
         break;
+    case 'get-wrapper-words':
+        getWrapperWords();
+        break;
+    case 'set-wrapper-words':
+        setWrapperWords();
+        break;
 }
 
 function save(){
@@ -384,3 +390,32 @@ function getUserIP()
 
     return $ip;
 }
+
+function getWrapperWords(){
+    $myFile = fopen("./data/wrapper/words.json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        if (filesize("./data/wrapper/words.json") > 0) {
+            $content = fread($myFile, filesize("./data/wrapper/words.json"));
+            fclose($myFile);
+        } else {
+            $content = "";
+        }
+        echo $content;
+    } else {
+        echo "fail";
+    }
+}
+
+function setWrapperWords(){
+    $data = $_POST['data'];
+    echo $data;
+    $myFile = fopen("./data/wrapper/words.json", "wr") or die("Unable to open file!");
+    if ($myFile) {
+        fwrite($myFile, $data);
+        fclose($myFile);
+        echo "wrapper words save success";
+    } else {
+        echo "wrapper words save fail";
+    }
+}
+
