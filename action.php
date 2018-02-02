@@ -392,7 +392,7 @@ function getUserIP()
 }
 
 function getWrapperWords(){
-    $myFile = fopen("./data/wrapper/words.json", "r") or die("Unable to open file!");
+    $myFile = fopen("./data/wrapper/words.json", "r") or die("fail");
     if ($myFile) {
         if (filesize("./data/wrapper/words.json") > 0) {
             $content = fread($myFile, filesize("./data/wrapper/words.json"));
