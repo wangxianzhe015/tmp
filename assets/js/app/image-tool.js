@@ -550,7 +550,7 @@ function addTextTooltip(left, top){
         if (clipboardData == "") return false;
         var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
         $.each(rows, function(i, row){
-            elements = row.split("\t");
+            elements = row.trim().split("\t");
             if (i == 0) {
                 $.each(elements, function (j, elem) {
                     header.push({title: elem})
@@ -563,13 +563,41 @@ function addTextTooltip(left, top){
         var $table = $('<table></table>');
         $(this).replaceWith($table);
         $table.DataTable( {
+            bAutoWidth: false,
             data: dataSet,
             columns: header
         });
+
+        $table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);
 
     }))).draggable().css({
         left: left,
         top: top,
         position: "absolute"
+    }).delegate("td", "click", function(){
+        var  i= 0, elem = this, $table = $(this).parents("table"), $ttip = $(this).parents(".ttip");
+        while((elem=elem.previousSibling)!=null) ++i;
+        if ($(this).hasClass("hover-td")){
+            $table.find("th").css({
+                "max-width": parseInt($ttip.css("width")) / $table.find("thead").find("th").length - 10,
+                "min-width": parseInt($ttip.css("width")) / $table.find("thead").find("th").length - 10
+            });
+            $(this).css("height", "");
+            $(".hover-td").removeClass("hover-td");
+        } else {
+            $(".hover-td").css("height", "").removeClass("hover-td");
+            $(this).css("height", parseInt($ttip.css("height")) * 0.7).addClass("hover-td");
+
+            var tmpW = parseInt($ttip.css("width")) * 0.3 / $table.find("thead").find("th").length - 10 < 0? 0 : parseInt($ttip.css("width")) * 0.3 / $table.find("thead").find("th").length - 10;
+            $table.find("th").css({
+                "max-width": tmpW,
+                "min-width": tmpW
+            });
+            $($table.find("th")[i]).css({
+                "max-width": parseInt($ttip.css("width")) * 0.7,
+                "min-width": parseInt($ttip.css("width")) * 0.7
+            });
+            $ttip.stop().animate({scrollTop: $(this).position().top - 20, scrollLeft: $(this).position().left - 20}, 1000);
+        }
     }).appendTo("body");
 }

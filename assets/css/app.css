@@ -565,6 +565,9 @@ button .text{
     color: white;
     font-style: italic;
 }
+.second .ttip .dataTables_wrapper td.hover-td{
+    white-space: normal;
+}
 
 .text.expanded .ttip{
     overflow: auto;
