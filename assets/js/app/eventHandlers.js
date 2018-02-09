@@ -17,24 +17,52 @@ function initHandlers(){
         setTimeout(hideLoadingDiv, 2000);
     });
 
-    $(document).on("mousemove", function(moveEventOptions){
-        if ($(moveEventOptions.originalEvent.target).find("iframe").length > 0){
+    $(document).on("mousemove", function(e){
+        if ($(e.originalEvent.target).find("iframe").length > 0){
             return;
         }
-        if (moveEventOptions.clientX < 50){
+        if (e.clientX < 50){
             setTimeout(showLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
-        } else if (window.innerWidth - moveEventOptions.clientX < 50) {
+        } else if (window.innerWidth - e.clientX < 50) {
             setTimeout(hideLeftSidebar, 100);
             setTimeout(showRightSidebar, 100);
         } else if (!mouseOverElement){
             setTimeout(hideLeftSidebar,100);
             setTimeout(hideRightSidebar,100);
         }
-        if (moveEventOptions.clientY < 150 && moveEventOptions.clientX > 50 && window.innerWidth - moveEventOptions.clientX > 50 && !mouseOverElement){
+        if (e.clientY < 150 && e.clientX > 50 && window.innerWidth - e.clientX > 50 && !mouseOverElement){
             setTimeout(showTopSidebar, 100);
         } else {
             setTimeout(hideTopSidebar, 100);
+        }
+        if (resizeTextCell != ""){
+            e.preventDefault();
+            var $obj = $("#" + resizeTextCell);
+            $obj.css({
+                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left,
+                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top,
+                transition: "none",
+                "min-height": 0,
+                "min-width": 0
+            });
+            $obj.data("lines").forEach(function(line){
+                adjustLine(line);
+            });
+        }
+    }).on("mouseup", function(e){
+        if (resizeTextCell != ""){
+            var $obj = $("#" + resizeTextCell);
+            $obj.css({
+                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left,
+                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top,
+                transition: ""
+            }).data({
+                width: $obj.css("width"),
+                height: $obj.css("height")
+            });
+            resizeTextCell = "";
+            $obj.draggable("enable");
         }
     });
 

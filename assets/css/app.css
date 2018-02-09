@@ -487,6 +487,22 @@ button .text{
     margin: 3px 0;
     padding: 0 0 10px 0;
 }
+.image-tooltip.text .image-tooltip-resize{
+    display: none;
+}
+.image-tooltip.text.expanded .image-tooltip-resize{
+    display: block;
+    width: 0;
+    height: 0;
+    border: solid 5px transparent;
+    border-right-color: #c0ff0057;
+    border-bottom-color: #c0ff0057;
+    position: absolute;
+    cursor: nw-resize;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+}
 .image-tooltip#preview-box{
     height: 75%;
     min-height: 600px;

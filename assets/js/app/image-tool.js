@@ -493,17 +493,30 @@ function addTextTooltip(left, top){
     $("<div></div>", {
         class: "image-tooltip second text",
         id: "text-box-" + parseInt(Math.random() * 10000000000)
-    }).data("lines", []).on("mouseover", function(){
+    }).data({
+        "lines": [],
+        "width": 0,
+        "height": 0
+    }).on("mouseover", function(){
         if (newBezierLine != null){
             newBezierLine.set("stroke", "white");
             canvas.renderAll();
         }
         if (mouseDrag) return false;
         $(this).addClass("expanded").attr("data-hidden", false);
+        if ($(this).data("width") != ""){
+            $(this).css({
+                width: parseInt($(this).data("width")),
+                height: parseInt($(this).data("height")),
+                "min-width": 0,
+                "min-height": 0
+            })
+        }
         $(this).data("lines").forEach(function(line){
             adjustLine(line);
         });
     }).on("mouseleave", function(){
+        if (resizeTextCell != "") return;
         if (newBezierLine != null){
             newBezierLine.set("stroke", "gray");
             canvas.renderAll();
@@ -512,12 +525,23 @@ function addTextTooltip(left, top){
         $(this).attr("data-hidden", true);
         setTimeout(function() {
             if ($(that).attr("data-hidden") == "true") {
-                $(that).removeClass("expanded").find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500);
-                setTimeout(function(){
+                $(that).removeClass("expanded").css({
+                    width: "",
+                    height: "",
+                    "min-height": "",
+                    "min-width": ""
+                }).find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500);
+                var clk = setInterval(function(){
                     $(that).data("lines").forEach(function(line){
                         adjustLine(line);
                     });
-                }, 500);
+                },100);
+                setTimeout(function(){
+                    //$(that).data("lines").forEach(function(line){
+                    //    adjustLine(line);
+                    //});
+                    clearInterval(clk);
+                }, 1000);
             }
         }, 10000);
     }).on("mouseup", function(){
@@ -570,7 +594,14 @@ function addTextTooltip(left, top){
 
         $table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);
 
-    }))).draggable().css({
+    }))).append($("<div></div>", {
+        class: "image-tooltip-resize"
+    }).on({
+        mousedown: function(){
+            $(this).parent().draggable("disable");
+            resizeTextCell = $(this).parent().attr("id");
+        }
+    })).draggable().css({
         left: left,
         top: top,
         position: "absolute"
