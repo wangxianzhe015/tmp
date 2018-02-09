@@ -521,7 +521,7 @@ function addTextTooltip(left, top){
             newBezierLine.set("stroke", "gray");
             canvas.renderAll();
         }
-        var that = this;
+        var that = "#" + $(this).attr("id");
         $(this).attr("data-hidden", true);
         setTimeout(function() {
             if ($(that).attr("data-hidden") == "true") {
@@ -532,9 +532,11 @@ function addTextTooltip(left, top){
                     "min-width": ""
                 }).find(".ttip").animate({scrollTop: 0, scrollLeft: 0}, 500);
                 var clk = setInterval(function(){
-                    $(that).data("lines").forEach(function(line){
-                        adjustLine(line);
-                    });
+                    if ($(that).length > 0) {
+                        $(that).data("lines").forEach(function (line) {
+                            adjustLine(line);
+                        });
+                    }
                 },100);
                 setTimeout(function(){
                     //$(that).data("lines").forEach(function(line){
@@ -601,7 +603,14 @@ function addTextTooltip(left, top){
             $(this).parent().draggable("disable");
             resizeTextCell = $(this).parent().attr("id");
         }
-    })).draggable().css({
+    })).append($("<div></div>", {
+        class: "text-cell-buttons"
+    }).append($("<img/>", {
+        src: "./assets/images/icons/remove-24.png"
+    }).on("click", function(){
+        removeTextCell = $(this).parents(".image-tooltip").attr("id");
+        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell");
+    }))).draggable().css({
         left: left,
         top: top,
         position: "absolute"

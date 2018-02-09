@@ -207,6 +207,28 @@ function initHandlers(){
         $("#ttip-edit").show();
     });
 
+    $("#confirm-btn").on("click", function(){
+        var $actionTag = $("#confirm-next-action"), action = $actionTag.val();
+        $actionTag.val("");
+        $(this).next().click();
+        if (action == "remove-text-cell"){
+            var $cell = $("#" + removeTextCell);
+            $cell.data("lines").forEach(function(line){
+                line.leftElement.lines.forEach(function(ln, i){
+                    if (line.id == ln.id){
+                        line.leftElement.lines.splice(i,1);
+                    }
+                });
+                canvas.remove(line.leftCircle);
+                canvas.remove(line.rightCircle);
+                canvas.remove(line);
+            });
+            $cell.remove();
+            removeTextCell = "";
+            canvas.renderAll();
+        }
+    });
+
     $(".dialog-close").on("click", function(){
         modalClose($(this).attr('dismiss'));
     });

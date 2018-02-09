@@ -503,6 +503,20 @@ button .text{
     bottom: 0;
     z-index: 10;
 }
+.image-tooltip.text .text-cell-buttons{
+    position: absolute;
+    right: -30px;
+    top: 5px;
+    display: none;
+}
+.image-tooltip.text .text-cell-buttons img{
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+}
+.image-tooltip.text.expanded .text-cell-buttons{
+    display: block;
+}
 .image-tooltip#preview-box{
     height: 75%;
     min-height: 600px;

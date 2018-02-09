@@ -41,7 +41,7 @@ var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
 
-var addingTextCell = false, resizeTextCell = "";
+var addingTextCell = false, resizeTextCell = "", removeTextCell = "";
 
 var foreignText = "输入文本！";
 
