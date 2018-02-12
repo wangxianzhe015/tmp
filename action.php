@@ -71,6 +71,9 @@ switch ($action) {
     case 'set-wrapper-words':
         setWrapperWords();
         break;
+    case 'tagger-file-upload':
+        uploadTaggerFile();
+        break;
 }
 
 function save(){
@@ -419,3 +422,12 @@ function setWrapperWords(){
     }
 }
 
+function uploadTaggerFile(){
+    if ( 0 < $_FILES['file']['error'] ) {
+        echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+    }
+    else {
+        move_uploaded_file($_FILES['file']['tmp_name'], './tagger/files/' . $_FILES['file']['name']);
+        echo "Success";
+    }
+}

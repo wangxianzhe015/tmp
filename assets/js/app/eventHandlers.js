@@ -36,33 +36,37 @@ function initHandlers(){
         } else {
             setTimeout(hideTopSidebar, 100);
         }
-        if (resizeTextCell != ""){
+        if (resizeTooltip != ""){
             e.preventDefault();
-            var $obj = $("#" + resizeTextCell);
+            var $obj = $("#" + resizeTooltip);
             $obj.css({
-                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left,
-                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top,
+                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left + 5,
+                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top + 5,
                 transition: "none",
                 "min-height": 0,
                 "min-width": 0
             });
-            $obj.data("lines").forEach(function(line){
-                adjustLine(line);
-            });
+            if ($obj.hasClass("text")) {
+                $obj.data("lines").forEach(function (line) {
+                    adjustLine(line);
+                });
+            }
         }
     }).on("mouseup", function(e){
-        if (resizeTextCell != ""){
-            var $obj = $("#" + resizeTextCell);
+        if (resizeTooltip != ""){
+            var $obj = $("#" + resizeTooltip);
             $obj.css({
-                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left,
-                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top,
+                width: e.originalEvent.pageX < $obj.position().left + 200?200:e.originalEvent.pageX - $obj.position().left + 5,
+                height: e.originalEvent.pageY < $obj.position().top + 36?36:e.originalEvent.pageY - $obj.position().top + 5,
                 transition: ""
             }).data({
                 width: $obj.css("width"),
                 height: $obj.css("height")
             });
-            resizeTextCell = "";
-            $obj.draggable("enable");
+            resizeTooltip = "";
+            if ($obj.hasClass("ui-draggable")) {
+                $obj.draggable("enable");
+            }
         }
     });
 
@@ -130,6 +134,11 @@ function initHandlers(){
                     break;
             }
         }
+    });
+
+    $(".image-tooltip-resize").on("mousedown", function(){
+        $(this).parent().draggable("disable");
+        resizeTooltip = $(this).parent().attr("id");
     });
 
     downloadCSVFile();
@@ -208,11 +217,10 @@ function initHandlers(){
     });
 
     $("#confirm-btn").on("click", function(){
-        var $actionTag = $("#confirm-next-action"), action = $actionTag.val();
-        $actionTag.val("");
+        var $actionTag = $("#confirm-next-action"), $valueTag = $("#confirm-next-value"), action = $actionTag.val();
         $(this).next().click();
         if (action == "remove-text-cell"){
-            var $cell = $("#" + removeTextCell);
+            var $cell = $("#" + $valueTag.val());
             $cell.data("lines").forEach(function(line){
                 line.leftElement.lines.forEach(function(ln, i){
                     if (line.id == ln.id){
@@ -224,9 +232,12 @@ function initHandlers(){
                 canvas.remove(line);
             });
             $cell.remove();
-            removeTextCell = "";
             canvas.renderAll();
+        } else if (action == "remove-tooltip") {
+            $("#" + $valueTag.val()).remove();
         }
+        $actionTag.val("");
+        $valueTag.val("");
     });
 
     $(".dialog-close").on("click", function(){
@@ -755,23 +766,21 @@ function initHandlers(){
         }
     });
 
-    $(".ttip").on("mousedown", function(e){
+    $(".ttip").delegate("mousedown", ".temp-input", function(e){
         var obj = e.target;
-        if (obj.className == "temp-input"){
-            $(obj).addClass("target");
-            e.preventDefault();
-            e.stopPropagation();
-            tempInputMoving = true;
+        $(obj).addClass("target");
+        e.preventDefault();
+        e.stopPropagation();
+        tempInputMoving = true;
 
-            var inputTag = document.createElement("input");
-            $(inputTag).attr("type","text").attr("id","temp-moving-input")
-                .css({
-                    position: "absolute",
-                    top: window.pageYOffset + e.clientY,
-                    left: window.pageXOffset + e.clientX
-                });
-            $("body").append(inputTag);
-        }
+        var inputTag = document.createElement("input");
+        $(inputTag).attr("type","text").attr("id","temp-moving-input")
+            .css({
+                position: "absolute",
+                top: window.pageYOffset + e.clientY,
+                left: window.pageXOffset + e.clientX
+            });
+        $("body").append(inputTag);
     });
 
     $("body").on("mousemove", function(e){
@@ -1017,6 +1026,28 @@ function initHandlers(){
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-app-init-btn").click();
         }
+    });
+
+    $("#tagger-file-upload-button").on("click", function () {
+        $(this).next().click();
+    });
+
+    $("#tagger-file-upload").on("change", function(){
+        var file_data = $(this).prop('files')[0];
+        var form_data = new FormData();
+        form_data.append('file', file_data);
+        $.ajax({
+            url: 'tagger/action.php', // point to server-side PHP script
+            dataType: 'text',  // what to expect back from the PHP script, if anything
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            success: function(r){
+                console.log(r);
+            }
+        });
     });
 
     $("#test-draggable").on("click", function(){

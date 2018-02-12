@@ -578,6 +578,7 @@
         <div class="dialog-content">Content</div>
         <div class="dialog-footer">
             <input type="hidden" id="confirm-next-action" value=""/>
+            <input type="hidden" id="confirm-next-value" value=""/>
             <button id="confirm-btn" class="confirm">OK</button>
             <button class="dialog-close" dismiss="#confirm-box">Cancel</button>
         </div>
@@ -628,11 +629,16 @@
     <span class="close-iframe" title="Close">X</span>
 </div>
 
-<div id="tagger-iframe">
+<div id="tagger-iframe" class="third-image-tooltip">
     <div class="ttip">
-        <iframe src="tagger.html"></iframe>
+        <iframe src="tagger/"></iframe>
     </div>
-    <span class="close-iframe" title="Close">X</span>
+    <div class="image-tooltip-resize"></div>
+    <div class="tagger-iframe-btns">
+        <span class="close-iframe" title="Close">x</span>
+        <span id="tagger-file-upload-button" title="Upload">+</span>
+        <input type="file" id="tagger-file-upload" style="display:none;"/>
+    </div>
 </div>
 
 <div id="calendar-iframe">

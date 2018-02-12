@@ -23,6 +23,7 @@ var showContextMenu = false;
 var mouseDown = false, downPoint={x:0,y:0};
 var mouseDrag = false;
 var mouseOverElement = false;
+var resizeTooltip = "";
 var tooltipObject = null;
 var targetElement = null, tempPoly = null, tempText = null;
 
@@ -41,7 +42,7 @@ var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
 
-var addingTextCell = false, resizeTextCell = "", removeTextCell = "", textCellScrollTimer = 0;
+var addingTextCell = false, textCellScrollTimer = 0;
 
 var foreignText = "输入文本！";
 

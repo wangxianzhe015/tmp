@@ -529,7 +529,7 @@ function addTextTooltip(left, top){
         });
     }).on("mouseleave", function(){
         clearInterval(textCellScrollTimer);
-        if (resizeTextCell != "") return;
+        if (resizeTooltip != "") return;
         if (newBezierLine != null){
             newBezierLine.set("stroke", "gray");
             canvas.renderAll();
@@ -615,15 +615,14 @@ function addTextTooltip(left, top){
     }).on({
         mousedown: function(){
             $(this).parent().draggable("disable");
-            resizeTextCell = $(this).parent().attr("id");
+            resizeTooltip = $(this).parent().attr("id");
         }
     })).append($("<div></div>", {
         class: "text-cell-buttons"
     }).append($("<img/>", {
         src: "./assets/images/icons/remove-24.png"
     }).on("click", function(){
-        removeTextCell = $(this).parents(".image-tooltip").attr("id");
-        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell");
+        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell", $(this).parents(".image-tooltip").attr("id"));
     }))).draggable().css({
         left: left,
         top: top,

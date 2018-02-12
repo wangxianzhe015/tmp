@@ -11,10 +11,11 @@ function alert(header, content){
     obj.fadeIn();
 }
 
-function showConfirmBox(content, next){
+function showConfirmBox(content, next, value){
     var $obj =$("#confirm-box");
     $obj.find(".dialog-content").html(content);
     $("#confirm-next-action").val(next);
+    $("#confirm-next-value").val(value);
     $obj.fadeIn();
 }
 

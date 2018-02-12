@@ -2,7 +2,7 @@ jQuery.fn.extend( {
 	cndceLine: function( params ){
 		// Defaults
 		var defaults = {
-			backgroundUrl: './assets/background.jpg',
+			//backgroundUrl: './assets/background.jpg',
 			jsonUrl: './data.json',
 
 			pointDistance: '18%',
@@ -40,7 +40,7 @@ jQuery.fn.extend( {
 
 		// Variables
 		var $canvas = $( '<canvas></canvas>' );
-		var $backgroundContainer = $( '<div class="background-container"></div>' );
+		//var $backgroundContainer = $( '<div class="background-container"></div>' );
 		var $canvasContainer = $( '<div class="canvas-container"></div>' );
 		var $elementsContainer = $( '<div class="elements-container"></div>' );
 
@@ -132,12 +132,12 @@ jQuery.fn.extend( {
 					left: ''
 				} );
 
-				$backgroundContainer.css( {
-					width: '',
-					height: '',
-					top: '',
-					left: ''
-				} )
+				//$backgroundContainer.css( {
+				//	width: '',
+				//	height: '',
+				//	top: '',
+				//	left: ''
+				//} )
 
 
 				if( !params.isVertical ){
@@ -146,8 +146,8 @@ jQuery.fn.extend( {
 						margin: '0 15vw'
 					} )
 
-					$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
-					$backgroundContainer.height( '' );
+					//$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
+					//$backgroundContainer.height( '' );
 					
 				}else{
 					$canvasContainer.height( tHeight );
@@ -155,7 +155,7 @@ jQuery.fn.extend( {
 						margin: '10vw 0'
 					} )
 
-					$backgroundContainer.height( $canvasContainer.outerHeight( true ) );
+					//$backgroundContainer.height( $canvasContainer.outerHeight( true ) );
 
 				}
 
@@ -541,10 +541,10 @@ jQuery.fn.extend( {
 		$container.rotate = function(  ){
 
 			setTransition( $canvasContainer, 'unset' );
-			setTransition( $backgroundContainer, 'unset' );
+			//setTransition( $backgroundContainer, 'unset' );
 
 			setTransition( $canvasContainer, '', 700 );
-			setTransition( $backgroundContainer, '', 700 );
+			//setTransition( $backgroundContainer, '', 700 );
 			
 			if( params.isVertical ){
 				params.isVertical = false
@@ -571,13 +571,13 @@ jQuery.fn.extend( {
 
 			// Background
 			$container.addClass( 'cndce-line' );
-			$container.append( $backgroundContainer );
+			//$container.append( $backgroundContainer );
 
-			$backgroundContainer.append( 
-				'<img src="'
-				+ params.backgroundUrl
-				+ '">' 
-			);
+			//$backgroundContainer.append(
+			//	'<img src="'
+			//	+ params.backgroundUrl
+			//	+ '">'
+			//);
 
 
 			// Canvas
@@ -707,18 +707,18 @@ jQuery.fn.extend( {
 							left: left + 'px'
 						} );
 
-						$backgroundContainer.css( {
-							left: left/2 + 'px'
-						} );
+						//$backgroundContainer.css( {
+						//	left: left/2 + 'px'
+						//} );
 
 					}else{
 						$canvasContainer.css( {
 							top: top + 'px'
 						} );
 
-						$backgroundContainer.css( {
-							top: top + 'px'
-						} );
+						//$backgroundContainer.css( {
+						//	top: top + 'px'
+						//} );
 					}
 
 					
@@ -764,12 +764,5 @@ jQuery.fn.extend( {
 
 
 		} );
-
-
-
-
-		
-		
-
 	}
 } );

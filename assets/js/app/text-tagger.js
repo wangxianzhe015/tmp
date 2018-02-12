@@ -1,9 +1,9 @@
 ;(function(document, $) {
     var taggerContainerClassName = "tagger-icons-container",
         taggerIconPath = {
-            "cut": "./assets/images/icons/cut-24.png",
-            "unhighlight": "./assets/images/icons/highlight-24.png",
-            "tick": "./assets/images/icons/check-24.png"
+            "cut": "../assets/images/icons/cut-black-24.png",
+            "unhighlight": "../assets/images/icons/highlight-black-24.png",
+            "tick": "../assets/images/icons/check-24-black.png"
         },
         keywords = ["Fact", "Hint", "Metadata"];
 
@@ -98,17 +98,17 @@
             if (keyword == "") return false;
             $(this).parent().hide();
             if (typeof window.getSelection != "undefined") {
-                var sel = window.getSelection(), $obj = $(sel.focusNode.parentNode);
-                if ($obj.attr("data-keyword") != ""){
-                    $obj = $(sel.anchorNode.parentNode);
-                }
+                var sel = window.getSelection(), $obj = $(sel.baseNode).parents(".tagger-highlight-text");
+                //if ($obj.attr("data-keyword") != ""){
+                //    $obj = $(sel.anchorNode).parents(".tagger-highlight-text");
+                //}
                 var wordID = $obj.attr("data-word-id");
                 var oldKeyword = $obj.attr("data-keyword"), oldCheck = true;
+                console.log($obj);
+                console.log(keyword);
                 $obj.attr("data-keyword", keyword);
                 $(".tagger-highlight-text").each(function(i,el){
-                    if ($(el).attr("data-word-id") == wordID){
-                        $(el).attr("data-keyword", keyword);
-                    } else {
+                    if ($(el).attr("data-word-id") !== wordID && $(el).attr("data-keyword") === oldKeyword){
                         if ($(el).attr("data-keyword") == oldKeyword) oldCheck = false;
                     }
                 });
@@ -148,7 +148,7 @@
             text: "X"
         }).on("click", function(e){
             $("#tagger-keyword-div").hide();
-            var sel = window.getSelection(), data = sel.toString(), $obj = $(sel.focusNode.parentNode), $container = $obj.parents(".tagger-content");
+            var sel = window.getSelection(), data = sel.toString(), $obj = $(sel.baseNode).parents(".tagger-highlight-text"), $container = $obj.parents(".tagger-content");
             if (data != "") {
                 $("#" + $obj.attr("id") + "-keyword").remove();
                 $obj.replaceWith(data);
@@ -385,7 +385,7 @@
         return this.on("mouseup", function(event) {
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range, data, children, highlightTag, keywordTag, isSecond = false;
-                if (sel.toString() == "" || $(sel.focusNode.parentNode).attr("data-keyword") == "")return false;
+                if (sel.toString() == "" || $(sel.baseNode).parents(".tagger-highlight-text").attr("data-keyword") == "")return false;
                 if (sel.rangeCount) {
                     for (var i = 0, len = sel.rangeCount; i < len; ++i) {
                         range = sel.getRangeAt(i);
@@ -469,8 +469,9 @@
             if (clipboardData == "") return false;
             $(this).parents(".playground").next().find(".image-btn").show();
             if ($(this).find(".tagger-content").hasClass("init")){
-                $(this).find(".tagger-content").html("").removeClass("init");
+                $(this).find(".tagger-content").html(clipboardData).removeClass("init");
                 $(this).find(".tagger-loading-div").fadeOut();
+                return;
             }
             if (typeof window.getSelection != "undefined") {
                 var sel = window.getSelection(), range;
