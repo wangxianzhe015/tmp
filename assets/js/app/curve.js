@@ -201,10 +201,10 @@ function adjustLine(line){
             } else {
                 tmpX = tooltipOffset.left + width;
             }
-            if (offset.top + height < tooltipOffset.top){
+            if (tmpY < tooltipOffset.top){
                 tmpY = tooltipOffset.top;
-            } else if (offset.top > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
-                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight;
+            } else if (tmpY > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
+                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight();
             }
         } else {
             point = line.leftElement.parents(".image-tooltip");
@@ -301,10 +301,10 @@ function adjustLine(line){
             } else {
                 tmpX = tooltipOffset.left + width;
             }
-            if (offset.top + height < tooltipOffset.top){
+            if (tmpY < tooltipOffset.top){
                 tmpY = tooltipOffset.top;
-            } else if (offset.top > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
-                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight;
+            } else if (tmpY > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
+                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight();
             }
         } else {
             point = line.rightElement.parents(".image-tooltip");

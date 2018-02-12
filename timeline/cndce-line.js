@@ -3,7 +3,6 @@ jQuery.fn.extend( {
 		// Defaults
 		var defaults = {
 			backgroundUrl: './assets/background.jpg',
-			//backgroundUrl: 'transparent',
 			jsonUrl: './data.json',
 
 			pointDistance: '18%',
@@ -24,8 +23,10 @@ jQuery.fn.extend( {
 
 			renderRate: 15,
 
-			defaultSubtitleIcon: 'bar-chart-o'
-		};
+			defaultSubtitleIcon: 'bar-chart-o',
+
+			isVertical: false
+		}
 
 
 		// Data Defaults
@@ -33,7 +34,7 @@ jQuery.fn.extend( {
 			content: '',
 			subtitle: '',
 			subtitleIcon: false
-		};
+		}
 
 
 
@@ -50,9 +51,12 @@ jQuery.fn.extend( {
 
 		var mouseX, mouseY;
 		var mouseDownX, mouseDownY;
-		window.maxScroll;
+		window.maxScrollX, window.maxScrollY;
 
 		var canvasTranslateX = 0;
+		var canvasTranslateY = 0;
+
+		
 
 
 		// Param Set Defaults
@@ -71,27 +75,102 @@ jQuery.fn.extend( {
 
 
 		// Functions
+
+		function setTransition( $elem, val, timeout ){
+
+			if( timeout == undefined ){
+				$elem.css( {
+					'-webkit-transition': val,
+					  '-moz-transition' : val,
+					     '-o-transition': val,
+					        'transition': val
+				} );
+			}else{
+				setTimeout( function(  ){
+					$elem.css( {
+						'-webkit-transition': val,
+						  '-moz-transition' : val,
+						     '-o-transition': val,
+						        'transition': val
+					} );
+				}, timeout );
+			}
+			
+
+			
+		}
+
 		function initCanvas(  ){
 
-			var tWidth = points[points.length - 1].x + params.pointSize;
-			var tHeight = $canvas.outerHeight(  );
+			var tWidth, tHeight;
+
+
+			if( !params.isVertical ){
+				tWidth = points[points.length - 1].x + params.pointSize;
+				tHeight = $container.outerHeight(  );
+
+				$container.removeClass( 'vertical' );
+
+			}else{
+				tWidth = $container.outerWidth(  );
+				tHeight = points[points.length - 1].y + params.pointSize;
+
+
+				$container.addClass( 'vertical' );
+			}
+			
 
 			if( Math.floor( $canvas[0].width ) != Math.floor( tWidth ) || Math.floor( $canvas[0].height ) != Math.floor( tHeight ) ){
 				$canvas[0].width = tWidth;
 				$canvas[0].height = tHeight;
 
-				$canvasContainer.width( tWidth );
 
-				$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
+				$canvasContainer.css( {
+					width: '',
+					height: '',
+					top: '',
+					left: ''
+				} );
+
+				$backgroundContainer.css( {
+					width: '',
+					height: '',
+					top: '',
+					left: ''
+				} )
+
+
+				if( !params.isVertical ){
+					$canvasContainer.width( tWidth );
+					$canvasContainer.css( {
+						margin: '0 15vw'
+					} )
+
+					$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
+					$backgroundContainer.height( '' );
+					
+				}else{
+					$canvasContainer.height( tHeight );
+					$canvasContainer.css( {
+						margin: '10vw 0'
+					} )
+
+					$backgroundContainer.height( $canvasContainer.outerHeight( true ) );
+
+				}
+
+
 
 				initPoints( points );
 				initElements(  );
 
 
-				maxScroll = -$canvasContainer.outerWidth( true ) + $container.outerWidth(  );
-
+				maxScrollX = -$canvasContainer.outerWidth( true ) + $container.outerWidth(  );
+				maxScrollY = -$canvasContainer.outerHeight( true ) + $container.outerHeight(  );
 
 			}
+
+			
 
 			ctx = $canvas[0].getContext( '2d' );
 
@@ -104,8 +183,10 @@ jQuery.fn.extend( {
 		function initPoints( data ){
 			points = data;
 
+			
+
 			var x = params.pointSize;
-			var y;
+			var y = 0;
 
 			var distance = Number.parseFloat( params.pointDistance );
 			var distanceUnit = params.pointDistance.match( /px|%/ )[0];
@@ -118,11 +199,22 @@ jQuery.fn.extend( {
 
 			// Set point x, y value
 			for( var i=0; i<points.length; i++ ){
-				y = $canvas.outerHeight(  ) / 2;
-				y += ( -1 * ( i % 2 ) ) * ( Math.random() * 100 ) % params.curveVariance;
+				y = ( -1 * ( i % 2 ) ) * ( Math.random() * 100 ) % params.curveVariance;
 
-				points[i].x = x;
-				points[i].y = y;
+				if( params.isVertical ){
+					y += $canvas.outerWidth(  ) / 2;
+					console.log( $canvas.outerWidth(  ) / 2 );
+
+					points[i].x = y;
+					points[i].y = x;
+
+				}else{
+					y += $canvas.outerHeight(  ) / 2;
+
+					points[i].x = x;
+					points[i].y = y;
+				}
+				
 
 				points[i].dX = 0;
 				points[i].dY = 0;
@@ -131,6 +223,32 @@ jQuery.fn.extend( {
 			}
 
 			initMidBezierPoints(  );
+		}
+
+		function initSubtitle( subtitleData ){
+			var $subtitle = $( '<div class="element-subtitle"></div>' )
+
+			// Subtitle Content
+			var $subtitleContent = $( '<div class="subtitle-content"></div>' );
+			$subtitleContent.append( subtitleData.subtitle );
+
+
+			// Subtitle Icon
+			if( subtitleData.subtitleIcon ){
+				var $subtitleIcon = $( '<div class="subtitle-icon"></div>' );
+
+				if( subtitleData.subtitleIcon == true )
+					subtitleData.subtitleIcon = defaults.defaultSubtitleIcon;
+
+				$subtitleIcon.append( '<i class="fa fa-' + subtitleData.subtitleIcon + '"></i>' );
+
+				$subtitle.append( $subtitleIcon );
+			}
+
+
+			$subtitle.append( $subtitleContent );
+
+			return $subtitle;
 		}
 
 		function initElements( isNew ){
@@ -143,7 +261,11 @@ jQuery.fn.extend( {
 				var $element = $( '<div class="element"></div>' );
 				var $elementWrapper = $( '<div class="element-wrapper"></div>' );
 
+				var $subtitleWrapper = $( '<div class="subtitle-wrapper"></div>' );
+
+
 				if( isNew ){
+					
 
 					// Add Content
 					if( points[i].content !== '' ){
@@ -154,33 +276,24 @@ jQuery.fn.extend( {
 						$elementWrapper.addClass( 'has-content' );
 					}	
 
-					// Add Subtitle
+					// Add In-parent Subtitle
 					if( points[i].subtitle !== '' ){
-						var $subtitle = $( '<div class="element-subtitle"></div>' )
+						$subtitleWrapper.append( initSubtitle( points[i] ) );
+					}
 
-						// Subtitle Content
-						var $subtitleContent = $( '<div class="subtitle-content"></div>' );
-						$subtitleContent.append( points[i].subtitle );
-
-						// Subtitle Icon
-						if( points[i].subtitleIcon ){
-							var $subtitleIcon = $( '<div class="subtitle-icon"></div>' );
-
-							if( points[i].subtitleIcon == true )
-								points[i].subtitleIcon = defaults.defaultSubtitleIcon;
-
-							$subtitleIcon.append( '<i class="fa fa-' + points[i].subtitleIcon + '"></i>' );
-
-							$subtitle.append( $subtitleIcon );
+					// Add In-array Subtitles
+					if( points[i].subtitles != undefined ){
+						for( var j=0; j<points[i].subtitles.length; j++ ){
+							$subtitleWrapper.append( initSubtitle( points[i].subtitles[j] ) );
 						}
-
-						$subtitle.append( $subtitleContent );
-						$elementWrapper.append( $subtitle );
 					}
 
 					$element.attr( 'data-index', i );
 					$element.append( $elementWrapper );
+
+					$elementWrapper.append( $subtitleWrapper );
 					$elementsContainer.append( $element );
+
 				}else{
 						$element = $( '.element[data-index='+i+']', $elementsContainer );
 				}
@@ -306,8 +419,11 @@ jQuery.fn.extend( {
 	    		points[i].y + points[i].dY
 	    	);
 
+
+
 			 ctx.stroke(  );
 		}
+
 
 		function getPointsInRange( x, y ){
 			var inRange = [];
@@ -344,10 +460,12 @@ jQuery.fn.extend( {
 					max = params.elementMaxDeltaMovement;
 				// }
 
+
 				if( inRange.indexOf( i ) != -1 ){
 					
 					var dX = ( max - Math.abs( points[i].dX ) ) * delta;
 					var dY = ( max - Math.abs( points[i].dY ) ) * delta;
+
 
 					if( points[i].x + points[i].dX > mouseX ){
 						points[i].dX = Math.max( 
@@ -360,6 +478,7 @@ jQuery.fn.extend( {
 							max
 						);
 					}
+
 
 					if( points[i].y + points[i].dY > mouseY ){
 						points[i].dY = Math.max( 
@@ -379,15 +498,20 @@ jQuery.fn.extend( {
 					var dX = points[i].dX * delta * 2;
 					var dY = points[i].dY * delta * 2;
 
+
 					// if( points[i].dX > 0 )
 					// 	points[i].dX -= dX;
 					// else
 						points[i].dX -= dX; 
 
+
 					// if( points[i].dY > 0 )
 					// 	points[i].dY -= dY;
 					// else
 						points[i].dY -= dY;
+
+
+
 
 					if( points[i].dX >= -0.5 && points[i].dX <= 0.5 ){
 						points[i].dX = 0;
@@ -409,48 +533,58 @@ jQuery.fn.extend( {
 						+ ')'
 					} )
 				}
+
+
 			}
 		}
 
+		$container.rotate = function(  ){
+
+			setTransition( $canvasContainer, 'unset' );
+			setTransition( $backgroundContainer, 'unset' );
+
+			setTransition( $canvasContainer, '', 700 );
+			setTransition( $backgroundContainer, '', 700 );
+			
+			if( params.isVertical ){
+				params.isVertical = false
+			}else{
+				params.isVertical = true;
+			}
+
+			// initCanvas(  );
+		}
+
+
 		$( window ).resize( function(  ){
 
+			
 			initPoints( points );
+			initCanvas(  )
 
-			var tWidth = points[points.length - 1].x + params.pointSize;
-			var tHeight = $canvas.outerHeight(  );
-
-			$canvas[0].width = tWidth;
-			$canvas[0].height = tHeight;
-
-			$canvasContainer.width( tWidth );
-
-			$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
-
-			initElements(  );
-
-
-			maxScroll = -$canvasContainer.outerWidth( true ) + $container.outerWidth(  );
-
-			console.log( $canvasContainer.outerWidth( true ) );
-			console.log( $container.outerWidth(  ) );
-
+			
 		} );
 
+
 		$( document ).ready( function( $ ){
+
+
 			// Background
 			$container.addClass( 'cndce-line' );
 			$container.append( $backgroundContainer );
 
-			//$backgroundContainer.append(
-			//	'<img src="'
-			//	+ params.backgroundUrl
-			//	+ '">'
-			//);
+			$backgroundContainer.append( 
+				'<img src="'
+				+ params.backgroundUrl
+				+ '">' 
+			);
+
 
 			// Canvas
 			$container.append( $canvasContainer );
 			$canvasContainer.append( $elementsContainer );
 			$canvasContainer.append( $canvas );
+
 
 			// Curve
 			$.ajax( {
@@ -465,17 +599,22 @@ jQuery.fn.extend( {
 									data.items[i][param] = dataDefaults[param];
 								}
 							}
+
 						}
 					}
+
 
 					initPoints( data.items );
 
 					initElements( true );
+					
 
 					setInterval( render, params.renderRate );
 
 				}
-			});
+			} )
+
+
 
 			// Events
 			$container.on( 'mouseenter', '.element-content', function(  ){
@@ -491,88 +630,146 @@ jQuery.fn.extend( {
 
 				mouseX = e.pageX - $( '.canvas-container', $container ).offset(  ).left;
 				mouseY = e.pageY - $( '.canvas-container', $container ).offset(  ).top;
-			});
+
+
+			} )
 
 			$container.on( 'mouseleave', '.canvas-container', function( e ){
+
 				mouseX = -1000;
 				mouseY = -1000;
-			});
+			} )
+
+
 
 			function mousedown( e ){
 				$container.addClass( 'mousedown' );
+
 				mouseDownX = e.pageX - $container.offset(  ).left;
+				mouseDownY = e.pageY - $container.offset(  ).top;
 
-				var start = $canvasContainer.data( 'start' );
+
+				var startX = $canvasContainer.data( 'startX' );
+				var startY = $canvasContainer.data( 'startY' );
 				
-				if( start == undefined )
-					start = 0;
+				if( startX == undefined )
+					startX = 0;
 
-				$canvasContainer.data( 'start', start + canvasTranslateX );
+				if( startY == undefined )
+					startY = 0;
+
+
+				$canvasContainer.data( 'startX', startX + canvasTranslateX );
+				$canvasContainer.data( 'startY', startY + canvasTranslateY );
 			}
 
 			function mouseup( e ){
 				$container.removeClass( 'mousedown' );
 
 				mouseDownX = undefined;
+				mouseDownY = undefined;
+
 			}
 
 			function mousemove( e ){
 				if( typeof e.preventDefault == 'function' )
 					e.preventDefault(  );
 
-				if( mouseDownX != undefined ){
+				if( mouseDownX != undefined || mouseDownY != undefined ){
 					var x = e.pageX - $container.offset(  ).left;
+					var y = e.pageY - $container.offset(  ).top;
 
 					var tempX = x - mouseDownX;
+					var tempY = y - mouseDownY;
 
 					var left = Math.min( 
-						$canvasContainer.data( 'start' ) + tempX,
+						$canvasContainer.data( 'startX' ) + tempX,
+						0
+					);
+					var top = Math.min(
+						$canvasContainer.data( 'startY' ) + tempY,
 						0
 					);
 
 					left = Math.max(
 						left,
-						maxScroll
+						maxScrollX
+					);
+
+					top = Math.max(
+						top,
+						maxScrollY
 					);
 
 
-					// if( left < 0 && left > maxScroll ){
-
+					if( !params.isVertical ){
 						$canvasContainer.css( {
 							left: left + 'px'
-						});
+						} );
 
 						$backgroundContainer.css( {
 							left: left/2 + 'px'
-						});
+						} );
 
-						canvasTranslateX = left - $canvasContainer.data( 'start' );
+					}else{
+						$canvasContainer.css( {
+							top: top + 'px'
+						} );
 
-					// }
+						$backgroundContainer.css( {
+							top: top + 'px'
+						} );
+					}
+
+					
+
+					canvasTranslateX = left - $canvasContainer.data( 'startX' );
+					canvasTranslateY = top - $canvasContainer.data( 'startY' );
+
+
+
+					
+
 				}
 			}
+
 
 			$container.mousedown( mousedown );
 
 			$container.mouseup( mouseup )
+			
 
 			$container.mousemove( mousemove );
 
 			$container.on( 'touchstart', function( e ){
 				mousedown( e.touches[0] )
-			});
+			} );
 
 			$container.on( 'touchend', function( e ){
 				mouseup( e.touches[0] );
-			});
+			} )
 
 			$container.on( 'touchmove', function( e ){
 				mousemove( e.touches[0] );
-			});
+			} )
 
 			setInterval( function(  ){
 
 			}, 100 );
-		});
+
+
+			$container.on( 'click', '.cndce-line-rotate', function(  ){
+				$container.rotate(  );
+			} );
+
+
+		} );
+
+
+
+
+		
+		
+
 	}
 } );
