@@ -497,12 +497,12 @@ function addTextTooltip(left, top){
         "lines": [],
         "width": 0,
         "height": 0
-    }).on("mouseover", function(){
+    }).on("mouseover", function(e){
+        clearInterval(textCellScrollTimer);
         if (newBezierLine != null){
             newBezierLine.set("stroke", "white");
             canvas.renderAll();
         }
-        if (mouseDrag) return false;
         $(this).addClass("expanded").attr("data-hidden", false);
         if ($(this).data("width") != ""){
             $(this).css({
@@ -512,10 +512,23 @@ function addTextTooltip(left, top){
                 "min-height": 0
             })
         }
+        if (newBezierLine != null){
+            var $obj = $(this).find(".ttip");
+            if (e.originalEvent.pageY < $(this).offset().top + 50){
+                textCellScrollTimer = setInterval(function(){
+                    $obj.stop().animate({scrollTop: $obj.scrollTop() - 20}, 500);
+                }, 500);
+            } else if ( e.originalEvent.pageY > $(this).offset().top + $(this).innerHeight() - 50){
+                textCellScrollTimer = setInterval(function(){
+                    $obj.stop().animate({scrollTop: $obj.scrollTop() + 20}, 500);
+                }, 500);
+            }
+        }
         $(this).data("lines").forEach(function(line){
             adjustLine(line);
         });
     }).on("mouseleave", function(){
+        clearInterval(textCellScrollTimer);
         if (resizeTextCell != "") return;
         if (newBezierLine != null){
             newBezierLine.set("stroke", "gray");
@@ -546,9 +559,9 @@ function addTextTooltip(left, top){
                 }, 1000);
             }
         }, 10000);
-    }).on("mouseup", function(){
+    }).on("mouseup", function(e){
         if (newBezierLine != null){
-            addBezierLine(newBezierLine.startElement, $(this).attr("id"));
+            addBezierLine(newBezierLine.startElement, $(e.originalEvent.target));
             canvas.discardActiveObject();
         }
         canvas.remove(newBezierLine);
@@ -591,7 +604,8 @@ function addTextTooltip(left, top){
         $table.DataTable( {
             bAutoWidth: false,
             data: dataSet,
-            columns: header
+            columns: header,
+            "columnDefs": [ { "defaultContent": "-", "targets": "_all" } ]
         });
 
         $table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);

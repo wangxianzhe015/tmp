@@ -92,19 +92,21 @@ function makeCurvePoint(x, y, line) {
 function addBezierLine(leftElement, rightElement){
     var startX, startY, endX, endY;
 
-    if (typeof leftElement === "string"){
-        var $leftElement = $("#" + leftElement);
-        startX = $leftElement.offset().left;
-        startY = $leftElement.offset().top;
+    if ( leftElement instanceof jQuery){
+        if (leftElement[0].tagName != "TD") return false;
+        leftElement = leftElement.parents("tr");
+        startX = leftElement.offset().left;
+        startY = leftElement.offset().top;
     } else {
         startX = leftElement.left;
         startY = leftElement.top;
     }
 
-    if (typeof rightElement === "string"){
-        var $rightElement = $("#" + rightElement);
-        endX = $rightElement.offset().left;
-        endY = $rightElement.offset().top;
+    if ( rightElement instanceof jQuery ){
+        if (rightElement[0].tagName != "TD") return false;
+        rightElement = rightElement.parents("tr");
+        endX = rightElement.offset().left;
+        endY = rightElement.offset().top;
     } else {
         endX = rightElement.left;
         endY = rightElement.top;
@@ -163,18 +165,18 @@ function addBezierLine(leftElement, rightElement){
     canvas.add(controlPoint);
 
     var lines;
-    if (typeof leftElement === "string"){
-        lines = $leftElement.data("lines");
+    if ( leftElement instanceof jQuery ){
+        lines = leftElement.parents(".image-tooltip").data("lines");
         lines.push(bLine);
-        $leftElement.data("lines", lines);
+        leftElement.parents(".image-tooltip").data("lines", lines);
     } else {
         leftElement.lines.push(bLine);
     }
 
-    if (typeof rightElement === "string"){
-        lines = $rightElement.data("lines");
+    if ( rightElement instanceof jQuery ){
+        lines = rightElement.parents(".image-tooltip").data("lines");
         lines.push(bLine);
-        $rightElement.data("lines", lines);
+        rightElement.parents(".image-tooltip").data("lines", lines);
     } else {
         rightElement.lines.push(bLine);
     }
@@ -183,38 +185,57 @@ function addBezierLine(leftElement, rightElement){
 }
 
 function adjustLine(line){
-    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, width, height;
+    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, tooltipOffset, width, height;
 
     // Starting point
-    if (typeof line.leftElement === "string") {
-        point = $("#" + line.leftElement);
-        offset = point.offset();
-        width = parseInt(point.css("width"));
-        height = parseInt(point.css("height"));
-        if (offset.left > control.left) {
-            tmpX = offset.left;
-            if (offset.top > control.top){
-                tmpY = offset.top;
-            } else if (offset.top < control.top && offset.top + height > control.top){
-                tmpY = offset.top + height / 2;
+    if ( line.leftElement instanceof jQuery ) {
+        if (line.leftElement.parents(".image-tooltip").hasClass("expanded")){
+            point = line.leftElement;
+            offset = point.offset();
+            tooltipOffset = point.parents(".image-tooltip").offset();
+            width = parseInt(point.parents(".image-tooltip").css("width"));
+            height = parseInt(point.css("height"));
+            tmpY = offset.top + height / 2;
+            if (offset.left + width / 2 > line.rightCircle.left) {
+                tmpX = tooltipOffset.left;
             } else {
-                tmpY = offset.top + height;
+                tmpX = tooltipOffset.left + width;
             }
-        } else if (offset.left < control.left && offset.left + width > control.left) {
-            tmpX = offset.left + width / 2;
-            if (offset.top + height / 2 > control.top){
-                tmpY = offset.top;
-            } else {
-                tmpY = offset.top + height;
+            if (offset.top + height < tooltipOffset.top){
+                tmpY = tooltipOffset.top;
+            } else if (offset.top > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
+                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight;
             }
         } else {
-            tmpX = offset.left + width;
-            if (offset.top > control.top){
-                tmpY = offset.top;
-            } else if (offset.top < control.top && offset.top + height > control.top){
-                tmpY = offset.top + height / 2;
+            point = line.leftElement.parents(".image-tooltip");
+            offset = point.offset();
+            width = parseInt(point.css("width"));
+            height = parseInt(point.css("height"));
+            if (offset.left > control.left) {
+                tmpX = offset.left;
+                if (offset.top > control.top){
+                    tmpY = offset.top;
+                } else if (offset.top < control.top && offset.top + height > control.top){
+                    tmpY = offset.top + height / 2;
+                } else {
+                    tmpY = offset.top + height;
+                }
+            } else if (offset.left < control.left && offset.left + width > control.left) {
+                tmpX = offset.left + width / 2;
+                if (offset.top + height / 2 > control.top){
+                    tmpY = offset.top;
+                } else {
+                    tmpY = offset.top + height;
+                }
             } else {
-                tmpY = offset.top + height;
+                tmpX = offset.left + width;
+                if (offset.top > control.top){
+                    tmpY = offset.top;
+                } else if (offset.top < control.top && offset.top + height > control.top){
+                    tmpY = offset.top + height / 2;
+                } else {
+                    tmpY = offset.top + height;
+                }
             }
         }
         line.path[0][1] = tmpX;
@@ -267,35 +288,54 @@ function adjustLine(line){
     }
 
     // Ending point
-    if (typeof line.rightElement === "string"){
-        point = $("#" + line.rightElement);
-        offset = point.offset();
-        width = parseInt(point.css("width"));
-        height = parseInt(point.css("height"));
-        if (offset.left > control.left) {
-            tmpX = offset.left;
-            if (offset.top > control.top){
-                tmpY = offset.top;
-            } else if (offset.top < control.top && offset.top + height > control.top){
-                tmpY = offset.top + height / 2;
+    if ( line.rightElement instanceof jQuery ){
+        if (line.rightElement.parents(".image-tooltip").hasClass("expanded")){
+            point = line.rightElement;
+            offset = point.offset();
+            tooltipOffset = point.parents(".image-tooltip").offset();
+            width = parseInt(point.parents(".image-tooltip").css("width"));
+            height = parseInt(point.css("height"));
+            tmpY = offset.top + height / 2;
+            if (offset.left + width / 2 > line.leftCircle.left) {
+                tmpX = tooltipOffset.left;
             } else {
-                tmpY = offset.top + height;
+                tmpX = tooltipOffset.left + width;
             }
-        } else if (offset.left < control.left && offset.left + width > control.left) {
-            tmpX = offset.left + width / 2;
-            if (offset.top + height / 2 > control.top){
-                tmpY = offset.top;
-            } else {
-                tmpY = offset.top + height;
+            if (offset.top + height < tooltipOffset.top){
+                tmpY = tooltipOffset.top;
+            } else if (offset.top > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
+                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight;
             }
         } else {
-            tmpX = offset.left + width;
-            if (offset.top > control.top){
-                tmpY = offset.top;
-            } else if (offset.top < control.top && offset.top + height > control.top){
-                tmpY = offset.top + height / 2;
+            point = line.rightElement.parents(".image-tooltip");
+            offset = point.offset();
+            width = parseInt(point.css("width"));
+            height = parseInt(point.css("height"));
+            if (offset.left > control.left) {
+                tmpX = offset.left;
+                if (offset.top > control.top) {
+                    tmpY = offset.top;
+                } else if (offset.top < control.top && offset.top + height > control.top) {
+                    tmpY = offset.top + height / 2;
+                } else {
+                    tmpY = offset.top + height;
+                }
+            } else if (offset.left < control.left && offset.left + width > control.left) {
+                tmpX = offset.left + width / 2;
+                if (offset.top + height / 2 > control.top) {
+                    tmpY = offset.top;
+                } else {
+                    tmpY = offset.top + height;
+                }
             } else {
-                tmpY = offset.top + height;
+                tmpX = offset.left + width;
+                if (offset.top > control.top) {
+                    tmpY = offset.top;
+                } else if (offset.top < control.top && offset.top + height > control.top) {
+                    tmpY = offset.top + height / 2;
+                } else {
+                    tmpY = offset.top + height;
+                }
             }
         }
         line.path[1][3] = tmpX;
