@@ -516,17 +516,14 @@
 	top: 5px;
 	left: 10px;
 	z-index: 100;
-	font-family: 'FontAwesome';
-	font-size: 40px;
-	color: white;
 	opacity: 0.7;
 	cursor: pointer;
+    width: 40px;
+    height: 40px;
+    background: url('../assets/images/icons/recycle.png') no-repeat;
+    background-size: contain;
 }
 
 .cndce-line-rotate.default-icon:hover{
 	opacity: 1;
-}
-
-.cndce-line-rotate.default-icon::before{
-	content: '\f079';
 }
