@@ -1,11 +1,13 @@
 <?php
 
+require "vendor/autoload.php";
 include_once('inc/simplexlsx.class.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 include_once('inc/phpmailer/Exception.php');
 include_once('inc/phpmailer/PHPMailer.php');
 include_once('inc/phpmailer/SMTP.php');
+use PHPHtmlParser\Dom;
 
 if (isset($_POST['action'])){
     $action = $_POST['action'];
@@ -73,6 +75,12 @@ switch ($action) {
         break;
     case 'tagger-file-upload':
         uploadTaggerFile();
+        break;
+    case 'get-tagger-file-names':
+        getTaggerFileNames();
+        break;
+    case 'get-tagger-file':
+        getTaggerFile();
         break;
 }
 
@@ -427,7 +435,42 @@ function uploadTaggerFile(){
         echo 'Error: ' . $_FILES['file']['error'] . '<br>';
     }
     else {
-        move_uploaded_file($_FILES['file']['tmp_name'], './tagger/files/' . $_FILES['file']['name']);
-        echo "Success";
+        $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        if ($ext == "html" || $ext == "htm" || $ext == "txt"){
+            move_uploaded_file($_FILES['file']['tmp_name'], './tagger/files/' . $_FILES['file']['name']);
+            echo "Success";
+        } else {
+            echo "The format is not allowed.";
+        }
     }
+}
+
+function getTaggerFileNames(){
+    $path = "./tagger/files/";
+    $files = scandir($path);
+
+    echo json_encode($files);
+}
+
+function getTaggerFile(){
+    $file = $_POST['file'];
+    $myFile = fopen("./tagger/files/$file", "r") or die("fail");
+    if ($myFile) {
+        if (filesize("./tagger/files/$file") > 0) {
+            $content = fread($myFile, filesize("./tagger/files/$file"));
+            fclose($myFile);
+        } else {
+            $content = "";
+        }
+        $ext = pathinfo("./tagger/files/$file", PATHINFO_EXTENSION);
+        if ($ext == "html" || $ext == "htm"){
+            $dom = new Dom;
+            $dom->load($content);
+            $content = $dom->find('body')[0]->innerHtml;
+        }
+        echo $content;
+    } else {
+        echo "fail";
+    }
+
 }

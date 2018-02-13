@@ -1697,7 +1697,7 @@ textarea.default-textarea{
     transform: translateX(-50%);
 }
 
-#ring-tags{
+#ring-tags, #tagger-files{
     width: 100px;
     margin: 0 50px;
     background-color: #191919;
@@ -1707,6 +1707,9 @@ textarea.default-textarea{
     border-radius: 3px;
     position: absolute;
     display: none;
+}
+#tagger-files{
+    bottom: 10px;
 }
 
 #ring-tween-btn{
