@@ -1022,28 +1022,85 @@ function initHandlers(){
             hideTimelineFrame();
             return;
         }
-        $(this).parent().hide();
+        $(this).parents(".image-tooltip").hide();
+        $(this).parents(".third-image-tooltip").hide();
         if ($(this).parents("#tagger-iframe").length > 0){
             $(this).parents("#tagger-iframe").find("iframe").contents().find(".tagger-app-init-btn").click();
         }
     });
 
     $("#tagger-file-upload-button").on("click", function () {
-        $(this).next().click();
+        $("#tagger-file-upload").click();
     });
 
     $("#tagger-file-upload").on("change", function(){
         var file_data = $(this).prop('files')[0];
         var form_data = new FormData();
         form_data.append('file', file_data);
+        form_data.append('action', 'tagger-file-upload');
         $.ajax({
-            url: 'tagger/action.php', // point to server-side PHP script
+            url: 'action.php', // point to server-side PHP script
             dataType: 'text',  // what to expect back from the PHP script, if anything
             cache: false,
             contentType: false,
             processData: false,
             data: form_data,
-            type: 'post'
+            type: 'post',
+            success: function(res){
+                if (res == "Success"){
+                    alert("Success", "File upload succeeded.");
+                } else {
+                    alert("Error", res);
+                }
+            }
+        });
+    });
+
+    $("#tagger-files-load-btn").on("click", function () {
+        var $that = $(this);
+        $("#tagger-files").html("<option value=''>Select...</option>");
+        $.ajax({
+            url: "action.php",
+            type: "post",
+            data: {
+                action: "get-tagger-file-names"
+            },
+            success: function(res){
+                if (res == "fail") {
+                    alert("Error", "Cannot open files");
+                    return;
+                }
+                var files = $.parseJSON(res);
+                files.forEach(function(file){
+                    if (file != "." && file != ".." && file != ".gitignore"){
+                        $("#tagger-files").append($("<option></option>",{
+                            text: file,
+                            value: file
+                        }));
+                    }
+                });
+                $("#tagger-files").show();
+            }
+        });
+    });
+
+    $("#tagger-files").on("change", function(){
+        var fileName = $(this).val(), $that = $(this);
+        $.ajax({
+            url: "action.php",
+            type: "post",
+            data: {
+                action: "get-tagger-file",
+                file: fileName
+            },
+            success: function(res){
+                if (res == "fail"){
+                    alert("Error", "Cannot open the file.");
+                    return;
+                }
+                $that.parents("#tagger-iframe").find("iframe").contents().find(".tagger-content").html(res);
+                $("#tagger-files").hide();
+            }
         });
     });
 

@@ -5,6 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
+        "paquettg/php-html-parser": "^1.7"
     },
     "require-dev": {
     },
