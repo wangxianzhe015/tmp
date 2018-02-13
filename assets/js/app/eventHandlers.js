@@ -1043,10 +1043,7 @@ function initHandlers(){
             contentType: false,
             processData: false,
             data: form_data,
-            type: 'post',
-            success: function(r){
-                console.log(r);
-            }
+            type: 'post'
         });
     });
 

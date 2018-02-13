@@ -95,6 +95,7 @@ function addBezierLine(leftElement, rightElement){
     if ( leftElement instanceof jQuery){
         if (leftElement[0].tagName != "TD") return false;
         leftElement = leftElement.parents("tr");
+        leftElement.data("text-cell", leftElement.parents(".image-tooltip").attr("id"));
         startX = leftElement.offset().left;
         startY = leftElement.offset().top;
     } else {
@@ -105,6 +106,7 @@ function addBezierLine(leftElement, rightElement){
     if ( rightElement instanceof jQuery ){
         if (rightElement[0].tagName != "TD") return false;
         rightElement = rightElement.parents("tr");
+        rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
         endX = rightElement.offset().left;
         endY = rightElement.offset().top;
     } else {
@@ -185,15 +187,16 @@ function addBezierLine(leftElement, rightElement){
 }
 
 function adjustLine(line){
-    var control = line.control, point, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, tooltipOffset, width, height;
+    var control = line.control, point, $textCell, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, tooltipOffset, width, height;
 
     // Starting point
     if ( line.leftElement instanceof jQuery ) {
-        if (line.leftElement.parents(".image-tooltip").hasClass("expanded")){
+        $textCell = $("#" + line.leftElement.data("text-cell"));
+        if ($textCell.hasClass("expanded")){
             point = line.leftElement;
             offset = point.offset();
-            tooltipOffset = point.parents(".image-tooltip").offset();
-            width = parseInt(point.parents(".image-tooltip").css("width"));
+            tooltipOffset = $textCell.offset();
+            width = parseInt($textCell.css("width"));
             height = parseInt(point.css("height"));
             tmpY = offset.top + height / 2;
             if (offset.left + width / 2 > line.rightCircle.left) {
@@ -203,11 +206,11 @@ function adjustLine(line){
             }
             if (tmpY < tooltipOffset.top){
                 tmpY = tooltipOffset.top;
-            } else if (tmpY > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
-                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight();
+            } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
+                tmpY = tooltipOffset.top + $textCell.innerHeight();
             }
         } else {
-            point = line.leftElement.parents(".image-tooltip");
+            point = $textCell;
             offset = point.offset();
             width = parseInt(point.css("width"));
             height = parseInt(point.css("height"));
@@ -289,11 +292,12 @@ function adjustLine(line){
 
     // Ending point
     if ( line.rightElement instanceof jQuery ){
-        if (line.rightElement.parents(".image-tooltip").hasClass("expanded")){
+        $textCell = $("#" + line.rightElement.data("text-cell"));
+        if ($textCell.hasClass("expanded")){
             point = line.rightElement;
             offset = point.offset();
-            tooltipOffset = point.parents(".image-tooltip").offset();
-            width = parseInt(point.parents(".image-tooltip").css("width"));
+            tooltipOffset = $textCell.offset();
+            width = parseInt($textCell.css("width"));
             height = parseInt(point.css("height"));
             tmpY = offset.top + height / 2;
             if (offset.left + width / 2 > line.leftCircle.left) {
@@ -303,11 +307,11 @@ function adjustLine(line){
             }
             if (tmpY < tooltipOffset.top){
                 tmpY = tooltipOffset.top;
-            } else if (tmpY > tooltipOffset.top + point.parents(".image-tooltip").innerHeight()) {
-                tmpY = tooltipOffset.top + point.parents(".image-tooltip").innerHeight();
+            } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
+                tmpY = tooltipOffset.top + $textCell.innerHeight();
             }
         } else {
-            point = line.rightElement.parents(".image-tooltip");
+            point = $textCell;
             offset = point.offset();
             width = parseInt(point.css("width"));
             height = parseInt(point.css("height"));
