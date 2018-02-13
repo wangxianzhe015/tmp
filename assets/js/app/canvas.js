@@ -137,7 +137,6 @@ canvas.on('mouse:down',function(e){
     downPoint = {x: e.e.pageX, y: e.e.pageY};
     $("#new-element-div").hide();
     $("#ring-tags").hide();
-    $("#tagger-files").hide();
     selectedRing = null;
     var object = e.target;
     if (object != null) {
