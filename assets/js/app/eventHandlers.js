@@ -1098,7 +1098,10 @@ function initHandlers(){
                     alert("Error", "Cannot open the file.");
                     return;
                 }
-                $that.parents("#tagger-iframe").find("iframe").contents().find(".tagger-content").html(res);
+                var $iframeContent = $that.parents("#tagger-iframe").find("iframe").contents();
+                $iframeContent.find(".playground").next().find(".image-btn").show();
+                $iframeContent.find(".tagger-content").html(res);
+
                 $("#tagger-files").hide();
             }
         });

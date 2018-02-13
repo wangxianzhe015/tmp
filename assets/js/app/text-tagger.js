@@ -104,8 +104,6 @@
                 //}
                 var wordID = $obj.attr("data-word-id");
                 var oldKeyword = $obj.attr("data-keyword"), oldCheck = true;
-                console.log($obj);
-                console.log(keyword);
                 $obj.attr("data-keyword", keyword);
                 $(".tagger-highlight-text").each(function(i,el){
                     if ($(el).attr("data-word-id") !== wordID && $(el).attr("data-keyword") === oldKeyword){
@@ -286,7 +284,7 @@
                 list.push(data[id]);
             });
             $.ajax({
-                url: "action.php",
+                url: "../action.php",
                 data: {
                     "action": "save-tagger",
                     data: {"json": list, "full": $(this).parent().prev().find(".tagger-content").html()},

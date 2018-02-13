@@ -47,6 +47,10 @@ input {
     width: 70%;
     float: left;
 }
+.tagger-content{
+    overflow-y: auto;
+    height: 100%;
+}
 .tagger-apps-select, .tagger-app-load-confirm{
     display: none;
 }
@@ -70,7 +74,7 @@ input {
     z-index: 100000;
 }
 .tagger-icon{
-    background-color: rgba(40,40,40,.8);
+    background-color: rgba(0,0,0,.3);
     width: 24px;
     height: 24px;
     padding: 5px;
@@ -149,6 +153,6 @@ input {
     text-align: center;
 }
 .tagger-notification-panel{
-    color: white;
+    color: black;
     text-align: center;
 }
