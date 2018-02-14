@@ -1109,11 +1109,22 @@ function initHandlers(){
                     $doc.find("script").remove();
                     $doc.find("style").remove();
                     $doc.find("title").remove();
-                    res = $doc.text();
+                    $doc.find("meta").remove();
+                    $doc.find("link").remove();
+                    $doc.find("input").remove();
+                    $doc.find("select").remove();
+                    $doc.find("textarea").remove();
+                    $doc.find("datalist").remove();
+                    $doc.find("output").remove();
+                    $doc.find("button").each(function(i, btn){
+                        $(btn).replaceWith("<p>" + btn.innerText + "</p>");
+                    });
+                    $doc.find("a").attr("href", "");
+                    res = $doc.html();
                 }
                 var $iframeContent = $that.parents("#tagger-iframe").find("iframe").contents();
                 $iframeContent.find(".playground").next().find(".image-btn").show();
-                $iframeContent.find(".tagger-content").html(res);
+                $iframeContent.find(".tagger-content").html(res).removeClass("init");
 
                 $("#tagger-files").hide();
             }
