@@ -1,13 +1,11 @@
 <?php
 
-require "vendor/autoload.php";
 include_once('inc/simplexlsx.class.php');
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 include_once('inc/phpmailer/Exception.php');
 include_once('inc/phpmailer/PHPMailer.php');
 include_once('inc/phpmailer/SMTP.php');
-use PHPHtmlParser\Dom;
 
 if (isset($_POST['action'])){
     $action = $_POST['action'];
@@ -461,12 +459,6 @@ function getTaggerFile(){
             fclose($myFile);
         } else {
             $content = "";
-        }
-        $ext = pathinfo("./tagger/files/$file", PATHINFO_EXTENSION);
-        if ($ext == "html" || $ext == "htm"){
-            $dom = new Dom;
-            $dom->load($content);
-            $content = $dom->find('body')[0]->innerHtml;
         }
         echo $content;
     } else {

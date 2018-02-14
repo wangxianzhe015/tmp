@@ -1085,7 +1085,7 @@ function initHandlers(){
     });
 
     $("#tagger-files").on("change", function(){
-        var fileName = $(this).val(), $that = $(this);
+        var fileName = $(this).val(), $that = $(this), extension = fileName.split(".")[fileName.split(".").length - 1];
         $.ajax({
             url: "action.php",
             type: "post",
@@ -1097,6 +1097,15 @@ function initHandlers(){
                 if (res == "fail"){
                     alert("Error", "Cannot open the file.");
                     return;
+                }
+                if (extension == "html" || extension == "htm"){
+                    var $doc = $("<html></html>", {
+                        html: res
+                    });
+                    $doc.find("script").remove();
+                    $doc.find("style").remove();
+                    $doc.find("title").remove();
+                    res = $doc.text();
                 }
                 var $iframeContent = $that.parents("#tagger-iframe").find("iframe").contents();
                 $iframeContent.find(".playground").next().find(".image-btn").show();
