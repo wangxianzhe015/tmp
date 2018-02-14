@@ -11,6 +11,16 @@ jQuery.fn.extend( {
 
 		var hasResized = false;
 
+		var isVertical = $( this ).hasClass( 'vertical' );
+		var handles;
+
+		// Vertical orientation
+		if( isVertical ){
+			handles = 'n, s';
+		}else{
+			handles = 'e, w';
+		}
+
 
 		$( accordion ).addClass( 'cndce-accordion' );
 
@@ -22,22 +32,33 @@ jQuery.fn.extend( {
 			$( this ).append( $wrapper );
 
 			$( this ).resizable( {
-				handles: 'e, w',
+				handles: handles,
 				maxWidth: params.maxSegmentWidth,
 				stop: function( e, ui ){
-					// ui.element.css( 'width', ui.element.outerWidth(  ) );
 
-					// ui.element.width( ui.element.css( 'width' ) );
+					if( !isVertical ){
+						var accordionWidth = $( accordion ).outerWidth(  );
 
-					var accordionWidth = $( accordion ).outerWidth(  );
+						$( '.section', accordion ).each( function(  ){
+							$( this ).css( 'width', ( ( $( this ).outerWidth(  ) / accordionWidth ) * 90 ) + '%' );
 
-					$( '.section', accordion ).each( function(  ){
-						$( this ).css( 'width', ( ( $( this ).outerWidth(  ) / accordionWidth ) * 90 ) + '%' );
+							$( this ).removeClass( 'ui-resizable-resizing' );
 
-						$( this ).removeClass( 'ui-resizable-resizing' );
+							
+						} )
+					}else{
+						var accordionHeight = $( accordion ).outerHeight(  );
 
-						
-					} )
+						$( '.section', accordion ).each( function(  ){
+							$( this ).css( 'height', ( ( $( this ).outerHeight(  ) / accordionHeight ) * 90 ) + '%' );
+
+							$( this ).removeClass( 'ui-resizable-resizing' );
+
+							
+						} )
+					}
+
+					
 				},
 				start: function( e, ui ){
 					
@@ -53,14 +74,25 @@ jQuery.fn.extend( {
 						j++;
 					}else if( ui.element.data( 'ui-resizable' ).axis == 'w' ){
 						j--;
+					}else if( ui.element.data( 'ui-resizable' ).axis == 'n' ){
+						j--;
+					}else if( ui.element.data( 'ui-resizable' ).axis == 's' ){
+						j++;
 					}
 
 					if( j >= 0 && j < $sections.length ){
 						var $adjacent = $( $sections[j] );
-						var delta = ui.size.width - ui.originalSize.width;
 
-						$adjacent.outerWidth( $adjacent.outerWidth(  ) - ( delta * 0.05 ) );
-						// console.log( $( adjacent ).outerWidth( '10' ) );
+						if( !isVertical ){
+							var delta = ui.size.width - ui.originalSize.width;
+
+							$adjacent.outerWidth( $adjacent.outerWidth(  ) - ( delta * 0.05 ) );
+						}else{
+							var delta = ui.size.height - ui.originalSize.height;
+
+							$adjacent.outerHeight( $adjacent.outerHeight(  ) - ( delta * 0.05 ) );
+						}
+						
 
 						$adjacent.addClass( 'ui-resizable-resizing' );
 					}

@@ -10,6 +10,19 @@
 :focus{
     outline: none;
 }
+::-webkit-scrollbar {
+    height: 1em;
+    width: 1em;
+}
+::-webkit-scrollbar-track {
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-corner{
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(59,64,67);
+}
 html, body, .playground{
     height: 100%;
     width: 100%;
@@ -25,7 +38,7 @@ input {
 }
 .playground{
     overflow:hidden;
-    height: 70%;
+    height: calc(90% - 90px);
 }
 .playground:before, .playground:after{
     display: table;
@@ -35,21 +48,30 @@ input {
     clear: both;
 }
 .tagger-keyword-left-panel, .tagger-keyword-right-panel{
-    width: 15%;
     height: 100%;
     float: left;
     display: block;
+}
+.tagger-keyword-left-panel {
+    width: 15%;
+}
+.tagger-keyword-right-panel{
+    width: 8%;
 }
 .tagger-container{
     color: #000000;
     line-height: 1.5em;
     height: 100%;
-    width: 70%;
+    width: 77%;
     float: left;
 }
 .tagger-content{
     overflow-y: auto;
-    height: 100%;
+    height: calc(100% - 50px);
+}
+.tagger-loading-div{
+    height: 30px;
+    padding: 10px 0;
 }
 .tagger-apps-select, .tagger-app-load-confirm{
     display: none;
@@ -151,8 +173,11 @@ input {
 }
 .tagger-button-panel{
     text-align: center;
+    height: 30px;
+    padding: 10px 0;
 }
 .tagger-notification-panel{
     color: black;
     text-align: center;
+    height: 30px;
 }

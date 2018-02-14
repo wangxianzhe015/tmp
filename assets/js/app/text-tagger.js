@@ -183,7 +183,7 @@
 
     function updateTaggerApps($obj){
         $.ajax({
-            url: "action.php",
+            url: "../action.php",
             type: "POST",
             data: {
                 action: "load-tagger-names"
@@ -238,7 +238,7 @@
         }).append($("<input/>", {
             type: "text",
             id: "tagger-app-name",
-            placeholder: "App Name"
+            placeholder: "Rule Name"
         })).append($("<img/>", {
             src: taggerIconPath.tick,
             class: "image-btn"
@@ -298,7 +298,7 @@
                     }, 3000);
                 }
             });
-            $(".tagger-icon-cut").show();
+            //$(".tagger-icon-cut").show();
         }).hide()).append($("<button></button>", {
             class: "tagger-app-init-btn"
         }).on("click", function(){
@@ -333,7 +333,7 @@
             var appName = $(this).prev().val();
             var that = $(this);
             $.ajax({
-                url: "action.php",
+                url: "../action.php",
                 type: "POST",
                 data: {
                     action: "load-tagger-app",

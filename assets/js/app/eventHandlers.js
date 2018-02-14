@@ -1029,6 +1029,10 @@ function initHandlers(){
         }
     });
 
+    $("#rotate-calendar").on("click", function(){
+        $("#calendar-iframe").find("iframe").contents().find(".cndce-accordion").toggleClass("vertical");
+    });
+
     $("#tagger-file-upload-button").on("click", function () {
         $("#tagger-file-upload").click();
     });

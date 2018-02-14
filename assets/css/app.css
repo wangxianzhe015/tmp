@@ -80,6 +80,21 @@ input[type="checkbox"] {
 .pull-left{
     float: left;
 }
+.floating-panel{
+    position: fixed;
+}
+.floating-panel.left{
+    left: 0;
+}
+.floating-panel.right{
+    right: 0;
+}
+.floating-panel.top{
+    top: 0;
+}
+.floating-panel.bottom{
+    bottom: 0;
+}
 .row:before, .row:after{
     display: table;
     content: " ";
@@ -1350,6 +1365,12 @@ textarea.default-textarea{
     position: absolute;
     top: 0;
     right: 0;
+    cursor: pointer;
+}
+#calendar-iframe #rotate-calendar{
+    position: absolute;
+    top: 50px;
+    right: 5px;
     cursor: pointer;
 }
 #tagger-iframe {
