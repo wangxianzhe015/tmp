@@ -1718,7 +1718,7 @@ textarea.default-textarea{
     transform: translateX(-50%);
 }
 
-#ring-tags, #tagger-files{
+#ring-tags, #tagger-files, #tagger-apps{
     width: 100px;
     margin: 0 50px;
     background-color: #191919;
@@ -1730,6 +1730,10 @@ textarea.default-textarea{
     display: none;
 }
 #tagger-files{
+    bottom: 50px;
+}
+
+#tagger-apps{
     bottom: 10px;
 }
 

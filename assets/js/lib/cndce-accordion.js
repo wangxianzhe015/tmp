@@ -193,14 +193,14 @@ jQuery.fn.extend( {
 
             var that = this, height;
             setTimeout(function(){
-                $(this).find(".boundary").each(function(i, el){
+                $(that).find(".boundary").each(function(i, el){
                     if ($(el).attr("class").indexOf("left") > -1 || $(el).attr("class").indexOf("right") > -1) {
                         height = $(el).parent().innerHeight() - 3 * parseInt($(el).css("font-size")) - 20;
                         $(el).css("width", height);
                     }
                 });
 
-                $(this).find(".tagger-word").each(function(i, el){
+                $(that).find(".tagger-word").each(function(i, el){
                     $(el).css({
                         width: parseInt($(el).text().length / $(el).parent().text().length * 100) + "%",
                         "min-width": $(el).text().length * 0.55 + "em"

@@ -1131,6 +1131,80 @@ function initHandlers(){
         });
     });
 
+    $("#tagger-app-load-btn").on("click", function(){
+        var $obj = $(this);
+        $.ajax({
+            url: "./action.php",
+            type: "POST",
+            data: {
+                action: "load-tagger-names"
+            },
+            success: function(res){
+                if (res != "fail") {
+                    var names = $.parseJSON(res), $select = $("#tagger-apps");
+                    $select.html("<option value=''>Select</option>");
+                    names.forEach(function (name) {
+                        if (name != "." && name != ".." && name != ".gitignore") {
+                            $("<option></option>", {
+                                text: name,
+                                value: name
+                            }).appendTo($select);
+                        }
+                    });
+                    $select.show();
+                }
+            }
+        });
+    });
+
+    $("#tagger-apps").on("change", function () {
+        var $that = $(this);
+        $.ajax({
+            url: "./action.php",
+            type: "POST",
+            data: {
+                action: "load-tagger-app",
+                name: $that.val()
+            },
+            success: function(res){
+                $that.hide();
+                var text = $.parseJSON(res).full, obj = $that.parents("#tagger-iframe").find("iframe").contents().find(".tagger-content");
+                obj.parents(".playground").next().find(".image-btn").show();
+                obj.parents(".playground").find(".tagger-highlight-keyword").removeClass("selected");
+                obj.removeClass("init").html(text);
+                obj.find("code").each(function(i, tag){
+                    obj.parents(".playground").find("#"+$(tag).attr("data-keyword")+"-keyword").addClass("selected");
+                    $(tag).on({
+                        click: function(){
+                            $("#tagger-iframe").find("iframe").contents().find("#"+$(this).attr("data-keyword")+"-keyword").addClass("selected");
+                            $("#tagger-iframe").find("iframe").contents().find("#tagger-keyword-div").attr("data-target", $(this).attr("id")).css({
+                                left: this.getBoundingClientRect().left,
+                                top: this.getBoundingClientRect().bottom
+                            }).show();
+                        },
+                        mouseover: function(e){
+                            if (window.getSelection().toString() != "") return false;
+                            var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                            $objects.each(function(i,el){
+                                $obj = $("#tagger-iframe").find("iframe").contents().find("#"+$(el).attr("data-keyword")+"-keyword");
+                                //if ($obj.html() == "") return false;
+                                $obj.addClass("hover");
+                            });
+                        },
+                        mouseout: function(e){
+                            var $objects = $.merge($(e.originalEvent.target), $(e.originalEvent.target).parents("code"), $(e.originalEvent.target).find("code")), $obj;
+                            $objects.each(function(i,el){
+                                $obj = $("#tagger-iframe").find("iframe").contents().find("#"+$(el).attr("data-keyword")+"-keyword");
+                                //if ($obj.html() == "") return false;
+                                $obj.removeClass("hover");
+                            });
+                        }
+                    });
+                });
+            }
+        });
+    });
+
     $("#test-draggable").on("click", function(){
         var obj = $("#iframe-draggable");
         obj.find("iframe").attr("src","assets/templates/accordion.html").on("load",function(){
