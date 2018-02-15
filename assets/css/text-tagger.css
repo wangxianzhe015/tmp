@@ -11,8 +11,8 @@
     outline: none;
 }
 ::-webkit-scrollbar {
-    height: 1em;
-    width: 1em;
+    height: 0.5em;
+    width: 0.5em;
 }
 ::-webkit-scrollbar-track {
     background-color: rgb(44,49,51);

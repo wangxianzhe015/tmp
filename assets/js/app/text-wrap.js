@@ -163,10 +163,6 @@ function boundary(object){
             var $newObject = $("<div></div>", {
                 class: "boundary-layout",
                 id: "boundary-layout-" + parseInt(Math.random() * 100000000000)
-            }).on("resize", function(){
-                $(this).find(".boundary").forEach(function(el){
-                    //TODO: resize
-                });
             });
 
             if (isMultiple){

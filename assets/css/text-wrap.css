@@ -52,6 +52,7 @@ p{
     font-family: SanFrancisco, Helvetica, sans-serif;
     font-size: 18px;
     overflow: hidden;
+    transition: all 0.5s;
 }
 .boundary-layout [class*='-boundary']{
     text-align: justify;
