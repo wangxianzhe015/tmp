@@ -1098,33 +1098,44 @@ function initHandlers(){
                 file: fileName
             },
             success: function(res){
+                var result = "";
                 if (res == "fail"){
                     alert("Error", "Cannot open the file.");
                     return;
                 }
                 if (extension == "html" || extension == "htm"){
-                    var $doc = $("<html></html>", {
-                        html: res
+                    //var $doc = $("<html></html>", {
+                    //    html: res
+                    //});
+                    //$doc.find("script").remove();
+                    //$doc.find("style").remove();
+                    //$doc.find("title").remove();
+                    //$doc.find("meta").remove();
+                    //$doc.find("link").remove();
+                    //$doc.find("input").remove();
+                    //$doc.find("select").remove();
+                    //$doc.find("textarea").remove();
+                    //$doc.find("datalist").remove();
+                    //$doc.find("output").remove();
+                    //$doc.find("button").each(function(i, btn){
+                    //    $(btn).replaceWith("<p>" + btn.innerText + "</p>");
+                    //});
+                    //$doc.find("a").attr("href", "");
+                    //res = $doc.html();
+                    var $doc = $.parseHTML(res);
+                    $doc.forEach(function(tag){
+                        if (tag.nodeName == "P"){
+                            result += tag.outerHTML;
+                        } else if (tag.nodeName.toLowerCase() != "script" && tag.nodeName.toLowerCase() != "style" && tag.nodeName.toLowerCase() != "link" && tag.nodeName.toLowerCase() != "meta") {
+                            result += $(tag).text();
+                        }
                     });
-                    $doc.find("script").remove();
-                    $doc.find("style").remove();
-                    $doc.find("title").remove();
-                    $doc.find("meta").remove();
-                    $doc.find("link").remove();
-                    $doc.find("input").remove();
-                    $doc.find("select").remove();
-                    $doc.find("textarea").remove();
-                    $doc.find("datalist").remove();
-                    $doc.find("output").remove();
-                    $doc.find("button").each(function(i, btn){
-                        $(btn).replaceWith("<p>" + btn.innerText + "</p>");
-                    });
-                    $doc.find("a").attr("href", "");
-                    res = $doc.html();
+                } else {
+                    result = res;
                 }
                 var $iframeContent = $that.parents("#tagger-iframe").find("iframe").contents();
                 $iframeContent.find(".playground").next().find(".image-btn").show();
-                $iframeContent.find(".tagger-content").html(res).removeClass("init");
+                $iframeContent.find(".tagger-content").html(result).removeClass("init");
 
                 $("#tagger-files").hide();
             }
@@ -1358,12 +1369,13 @@ function initHandlers(){
                     } else {
                         var objs = $.parseHTML(res), result = "";
                         objs.forEach(function(obj){
-                            if (obj.tagName == "P"){
-                                result += "<p></p>";
+                            if (obj.nodeName == "P"){
+                                result += obj.outerHTML;
                             } else {
-                                result += obj;
+                                result += obj.wholeText;
                             }
                         });
+                        $obj.find("#text-from-search-content").html(result);
                     }
                 }
             });
@@ -1371,6 +1383,10 @@ function initHandlers(){
         mouseleave: function(){
             $("#text-from-search").hide();
         }
+    });
+
+    $("#download-link-from-search").on("click", function(){
+
     });
 
     $(".custom-accordion-add-btn").on("click", function(){
