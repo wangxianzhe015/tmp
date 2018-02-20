@@ -481,7 +481,8 @@ function regexSearch(parent,txt){
             list.forEach(function(word){
                 if (word !== ''){
                     liTag = $('<li></li>',{
-                        "data-hidden": word['hidden']
+                        "data-hidden": word['hidden'],
+                        "data-id": word['id']
                     }).on("click", function(){
                         $(parent).find(".regex-search-input").val($(this).find(".regex-search-head").html()).focus();
                         $(parent).find(".suggest-list").hide().find("li").show();
@@ -493,6 +494,7 @@ function regexSearch(parent,txt){
                         var dialog = $("#searchTooltip");
                         dialog.find(".tab-menu").find("a").text($(this).find(".regex-search-head").text());
                         dialog.find("#search-result-description").val($(this).find(".regex-search-tagline").text().split(" | ")[0] + ", " + $(this).find(".regex-search-tagline").text().split(" | ")[1]);
+                        dialog.find("#search-result-id").val($(this).attr("data-id"));
                         var top = window.scrollY + window.innerHeight - dialog.innerHeight() - 150;
                         var left;
                         if (dialog.innerWidth() < $(this).offset().left - window.scrollX){

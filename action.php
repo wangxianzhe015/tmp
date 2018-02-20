@@ -44,6 +44,9 @@ switch ($action) {
     case 'regex-search':
         regexSearch();
         break;
+    case 'get-text-from-url':
+        getTextFromCSV();
+        break;
     case 'save-people':
         savePeople();
         break;
@@ -221,39 +224,62 @@ function regexSearch(){
     $result = [];
     $ip = getUserIP();
     if (($handle = fopen("./data/places/". $ip . "-data.csv", "r")) !== FALSE) {
+        $id = 0;
         while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $head = $row[0];
             $head2 = $row[1];
             if (stripos($head, $text) !== false || stripos($head2, $text) !== false) {
+                $row = json_decode(json_encode($row));
                 $tag = ""; $hidden = "";
                 if (isset($row[3])){
-                    $tag = $row[3];
+                    $tag = trim($row[3]);
 //                    $tag = date("d-M-Y", ($row[3] - 25569) * 86400);
                 }
                 if (isset($row[2])){
                     if ($tag == ""){
-                        $tag = $row[2];
+                        $tag = trim($row[2]);
                     } else {
-                        $tag = $tag . " | " . $row[2];
+                        $tag = $tag . " | " . trim($row[2]);
                     }
                 }
-                if (isset($row[4])){
-                    $extra = $row[4];
+                if (isset($row[4]) && $row[4] != ""){
+                    $extra = trim($row[4]);
                 } else {
                     $extra = "";
                 }
-                if (isset($row[5])){
-                    $hidden = $row[5];
+                if (isset($row[5]) && $row[5] != ""){
+                    $hidden = trim($row[5]);
                 }
-                if (isset($row[6])){
+                if (isset($row[6]) && $row[6] != ""){
                     $hidden = $hidden . " | ". $row[6];
                 }
-                array_push($result, ['head' => $head, 'tag' => $tag, 'extra' => $extra, 'hidden' => $hidden]);
+                array_push($result, ['head' => $head, 'tag' => $tag, 'extra' => $extra, 'hidden' => $hidden, 'id' => $id]);
             }
+            $id ++;
         }
         fclose($handle);
     }
     echo json_encode($result);
+}
+
+function getTextFromCSV(){
+    $data_id = $_POST['id'];
+    $ip = getUserIP();
+    if (($handle = fopen("./data/places/". $ip . "-data.csv", "r")) !== FALSE) {
+        $id = 0;
+        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if ($data_id == $id){
+                if (isset($row[6]) && $row[6] != ""){
+                    echo $row[6];
+                } else {
+                    echo "fail";
+                }
+                break;
+            }
+            $id ++;
+        }
+        fclose($handle);
+    }
 }
 
 function loadPeople(){

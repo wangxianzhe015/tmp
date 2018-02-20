@@ -1335,6 +1335,44 @@ function initHandlers(){
         removeImageTools();
     });
 
+    $("#show-text-from-search").on({
+        click: function(){
+            var $obj = $("#text-from-search");
+            $obj.find(".loading").show();
+            $obj.find("#text-from-search-content").html("");
+            $obj.css({
+                left: $(this).offset().left + 50,
+                top: $(this).offset().top
+            }).show();
+            $.ajax({
+                url: "action.php",
+                type: "POST",
+                data: {
+                    action: "get-text-from-url",
+                    id: $("#search-result-id").val()
+                },
+                success: function(res){
+                    $obj.find(".loading").hide();
+                    if (res == "fail"){
+                        $obj.find("#text-from-search-content").html("No Content");
+                    } else {
+                        var objs = $.parseHTML(res), result = "";
+                        objs.forEach(function(obj){
+                            if (obj.tagName == "P"){
+                                result += "<p></p>";
+                            } else {
+                                result += obj;
+                            }
+                        });
+                    }
+                }
+            });
+        },
+        mouseleave: function(){
+            $("#text-from-search").hide();
+        }
+    });
+
     $(".custom-accordion-add-btn").on("click", function(){
         $("<h1></h1>", {
             class: "custom-accordion-header"

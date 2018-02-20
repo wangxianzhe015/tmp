@@ -492,6 +492,13 @@ button .text{
     font-size:10px;
     padding: 0;
 }
+.third-image-tooltip#tagger-iframe{
+    height: 80%;
+    width: 60%;
+}
+.third-image-tooltip#text-from-search{
+
+}
 .image-tooltip.text.expanded{
     height: 50%;
     min-height: 400px;
@@ -577,6 +584,9 @@ button .text{
     bottom: 0;
     width: calc(100% - 20px);
 }
+#searchTooltip #search-result-buttons img{
+    cursor: pointer;
+}
 .ttip{
     -webkit-box-sizing: content-box;
     -moz-box-sizing: content-box;
@@ -608,6 +618,7 @@ button .text{
 }
 .third-image-tooltip .ttip{
     background-color: rgba(255,255,255,.8);
+    color: black;
     overflow: hidden;
 }
 /* for Datatables */

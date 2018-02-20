@@ -439,15 +439,23 @@
             <h3 class="white"></h3>
             <div class="form-group">
                 <span id="search-result-text" class="form-control"></span>
+                <input type="hidden" id="search-result-id"/>
             </div>
             <div id="search-result-buttons" class="form-group no-margin text-right">
-                <img src="assets/images/icons/circle-24.png" id="add-element-from-search" style="cursor: pointer;"/>
-                <img src="assets/images/icons/pen-24.png" style="cursor: pointer;"/>
-                <img src="assets/images/icons/suitcase-24.png" style="cursor: pointer;"/>
-                <img src="assets/images/icons/pdf-24.png" style="cursor: pointer;"/>
-                <img src="assets/images/icons/file-24.png" style="cursor: pointer;"/>
+                <img src="assets/images/icons/circle-24.png" id="add-element-from-search"/>
+                <img src="assets/images/icons/pen-24.png"/>
+                <img src="assets/images/icons/suitcase-24.png"/>
+                <img src="assets/images/icons/pdf-24.png"/>
+                <img src="assets/images/icons/file-24.png" id="show-text-from-search"/>
             </div>
         </div>
+    </div>
+</div>
+
+<div id="text-from-search" class="third-image-tooltip">
+    <div class="ttip">
+        <div class="loading"></div>
+        <div id="text-from-search-content"></div>
     </div>
 </div>
 
