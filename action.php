@@ -273,7 +273,17 @@ function getTextFromCSV(){
         while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             if ($data_id == $id){
                 if (isset($row[7]) && $row[7] != ""){
-                    echo file_get_contents($row[7]);
+//                    echo file_get_contents($row[7]);
+                    $c = curl_init($row[7]);
+                    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+
+                    $html = curl_exec($c);
+
+                    if (curl_error($c))
+                        die(curl_error($c));
+
+                    curl_close($c);
+                    echo $html;
                 } else {
                     echo "fail";
                 }
