@@ -138,6 +138,8 @@ canvas.on('mouse:down',function(e){
     $("#new-element-div").hide();
     $("#ring-tags").hide();
     $("#tagger-files").hide();
+    $("#tagger-json-apps").hide();
+    $("#tagger-apps").hide();
     selectedRing = null;
     var object = e.target;
     if (object != null) {

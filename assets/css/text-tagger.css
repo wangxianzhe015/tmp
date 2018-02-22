@@ -70,7 +70,7 @@ input {
 }
 .tagger-content{
     overflow-y: auto;
-    height: calc(100% - 50px);
+    height: 100%;
 }
 .tagger-loading-div{
     height: 30px;

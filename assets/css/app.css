@@ -1731,7 +1731,7 @@ textarea.default-textarea{
     transform: translateX(-50%);
 }
 
-#ring-tags, #tagger-files, #tagger-apps{
+#ring-tags, #tagger-files, #tagger-apps, #tagger-json-apps{
     width: 100px;
     margin: 0 50px;
     background-color: #191919;
@@ -1743,11 +1743,15 @@ textarea.default-textarea{
     display: none;
 }
 #tagger-files{
-    bottom: 50px;
+    bottom: 120px;
+}
+
+#tagger-json-apps{
+    bottom: 90px;
 }
 
 #tagger-apps{
-    bottom: 10px;
+    bottom: 50px;
 }
 
 #ring-tween-btn{

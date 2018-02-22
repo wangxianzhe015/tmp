@@ -306,14 +306,14 @@
         }).on("click", function(){
             var playground = $(this).parent().prev();
             playground.find(".tagger-content").html('By pressing Ctrl + V, you can input text here. You need to point where to paste by clicking with mouse. Or you can open saved one by clicking "Open" button.').addClass("init");
-            playground.find(".tagger-loading-div").show();
+            //playground.find(".tagger-loading-div").show();
             playground.find(".tagger-keyword-left-panel").find(".tagger-highlight-keyword").removeClass("selected");
             $(this).parent().find(".image-btn").hide();
         }).hide()).insertAfter(playground);
 
         var taggerLoadingDiv = $("<div></div>", {
             class: "tagger-loading-div"
-        }).appendTo($(this));
+        }).appendTo($(this)).hide();
 
         $("<button></button>", {
             class: "btn",
