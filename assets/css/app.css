@@ -497,7 +497,9 @@ button .text{
     width: 60%;
 }
 .third-image-tooltip#text-from-search{
-
+    position: fixed;
+    z-index: 1000;
+    transform: translateX(35%) translateY(12%);
 }
 .image-tooltip.text.expanded{
     height: 50%;

@@ -26,6 +26,7 @@
 html, body, .playground{
     height: 100%;
     width: 100%;
+    margin: 0;
     overflow: hidden;
 }
 input {
@@ -38,7 +39,7 @@ input {
 }
 .playground{
     overflow:hidden;
-    height: calc(90% - 90px);
+    height: calc(95% - 90px);
 }
 .playground:before, .playground:after{
     display: table;
@@ -53,16 +54,18 @@ input {
     display: block;
 }
 .tagger-keyword-left-panel {
-    width: 15%;
+    width: 8%;
+    min-width: 4em;
 }
 .tagger-keyword-right-panel{
-    width: 8%;
+    width: 3%;
+    max-width: 10px;
 }
 .tagger-container{
     color: #000000;
     line-height: 1.5em;
     height: 100%;
-    width: 77%;
+    width: calc(92% - 10px);
     float: left;
 }
 .tagger-content{
@@ -87,8 +90,8 @@ input {
 }
 .tagger-icons-container{
     color: white;
-    height: 10%;
-    min-height: 34px;
+    height: 5%;
+    /*min-height: 34px;*/
     width: 100%;
     border-radius: 5px;
     padding: 5px;
@@ -175,6 +178,15 @@ input {
     text-align: center;
     height: 30px;
     padding: 10px 0;
+}
+.tagger-button-panel #tagger-app-name{
+    position: fixed;
+    right: calc(50% - 87px);
+    transition: right 0.5s;
+}
+.tagger-button-panel img{
+    position: fixed;
+    right: calc(50% - 115px);
 }
 .tagger-notification-panel{
     color: black;

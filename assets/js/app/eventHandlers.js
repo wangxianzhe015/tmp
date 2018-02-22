@@ -68,6 +68,29 @@ function initHandlers(){
                 $obj.draggable("enable");
             }
         }
+    }).on('drop', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.originalEvent.dataTransfer.types.indexOf("Files") == -1) return;
+        showUploadDiv();
+    }).on('dragover', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.originalEvent.dataTransfer.types.indexOf("Files") == -1) return;
+        showUploadDiv();
+        var dropZone = $('#dropzone'),
+            timeout = window.dropZoneTimeout;
+        if (timeout) {
+            clearTimeout(timeout);
+        } else {
+            dropZone.addClass('in');
+        }
+        var hoveredDropZone = $(e.target).closest(dropZone);
+        dropZone.toggleClass('hover', hoveredDropZone.length);
+        window.dropZoneTimeout = setTimeout(function () {
+            window.dropZoneTimeout = null;
+            dropZone.removeClass('in hover');
+        }, 100);
     });
 
     $(document).contextmenu({
@@ -1216,6 +1239,61 @@ function initHandlers(){
         });
     });
 
+    $("#tagger-app-save-btn").on("click", function(){
+        var $obj = $(this).parents("#tagger-iframe").find("iframe").contents();
+        var app_name = $obj.find("#tagger-app-name").val();
+        if (app_name == ""){
+            $obj.find(".tagger-notification-panel").html("Input App Name!!!");
+            setTimeout(function(){
+                $obj.find(".tagger-notification-panel").html("");
+            }, 3000);
+            return false;
+        }
+        if (!$obj.find("#Hint-keyword").hasClass("selected")){
+            $obj.find(".tagger-notification-panel").html("Hint Not Checked!!!");
+            setTimeout(function(){
+                $obj.find(".tagger-notification-panel").html("");
+            }, 3000);
+            return false;
+        }
+        $obj.find("#tagger-app-name").val("").css("right", 0);
+        var data = {}, wordID = "", tmp, wordIDs = [], list = [];
+        $obj.find(".tagger-highlight-text").each(function(i, el){
+            wordID = $(el).attr("data-word-id").toString();
+            if (data[wordID] == undefined) {
+                wordIDs.push(wordID);
+                data[wordID] = {
+                    text: $(el).text(),
+                    keyword: $(el).attr("data-keyword")
+                }
+            } else {
+                tmp = data[wordID].text;
+                data[wordID] = {
+                    text: tmp + $(el).text(),
+                    keyword: $(el).attr("data-keyword")
+                }
+            }
+        });
+        wordIDs.forEach(function(id){
+            list.push(data[id]);
+        });
+        $.ajax({
+            url: "./action.php",
+            data: {
+                "action": "save-tagger",
+                data: {"json": list, "full": $obj.find(".tagger-content").html()},
+                name: app_name
+            },
+            type: "POST",
+            success: function(){
+                $obj.find(".tagger-notification-panel").html("Saved Successfully!");
+                setTimeout(function(){
+                    $obj.find(".tagger-notification-panel").html("");
+                }, 3000);
+            }
+        });
+    });
+
     $("#test-draggable").on("click", function(){
         var obj = $("#iframe-draggable");
         obj.find("iframe").attr("src","assets/templates/accordion.html").on("load",function(){
@@ -1351,10 +1429,7 @@ function initHandlers(){
             var $obj = $("#text-from-search");
             $obj.find(".loading").show();
             $obj.find("#text-from-search-content").html("");
-            $obj.css({
-                left: $(this).offset().left + 50,
-                top: $(this).offset().top
-            }).show();
+            $obj.show();
             $.ajax({
                 url: "action.php",
                 type: "POST",
@@ -1379,9 +1454,6 @@ function initHandlers(){
                     }
                 }
             });
-        },
-        mouseleave: function(){
-            $("#text-from-search").hide();
         }
     });
 
@@ -1399,6 +1471,10 @@ function initHandlers(){
                 }
             }
         });
+    });
+
+    $("#text-from-search").on("mouseleave", function(){
+        $(this).hide();
     });
 
     $(".custom-accordion-add-btn").on("click", function(){
@@ -1687,25 +1763,6 @@ $(function () {
         dropZone: $("body"),
         disableImageLoad: true,
         disableImageResize: true
-    });
-
-    $(document).bind('drop dragover', function (e) {
-        e.preventDefault();
-        showUploadDiv();
-    }).bind('dragover', function (e) {
-        var dropZone = $('#dropzone'),
-            timeout = window.dropZoneTimeout;
-        if (timeout) {
-            clearTimeout(timeout);
-        } else {
-            dropZone.addClass('in');
-        }
-        var hoveredDropZone = $(e.target).closest(dropZone);
-        dropZone.toggleClass('hover', hoveredDropZone.length);
-        window.dropZoneTimeout = setTimeout(function () {
-            window.dropZoneTimeout = null;
-            dropZone.removeClass('in hover');
-        }, 100);
     });
 
     // Load existing files:

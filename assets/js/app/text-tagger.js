@@ -239,67 +239,69 @@
             type: "text",
             id: "tagger-app-name",
             placeholder: "Rule Name"
-        })).append($("<img/>", {
-            src: taggerIconPath.tick,
-            class: "image-btn"
-        }).on("click", function(){
-            //var hintCheck = false;
-            //$(".tagger-highlight-keyword").each(function(i, obj){
-            //    if ($(obj).html() == "Hint") hintCheck = true;
-            //});
-            var app_name = $("#tagger-app-name").val();
-            if (app_name == ""){
-                $(".tagger-notification-panel").html("Input App Name!!!");
-                setTimeout(function(){
-                    $(".tagger-notification-panel").html("");
-                }, 3000);
-                return false;
-            }
-            $(this).prev().val("");
-            if (!$("#Hint-keyword").hasClass("selected")){
-                $(".tagger-notification-panel").html("Hint Not Checked!!!");
-                setTimeout(function(){
-                    $(".tagger-notification-panel").html("");
-                }, 3000);
-                return false;
-            }
-            var data = {}, wordID = "", tmp, wordIDs = [], list = [];
-            $(".tagger-highlight-text").each(function(i, el){
-                wordID = $(el).attr("data-word-id").toString();
-                if (data[wordID] == undefined) {
-                    wordIDs.push(wordID);
-                    data[wordID] = {
-                        text: $(el).text(),
-                        keyword: $(el).attr("data-keyword")
-                    }
-                } else {
-                    tmp = data[wordID].text;
-                    data[wordID] = {
-                        text: tmp + $(el).text(),
-                        keyword: $(el).attr("data-keyword")
-                    }
-                }
-            });
-            wordIDs.forEach(function(id){
-                list.push(data[id]);
-            });
-            $.ajax({
-                url: "../action.php",
-                data: {
-                    "action": "save-tagger",
-                    data: {"json": list, "full": $(this).parent().prev().find(".tagger-content").html()},
-                    name: app_name
-                },
-                type: "POST",
-                success: function(){
-                    $(".tagger-notification-panel").html("Saved Successfully!");
-                    setTimeout(function(){
-                        $(".tagger-notification-panel").html("");
-                    }, 3000);
-                }
-            });
-            //$(".tagger-icon-cut").show();
-        }).hide()).append($("<button></button>", {
+        }))
+        //.append($("<img/>", {
+        //    src: taggerIconPath.tick,
+        //    class: "image-btn"
+        //}).on("click", function(){
+        //    //var hintCheck = false;
+        //    //$(".tagger-highlight-keyword").each(function(i, obj){
+        //    //    if ($(obj).html() == "Hint") hintCheck = true;
+        //    //});
+        //    var app_name = $("#tagger-app-name").val();
+        //    if (app_name == ""){
+        //        $(".tagger-notification-panel").html("Input App Name!!!");
+        //        setTimeout(function(){
+        //            $(".tagger-notification-panel").html("");
+        //        }, 3000);
+        //        return false;
+        //    }
+        //    if (!$("#Hint-keyword").hasClass("selected")){
+        //        $(".tagger-notification-panel").html("Hint Not Checked!!!");
+        //        setTimeout(function(){
+        //            $(".tagger-notification-panel").html("");
+        //        }, 3000);
+        //        return false;
+        //    }
+        //    $(this).prev().val("").css("right", 0);
+        //    var data = {}, wordID = "", tmp, wordIDs = [], list = [];
+        //    $(".tagger-highlight-text").each(function(i, el){
+        //        wordID = $(el).attr("data-word-id").toString();
+        //        if (data[wordID] == undefined) {
+        //            wordIDs.push(wordID);
+        //            data[wordID] = {
+        //                text: $(el).text(),
+        //                keyword: $(el).attr("data-keyword")
+        //            }
+        //        } else {
+        //            tmp = data[wordID].text;
+        //            data[wordID] = {
+        //                text: tmp + $(el).text(),
+        //                keyword: $(el).attr("data-keyword")
+        //            }
+        //        }
+        //    });
+        //    wordIDs.forEach(function(id){
+        //        list.push(data[id]);
+        //    });
+        //    $.ajax({
+        //        url: "../action.php",
+        //        data: {
+        //            "action": "save-tagger",
+        //            data: {"json": list, "full": $(this).parent().prev().find(".tagger-content").html()},
+        //            name: app_name
+        //        },
+        //        type: "POST",
+        //        success: function(){
+        //            $(".tagger-notification-panel").html("Saved Successfully!");
+        //            setTimeout(function(){
+        //                $(".tagger-notification-panel").html("");
+        //            }, 3000);
+        //        }
+        //    });
+        //    //$(".tagger-icon-cut").show();
+        //}).hide())
+        .append($("<button></button>", {
             class: "tagger-app-init-btn"
         }).on("click", function(){
             var playground = $(this).parent().prev();
