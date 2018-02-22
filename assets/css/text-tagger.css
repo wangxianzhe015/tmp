@@ -54,8 +54,7 @@ input {
     display: block;
 }
 .tagger-keyword-left-panel {
-    width: 8%;
-    min-width: 4em;
+    width: 4em;
 }
 .tagger-keyword-right-panel{
     width: 3%;
@@ -65,7 +64,7 @@ input {
     color: #000000;
     line-height: 1.5em;
     height: 100%;
-    width: calc(92% - 10px);
+    width: calc(100% - 10px - 4em);
     float: left;
 }
 .tagger-content{
