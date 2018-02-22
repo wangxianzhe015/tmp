@@ -1371,7 +1371,7 @@ function initHandlers(){
                         objs.forEach(function(obj){
                             if (obj.nodeName == "P"){
                                 result += obj.outerHTML;
-                            } else {
+                            } else if (obj.nodeName.toLowerCase() != "script" && obj.nodeName.toLowerCase() != "style" && obj.nodeName.toLowerCase() != "link" && obj.nodeName.toLowerCase() != "meta") {
                                 result += obj.wholeText;
                             }
                         });
@@ -1386,7 +1386,19 @@ function initHandlers(){
     });
 
     $("#download-link-from-search").on("click", function(){
-
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            data: {
+                action: "get-file-from-url",
+                id: $("#search-result-id").val()
+            },
+            success: function(res){
+                if (res != "fail"){
+                    downloadFileFromURI(res, "File");
+                }
+            }
+        });
     });
 
     $(".custom-accordion-add-btn").on("click", function(){

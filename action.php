@@ -47,6 +47,9 @@ switch ($action) {
     case 'get-text-from-url':
         getTextFromCSV();
         break;
+    case 'get-file-from-url':
+        getFileFromCSV();
+        break;
     case 'save-people':
         savePeople();
         break;
@@ -269,8 +272,28 @@ function getTextFromCSV(){
         $id = 0;
         while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
             if ($data_id == $id){
-                if (isset($row[6]) && $row[6] != ""){
-                    echo $row[6];
+                if (isset($row[7]) && $row[7] != ""){
+                    echo file_get_contents($row[7]);
+                } else {
+                    echo "fail";
+                }
+                break;
+            }
+            $id ++;
+        }
+        fclose($handle);
+    }
+}
+
+function getFileFromCSV(){
+    $data_id = $_POST['id'];
+    $ip = getUserIP();
+    if (($handle = fopen("./data/places/". $ip . "-data.csv", "r")) !== FALSE) {
+        $id = 0;
+        while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            if ($data_id == $id){
+                if (isset($row[8]) && $row[8] != ""){
+                    echo $row[8];
                 } else {
                     echo "fail";
                 }
