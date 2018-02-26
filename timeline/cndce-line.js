@@ -149,6 +149,9 @@ jQuery.fn.extend( {
 					//$backgroundContainer.width( $canvasContainer.outerWidth( true ) );
 					//$backgroundContainer.height( '' );
 					
+					maxScrollX = -$canvasContainer.outerWidth( true ) + $container.outerWidth(  );
+
+					
 				}else{
 					$canvasContainer.height( tHeight );
 					$canvasContainer.css( {
@@ -156,6 +159,8 @@ jQuery.fn.extend( {
 					} )
 
 					//$backgroundContainer.height( $canvasContainer.outerHeight( true ) );
+
+					maxScrollY = -$canvasContainer.outerHeight( true ) + $container.outerHeight(  );
 
 				}
 
@@ -165,8 +170,6 @@ jQuery.fn.extend( {
 				initElements(  );
 
 
-				maxScrollX = -$canvasContainer.outerWidth( true ) + $container.outerWidth(  );
-				maxScrollY = -$canvasContainer.outerHeight( true ) + $container.outerHeight(  );
 
 			}
 
@@ -627,9 +630,11 @@ jQuery.fn.extend( {
 			} );
 
 			$container.on( 'mousemove', '.canvas-container', function( e ){
+				var $canvasContainer = $( '.canvas-container', $container );
+				var offset = $canvasContainer.offset(  );
 
-				mouseX = e.pageX - $( '.canvas-container', $container ).offset(  ).left;
-				mouseY = e.pageY - $( '.canvas-container', $container ).offset(  ).top;
+				mouseX = e.pageX - offset.left;
+				mouseY = e.pageY - offset.top;
 
 
 			} )
@@ -676,33 +681,22 @@ jQuery.fn.extend( {
 					e.preventDefault(  );
 
 				if( mouseDownX != undefined || mouseDownY != undefined ){
-					var x = e.pageX - $container.offset(  ).left;
-					var y = e.pageY - $container.offset(  ).top;
-
-					var tempX = x - mouseDownX;
-					var tempY = y - mouseDownY;
-
-					var left = Math.min( 
-						$canvasContainer.data( 'startX' ) + tempX,
-						0
-					);
-					var top = Math.min(
-						$canvasContainer.data( 'startY' ) + tempY,
-						0
-					);
-
-					left = Math.max(
-						left,
-						maxScrollX
-					);
-
-					top = Math.max(
-						top,
-						maxScrollY
-					);
 
 
 					if( !params.isVertical ){
+						var x = e.pageX - $container.offset(  ).left;
+						var tempX = x - mouseDownX;
+
+						var left = Math.min( 
+							$canvasContainer.data( 'startX' ) + tempX,
+							0
+						);
+
+						left = Math.max(
+							left,
+							maxScrollX
+						);
+
 						$canvasContainer.css( {
 							left: left + 'px'
 						} );
@@ -711,7 +705,26 @@ jQuery.fn.extend( {
 						//	left: left/2 + 'px'
 						//} );
 
+						canvasTranslateX = left - $canvasContainer.data( 'startX' );
+
 					}else{
+						var y = e.pageY - $container.offset(  ).top;
+						var tempY = y - mouseDownY;
+
+						
+						var top = Math.min(
+							$canvasContainer.data( 'startY' ) + tempY,
+							0
+						);
+
+						
+
+						top = Math.max(
+							top,
+							maxScrollY
+						);
+
+
 						$canvasContainer.css( {
 							top: top + 'px'
 						} );
@@ -719,17 +732,10 @@ jQuery.fn.extend( {
 						//$backgroundContainer.css( {
 						//	top: top + 'px'
 						//} );
+
+						canvasTranslateY = top - $canvasContainer.data( 'startY' );
+
 					}
-
-					
-
-					canvasTranslateX = left - $canvasContainer.data( 'startX' );
-					canvasTranslateY = top - $canvasContainer.data( 'startY' );
-
-
-
-					
-
 				}
 			}
 
@@ -752,11 +758,6 @@ jQuery.fn.extend( {
 			$container.on( 'touchmove', function( e ){
 				mousemove( e.touches[0] );
 			} )
-
-			setInterval( function(  ){
-
-			}, 100 );
-
 
 			$container.on( 'click', '.cndce-line-rotate', function(  ){
 				$container.rotate(  );
