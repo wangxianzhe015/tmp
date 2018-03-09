@@ -372,17 +372,48 @@ canvas.on('mouse:down',function(e){
                 class: "bezier-line-control-btn",
                 src: "./assets/images/icons/cancel-24.png"
             }).on("click", function(){
+                var lines = [], $textCell;
                 if (rmBezierLine != null){
-                    rmBezierLine.leftElement.lines.forEach(function(line, i){
-                        if (line.id == rmBezierLine.id){
-                            rmBezierLine.leftElement.lines.splice(i,1);
+                    if (rmBezierLine.leftElement instanceof jQuery) {
+                        if (rmBezierLine.leftElement.hasClass("image-tooltip")){
+                            $textCell = rmBezierLine.leftElement;
+                        } else {
+                            $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
                         }
-                    });
-                    rmBezierLine.rightElement.lines.forEach(function(line, i){
-                        if (line.id == rmBezierLine.id){
-                            rmBezierLine.rightElement.lines.splice(i,1);
+                        lines = $textCell.data("lines");
+                        lines.forEach(function (line, i) {
+                            if (line.id == rmBezierLine.id) {
+                                lines.splice(i, 1);
+                            }
+                        });
+                        $textCell.data("lines", lines);
+                    } else {
+                        rmBezierLine.leftElement.lines.forEach(function (line, i) {
+                            if (line.id == rmBezierLine.id) {
+                                rmBezierLine.leftElement.lines.splice(i, 1);
+                            }
+                        });
+                    }
+                    if (rmBezierLine.rightElement instanceof jQuery){
+                        if (rmBezierLine.rightElement.hasClass("image-tooltip")){
+                            $textCell = rmBezierLine.rightElement;
+                        } else {
+                            $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
                         }
-                    });
+                        lines = $textCell.data("lines");
+                        lines.forEach(function (line, i) {
+                            if (line.id == rmBezierLine.id) {
+                                lines.splice(i, 1);
+                            }
+                        });
+                        $textCell.data("lines", lines);
+                    } else {
+                        rmBezierLine.rightElement.lines.forEach(function (line, i) {
+                            if (line.id == rmBezierLine.id) {
+                                rmBezierLine.rightElement.lines.splice(i, 1);
+                            }
+                        });
+                    }
                     canvas.remove(rmBezierLine.leftCircle);
                     canvas.remove(rmBezierLine.rightCircle);
                     canvas.remove(rmBezierLine);

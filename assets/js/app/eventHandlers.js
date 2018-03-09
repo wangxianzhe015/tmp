@@ -243,17 +243,61 @@ function initHandlers(){
         var $actionTag = $("#confirm-next-action"), $valueTag = $("#confirm-next-value"), action = $actionTag.val();
         $(this).next().click();
         if (action == "remove-text-cell"){
-            var $cell = $("#" + $valueTag.val());
-            $cell.data("lines").forEach(function(line){
-                line.leftElement.lines.forEach(function(ln, i){
-                    if (line.id == ln.id){
-                        line.leftElement.lines.splice(i,1);
+            var $cell = $("#" + $valueTag.val()), lines, $elem, i;
+            for (var j = $cell.data("lines").length; j > 0; j --){
+                var line = $cell.data("lines")[j - 1];
+                if (line.rightElement instanceof jQuery){
+                    if (line.rightElement.hasClass("image-tooltip")){
+                        $elem = line.rightElement;
+                    } else {
+                        $elem = line.rightElement.parents(".image-tooltip");
                     }
-                });
+                    if ($elem.attr("id") != $valueTag.val()) {
+                        lines = $elem.data("lines");
+                        for (i = lines.length; i > 0; i--) {
+                            if (line.id == lines[i - 1].id) {
+                                lines.splice(i - 1, 1);
+                            }
+                        }
+                        $elem.data("lines", lines);
+                    }
+                } else {
+                    lines = line.rightElement.lines;
+                    for (i = lines.length; i > 0; i --){
+                        if (line.id == lines[i - 1].id) {
+                            line.rightElement.lines.splice(i - 1, 1);
+                        }
+                    }
+                }
+                if (line.leftElement instanceof jQuery) {
+                    if (line.leftElement.hasClass("image-tooltip")){
+                        $elem = line.leftElement;
+                    } else {
+                        $elem = line.leftElement.parents(".image-tooltip");
+                    }
+                    if ($elem.attr("id") != $valueTag.val()) {
+                        lines = $elem.data("lines");
+                        for (i = lines.length; i > 0; i--) {
+                            if (line.id == lines[i - 1].id) {
+                                lines.splice(i - 1, 1);
+                            }
+                        }
+                        $elem.data("lines", lines);
+                    }
+                } else {
+                    lines = line.leftElement.lines;
+                    for (i = lines.length; i > 0; i --){
+                        if (line.id == lines[i - 1].id) {
+                            line.leftElement.lines.splice(i - 1, 1);
+                        }
+                    }
+                }
                 canvas.remove(line.leftCircle);
                 canvas.remove(line.rightCircle);
+                canvas.remove(line.control);
                 canvas.remove(line);
-            });
+            }
+            canvas.remove($cell.data("newPoint"));
             $cell.remove();
             canvas.renderAll();
         } else if (action == "remove-tooltip") {
