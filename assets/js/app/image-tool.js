@@ -490,7 +490,7 @@ function showUploadDiv(){
 
 
 function addTextTooltip(left, top){
-    $("<div></div>", {
+    var $tooltip = $("<div></div>", {
         class: "image-tooltip second text",
         id: "text-box-" + parseInt(Math.random() * 10000000000)
     }).data({
@@ -569,9 +569,14 @@ function addTextTooltip(left, top){
         canvas.renderAll();
 
     }).on("drag", function(){
+        $(this).data("newPoint").set({
+            left: $(this).offset().left,
+            top: $(this).offset().top
+        }).setCoords();
         $(this).data("lines").forEach(function(line){
             adjustLine(line);
         });
+        canvas.renderAll();
     }).append($("<div></div>", {
         class: "ttip"
     }).append($("<input/>", {
@@ -653,4 +658,25 @@ function addTextTooltip(left, top){
             $ttip.stop().animate({scrollTop: $(this).position().top - 20, scrollLeft: $(this).position().left - 20}, 1000);
         }
     }).appendTo("body");
+
+    var newPoint = new fabric.Circle({
+        left: left,
+        top: top,
+        class: 'new-bezier-point',
+        hoverCursor: 'pointer',
+        strokeWidth: 1,
+        stroke: 'white',
+        radius: 3,
+        originX: 'center',
+        originY: 'center',
+        selectable: false,
+        opacity: bLineCircleOpacity,
+        fill: 'transparent'
+    });
+
+    canvas.add(newPoint);
+    newPoint.bringForward();
+    $tooltip.data("newPoint", newPoint);
+    newPoint.master = $tooltip;
+
 }

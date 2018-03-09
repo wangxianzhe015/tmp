@@ -86,15 +86,28 @@ canvas.on('mouse:move',function(moveEventOptions){
     if (newBezierLine != null){
         canvas.selectionBorderColor = 'transparent';
         var xPos = moveEventOptions.e.pageX, yPos = moveEventOptions.e.pageY, startX, startY, startElement = newBezierLine.startElement, distance, angle, factor = yPos>startElement.top?-1:1;
-        distance = Math.sqrt(Math.pow(xPos - startElement.left, 2) + Math.pow(yPos - startElement.top, 2));
-        angle = Math.acos((xPos - startElement.left) / distance);
-        var circleRadius = Math.sqrt(3) * (radius - border / 2) / 2;
-        newBezierLine.set({
-            x1: startElement.left + circleRadius * Math.cos(angle),
-            y1: startElement.top - circleRadius * Math.sin(angle) * factor,
-            x2: xPos,
-            y2: yPos
-        });
+        if (startElement instanceof jQuery){
+            startX = startElement.offset().left;
+            startY = startElement.offset().top;
+            newBezierLine.set({
+                x1: startX,
+                y1: startY,
+                x2: xPos,
+                y2: yPos
+            });
+        } else {
+            startX = startElement.left;
+            startY = startElement.top;
+            distance = Math.sqrt(Math.pow(xPos - startX, 2) + Math.pow(yPos - startY, 2));
+            angle = Math.acos((xPos - startX) / distance);
+            var circleRadius = Math.sqrt(3) * (radius - border / 2) / 2;
+            newBezierLine.set({
+                x1: startX + circleRadius * Math.cos(angle),
+                y1: startY - circleRadius * Math.sin(angle) * factor,
+                x2: xPos,
+                y2: yPos
+            });
+        }
         canvas.renderAll();
         return false;
     } else {

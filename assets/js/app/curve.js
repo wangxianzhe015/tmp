@@ -43,9 +43,9 @@ function makeCurveCircle(x, y) {
         top: y - Math.sqrt(3) * (radius - border / 2) / 2,
         class: 'new-bezier-point',
         hoverCursor: 'pointer',
-        strokeWidth: 2,
+        strokeWidth: 1,
         stroke: 'white',
-        radius: 5,
+        radius: 3,
         originX: 'center',
         originY: 'center',
         selectable: false,
@@ -93,9 +93,10 @@ function addBezierLine(leftElement, rightElement){
     var startX, startY, endX, endY;
 
     if ( leftElement instanceof jQuery){
-        if (leftElement[0].tagName != "TD") return false;
-        leftElement = leftElement.parents("tr");
-        leftElement.data("text-cell", leftElement.parents(".image-tooltip").attr("id"));
+        //if (leftElement[0].tagName != "TD") return false;
+        //leftElement = leftElement.parents("tr");
+        //leftElement.data("text-cell", leftElement.parents(".image-tooltip").attr("id"));
+        leftElement.data("text-cell", leftElement.attr("id"));
         startX = leftElement.offset().left;
         startY = leftElement.offset().top;
     } else {
@@ -104,9 +105,15 @@ function addBezierLine(leftElement, rightElement){
     }
 
     if ( rightElement instanceof jQuery ){
-        if (rightElement[0].tagName != "TD") return false;
-        rightElement = rightElement.parents("tr");
-        rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
+        //if (rightElement[0].tagName != "TD") return false;
+        //rightElement = rightElement.parents("tr");
+        if (rightElement[0].tagName == "TD") {
+            rightElement = rightElement.parents("tr");
+            rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
+        } else {
+            rightElement = rightElement.parents(".image-tooltip");
+            rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
+        }
         endX = rightElement.offset().left;
         endY = rightElement.offset().top;
     } else {
@@ -134,9 +141,9 @@ function addBezierLine(leftElement, rightElement){
     var leftCircle = new fabric.Circle({
         class: 'bezier-start-point',
         hoverCursor: 'pointer',
-        strokeWidth: 2,
+        strokeWidth: 1,
         stroke: 'white',
-        radius: 5,
+        radius: 3,
         originX: 'center',
         originY: 'center',
         selectable: false,
@@ -150,9 +157,9 @@ function addBezierLine(leftElement, rightElement){
     var rightCircle = new fabric.Circle({
         class: 'bezier-end-point',
         hoverCursor: 'pointer',
-        strokeWidth: 2,
+        strokeWidth: 1,
         stroke: 'white',
-        radius: 5,
+        radius: 3,
         originX: 'center',
         originY: 'center',
         selectable: false,
@@ -168,17 +175,29 @@ function addBezierLine(leftElement, rightElement){
 
     var lines;
     if ( leftElement instanceof jQuery ){
-        lines = leftElement.parents(".image-tooltip").data("lines");
-        lines.push(bLine);
-        leftElement.parents(".image-tooltip").data("lines", lines);
+        if (leftElement.hasClass("image-tooltip")) {
+            lines = leftElement.data("lines");
+            lines.push(bLine);
+            leftElement.data("lines", lines);
+        } else {
+            lines = leftElement.parents(".image-tooltip").data("lines");
+            lines.push(bLine);
+            leftElement.parents(".image-tooltip").data("lines", lines);
+        }
     } else {
         leftElement.lines.push(bLine);
     }
 
     if ( rightElement instanceof jQuery ){
-        lines = rightElement.parents(".image-tooltip").data("lines");
-        lines.push(bLine);
-        rightElement.parents(".image-tooltip").data("lines", lines);
+        if (rightElement.hasClass("image-tooltip")) {
+            lines = rightElement.data("lines");
+            lines.push(bLine);
+            rightElement.data("lines", lines);
+        } else {
+            lines = rightElement.parents(".image-tooltip").data("lines");
+            lines.push(bLine);
+            rightElement.parents(".image-tooltip").data("lines", lines);
+        }
     } else {
         rightElement.lines.push(bLine);
     }
@@ -192,33 +211,34 @@ function adjustLine(line){
     // Starting point
     if ( line.leftElement instanceof jQuery ) {
         $textCell = $("#" + line.leftElement.data("text-cell"));
-        if ($textCell.hasClass("expanded")){
-            point = line.leftElement;
-            offset = point.offset();
-            tooltipOffset = $textCell.offset();
-            width = parseInt($textCell.css("width"));
-            height = parseInt(point.css("height"));
-            tmpY = offset.top + height / 2;
-            if (offset.left + width / 2 > line.rightCircle.left) {
-                tmpX = tooltipOffset.left;
-            } else {
-                tmpX = tooltipOffset.left + width;
-            }
-            if (tmpY < tooltipOffset.top){
-                tmpY = tooltipOffset.top;
-            } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
-                tmpY = tooltipOffset.top + $textCell.innerHeight();
-            }
-        } else {
+        //if ($textCell.hasClass("expanded")){
+        //    point = line.leftElement;
+        //    offset = point.offset();
+        //    tooltipOffset = $textCell.offset();
+        //    width = parseInt($textCell.css("width"));
+        //    height = parseInt(point.css("height"));
+        //    tmpY = offset.top + height / 2;
+        //    if (offset.left + width / 2 > line.rightCircle.left) {
+        //        tmpX = tooltipOffset.left;
+        //    } else {
+        //        tmpX = tooltipOffset.left + width;
+        //    }
+        //    if (tmpY < tooltipOffset.top){
+        //        tmpY = tooltipOffset.top;
+        //    } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
+        //        tmpY = tooltipOffset.top + $textCell.innerHeight();
+        //    }
+        //} else {
             point = $textCell;
             offset = point.offset();
             width = parseInt(point.css("width"));
             height = parseInt(point.css("height"));
             if (offset.left > control.left) {
                 tmpX = offset.left;
-                if (offset.top > control.top){
-                    tmpY = offset.top;
-                } else if (offset.top < control.top && offset.top + height > control.top){
+                //if (offset.top > control.top){
+                //    tmpY = offset.top;
+                //} else if (offset.top < control.top && offset.top + height > control.top){
+                if (offset.top + height > control.top){
                     tmpY = offset.top + height / 2;
                 } else {
                     tmpY = offset.top + height;
@@ -240,7 +260,7 @@ function adjustLine(line){
                     tmpY = offset.top + height;
                 }
             }
-        }
+        //}
         line.path[0][1] = tmpX;
         line.path[0][2] = tmpY;
         line.leftCircle.set({
@@ -293,33 +313,34 @@ function adjustLine(line){
     // Ending point
     if ( line.rightElement instanceof jQuery ){
         $textCell = $("#" + line.rightElement.data("text-cell"));
-        if ($textCell.hasClass("expanded")){
-            point = line.rightElement;
-            offset = point.offset();
-            tooltipOffset = $textCell.offset();
-            width = parseInt($textCell.css("width"));
-            height = parseInt(point.css("height"));
-            tmpY = offset.top + height / 2;
-            if (offset.left + width / 2 > line.leftCircle.left) {
-                tmpX = tooltipOffset.left;
-            } else {
-                tmpX = tooltipOffset.left + width;
-            }
-            if (tmpY < tooltipOffset.top){
-                tmpY = tooltipOffset.top;
-            } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
-                tmpY = tooltipOffset.top + $textCell.innerHeight();
-            }
-        } else {
+        //if ($textCell.hasClass("expanded")){
+        //    point = line.rightElement;
+        //    offset = point.offset();
+        //    tooltipOffset = $textCell.offset();
+        //    width = parseInt($textCell.css("width"));
+        //    height = parseInt(point.css("height"));
+        //    tmpY = offset.top + height / 2;
+        //    if (offset.left + width / 2 > line.leftCircle.left) {
+        //        tmpX = tooltipOffset.left;
+        //    } else {
+        //        tmpX = tooltipOffset.left + width;
+        //    }
+        //    if (tmpY < tooltipOffset.top){
+        //        tmpY = tooltipOffset.top;
+        //    } else if (tmpY > tooltipOffset.top + $textCell.innerHeight()) {
+        //        tmpY = tooltipOffset.top + $textCell.innerHeight();
+        //    }
+        //} else {
             point = $textCell;
             offset = point.offset();
             width = parseInt(point.css("width"));
             height = parseInt(point.css("height"));
             if (offset.left > control.left) {
                 tmpX = offset.left;
-                if (offset.top > control.top) {
-                    tmpY = offset.top;
-                } else if (offset.top < control.top && offset.top + height > control.top) {
+                //if (offset.top > control.top) {
+                //    tmpY = offset.top;
+                //} else if (offset.top < control.top && offset.top + height > control.top) {
+                if (offset.top + height > control.top) {
                     tmpY = offset.top + height / 2;
                 } else {
                     tmpY = offset.top + height;
@@ -341,7 +362,7 @@ function adjustLine(line){
                     tmpY = offset.top + height;
                 }
             }
-        }
+        //}
         line.path[1][3] = tmpX;
         line.path[1][4] = tmpY;
         line.rightCircle.set({
