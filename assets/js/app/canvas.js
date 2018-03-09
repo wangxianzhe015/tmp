@@ -454,13 +454,21 @@ canvas.on('mouse:down',function(e){
 
 canvas.on('mouse:up',function(e){
     mouseDown = false;
-    if (mouseDrag && e.target == null){
-        if (newBezierLine != null){
-            canvas.remove(newBezierLine);
-            newBezierLine = null;
-            canvas.renderAll();
-            return false;
+
+    if (newBezierLine != null){
+        if (e.target != null){
+            if (e.target.class == 'element' && newBezierLine.startElement != e.target){
+                addBezierLine(newBezierLine.startElement, e.target);
+                canvas.discardActiveObject();
+            }
         }
+        canvas.remove(newBezierLine);
+        newBezierLine = null;
+        canvas.renderAll();
+        return false;
+    }
+
+    if (mouseDrag && e.target == null){
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
         if (canvas.getActiveGroup() == null && canvas.getActiveObject() == null) {
             if (Math.abs(downPoint.x - upPoint.x) < 20 && Math.abs(downPoint.y - upPoint.y) < 20) {
@@ -566,15 +574,6 @@ canvas.on('mouse:up',function(e){
         obj.setOpacity(0);
     }
     mouseDrag = false;
-
-    if (e.target != null && newBezierLine != null){
-        if (e.target.class == 'element' && newBezierLine.startElement != e.target){
-            addBezierLine(newBezierLine.startElement, e.target);
-            canvas.discardActiveObject();
-        }
-        canvas.remove(newBezierLine);
-        newBezierLine = null;
-    }
 
     canvas.renderAll();
 });
@@ -703,17 +702,19 @@ canvas.on('object:moving', function(e){
 
         canvas.renderAll();
     } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
-        var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup();
+        var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup(), offsetX = obj.left + obj.width / 2, offsetY = obj.top + obj.height / 2;
         moveThreeDots(obj);
         obj._objects.forEach(function(shape){
-            shape.newPoint.set({
-                left: obj.left + obj.width / 2 + shape.left,
-                top: obj.top + obj.height / 2 + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
-            });
-            shape.newPoint.setCoords();
-            shape.lines.forEach(function(line){
-                adjustLine(line);
-            });
+            if (shape.class == "element") {
+                shape.newPoint.set({
+                    left: offsetX + shape.left,
+                    top: offsetY + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
+                });
+                shape.newPoint.setCoords();
+                shape.lines.forEach(function (line) {
+                    adjustLine(line);
+                });
+            }
         });
     } else if (e.target.class == "b-point") {
 
@@ -742,6 +743,7 @@ canvas.on('selection:cleared', function(e){
     if (threeDots != null){
         removeThreeDots();
     }
+    groupTarget = null;
     if (e.target != null && e.target.class == 'group'){
         e.target.setControlsVisibility({
             mt: false,

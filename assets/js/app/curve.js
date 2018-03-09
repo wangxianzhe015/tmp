@@ -206,7 +206,7 @@ function addBezierLine(leftElement, rightElement){
 }
 
 function adjustLine(line){
-    var control = line.control, point, $textCell, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, tooltipOffset, width, height;
+    var control = line.control, point, $textCell, distance, angle, factor = 1, tmpX, tmpY, newPoint, overlap = false, angleOffset, toggleDirection = 1, actualRadius = Math.sqrt(3) * (radius - border / 2) / 2, lines, offset, tooltipOffset, width, height, groupX = 0, groupY = 0;
 
     // Starting point
     if ( line.leftElement instanceof jQuery ) {
@@ -270,11 +270,19 @@ function adjustLine(line){
         line.leftCircle.setCoords();
     } else {
         point = line.leftElement;
-        distance = Math.sqrt((point.left - control.left) * (point.left - control.left) + (point.top - control.top) * (point.top - control.top));
-        if (control.top < point.top) {
+        if (groupTarget != null){
+            groupTarget._objects.forEach(function(obj){
+                if (obj.id == line.leftElement.id){
+                    groupX = groupTarget.left + groupTarget.width / 2;
+                    groupY = groupTarget.top + groupTarget.height / 2;
+                }
+            });
+        }
+        distance = Math.sqrt(Math.pow(point.left - control.left + groupX, 2) + Math.pow(point.top - control.top + groupY, 2));
+        if (control.top < point.top + groupY) {
             factor = -1;
         }
-        angle = factor * Math.atan((control.left - point.left) / (control.top - point.top));
+        angle = factor * Math.atan((control.left - point.left - groupX) / (control.top - point.top - groupY));
         tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
         tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
         line.path[0][1] = tmpX;
@@ -297,8 +305,8 @@ function adjustLine(line){
             angleOffset += 5 / actualRadius;
             toggleDirection *= -1;
             newPoint.set({
-                left: point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
-                top: point.top - Math.cos(angleOffset) * actualRadius
+                left: groupX + point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
+                top: groupY + point.top - Math.cos(angleOffset) * actualRadius
             });
             newPoint.setCoords();
             overlap = false;
@@ -312,7 +320,11 @@ function adjustLine(line){
 
     // Ending point
     if ( line.rightElement instanceof jQuery ){
-        $textCell = $("#" + line.rightElement.data("text-cell"));
+        if (line.rightElement.hasClass("image-tooltip")) {
+            $textCell = line.rightElement;
+        } else {
+            $textCell = $("#" + line.rightElement.data("text-cell"));
+        }
         //if ($textCell.hasClass("expanded")){
         //    point = line.rightElement;
         //    offset = point.offset();
@@ -372,12 +384,22 @@ function adjustLine(line){
         line.rightCircle.setCoords();
     } else {
         point = line.rightElement;
+        groupX = 0;
+        groupY = 0;
+        if (groupTarget != null){
+            groupTarget._objects.forEach(function(obj){
+                if (obj.id == line.rightElement.id){
+                    groupX = groupTarget.left + groupTarget.width / 2;
+                    groupY = groupTarget.top + groupTarget.height / 2;
+                }
+            });
+        }
         factor = 1;
-        distance = Math.sqrt((point.left - control.left) * (point.left - control.left) + (point.top - control.top) * (point.top - control.top));
-        if (control.top < point.top) {
+        distance = Math.sqrt(Math.pow(point.left - control.left + groupX, 2) + Math.pow(point.top - control.top + groupY, 2));
+        if (control.top < point.top + groupY) {
             factor = -1;
         }
-        angle = factor * Math.atan((control.left - point.left) / (control.top - point.top));
+        angle = factor * Math.atan((control.left - point.left - groupX) / (control.top - point.top - groupY));
         tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
         tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
         line.path[1][3] = tmpX;
@@ -400,8 +422,8 @@ function adjustLine(line){
             angleOffset += 5 / actualRadius;
             toggleDirection *= -1;
             newPoint.set({
-                left: point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
-                top: point.top - Math.cos(angleOffset) * actualRadius
+                left: groupX + point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
+                top: groupY + point.top - Math.cos(angleOffset) * actualRadius
             });
             newPoint.setCoords();
             overlap = false;

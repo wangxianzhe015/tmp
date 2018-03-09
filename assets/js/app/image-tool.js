@@ -564,8 +564,6 @@ function addTextTooltip(left, top){
             addBezierLine(newBezierLine.startElement, $(e.originalEvent.target));
             canvas.discardActiveObject();
         }
-        canvas.remove(newBezierLine);
-        newBezierLine = null;
         canvas.renderAll();
 
     }).on("drag", function(){
