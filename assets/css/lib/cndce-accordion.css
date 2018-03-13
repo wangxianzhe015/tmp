@@ -307,25 +307,25 @@
 .cndce-accordion .ui-resizable-e{
 	width: 15px;
 	right: 0;
-
 	cursor: col-resize;
 }
 
 .cndce-accordion .ui-resizable-w{
 	width: 15px;
 	left: 0;
-
 	cursor: col-resize;
 }
 
 .cndce-accordion .ui-resizable-n{
 	height: 15px;
 	top: 0;
+    cursor: row-resize;
 }
 
 .cndce-accordion .ui-resiable-s{
 	height: 15px;
 	bottom: 0;
+    cursor: row-resize;
 }
 
 

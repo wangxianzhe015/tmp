@@ -665,15 +665,18 @@ button .text{
     width: 90%;
 }
 .ttip #button-pane button, .normal-btn{
-    background-color: rgb(92,183,92);
+    /*background-color: rgb(92,183,92);*/
+    background-color: transparent;
     color: white;
     cursor: pointer;
     padding: 5px 15px;
-    border: none;
-    border-radius: 5px;
+    /*border: none;*/
+    border: solid 1px white;
+    /*border-radius: 5px;*/
+    border-radius: 2em;
     font-size: 1em;
     font-weight: bold;
-    width: 80px;
+    /*width: 80px;*/
 }
 .ttip #button-pane button, .normal-btn.right{
     margin-left: calc(100% - 80px);
@@ -1265,12 +1268,12 @@ textarea.default-textarea{
     border-radius: 5px;
 }
 #left-sidebar{
-    width: 30px;
-    height: calc(100% - 20px);
+    width: 44px;
+    height: 100%;
     position: fixed;
     left: -50px;
     top: 0;
-    padding: 10px;
+    padding: 0;
     background-color: #202020;
     transform: scaleY(-1);
     z-index: 1001;
@@ -1285,16 +1288,19 @@ textarea.default-textarea{
     background-color: #202020;
     z-index: 1001;
 }
-#right-sidebar .icon-button{
+.icon-button{
     cursor: pointer;
+}
+.icon-button:hover{
+    background-color: #333333;
 }
 #left-sidebar .icon-button{
     display: block;
-    cursor: pointer;
     transform: scaleY(-1);
     position: relative;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
+    padding: 10px;
 }
 #left-sidebar .icon-button#back-button{
     position: absolute;
@@ -1304,7 +1310,7 @@ textarea.default-textarea{
     display: none;
     width: 20px;
     height: 20px;
-    left: 5px;
+    left: 4px;
 }
 #iframe-panel{
     background-color: rgba(30,30,30,.7);

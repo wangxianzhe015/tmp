@@ -532,10 +532,22 @@ canvas.on('mouse:up',function(e){
                     canvas.forEachObject(function (obj) {
                         if (obj.class === 'element') {
                             obj.setVisible(true);
+                            obj.newPoint.setVisible(true);
+                            obj.lines.forEach(function(line){
+                                line.setVisible(true);
+                                line.leftCircle.setVisible(true);
+                                line.rightCircle.setVisible(true);
+                            });
                             $(".regex-search-input").each(function(i,el){
                                 var regexExp = new RegExp($(el).val().toUpperCase(), "g");
                                 if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
                                     obj.setVisible(false);
+                                    obj.newPoint.setVisible(false);
+                                    obj.lines.forEach(function(line){
+                                        line.setVisible(false);
+                                        line.leftCircle.setVisible(false);
+                                        line.rightCircle.setVisible(false);
+                                    });
                                 }
                             });
                         }
@@ -561,6 +573,12 @@ canvas.on('mouse:up',function(e){
                                 //obj.setVisible(true);
                                 if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
                                     obj.setVisible(false);
+                                    obj.newPoint.setVisible(false);
+                                    obj.lines.forEach(function(line){
+                                        line.setVisible(false);
+                                        line.leftCircle.setVisible(false);
+                                        line.rightCircle.setVisible(false);
+                                    });
                                 }
                             }
                         });

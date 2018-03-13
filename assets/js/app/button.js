@@ -426,10 +426,10 @@ function showCalendarFrame(){
     removeImageTools(true);
     $(".sidebar").hide();
     canvas.forEachObject(function(obj){
-        if (obj.class == "element" && obj.visible){
+        if (obj.visible){
             obj.set({
                 visible: false,
-                class: "temp-disabled"
+                temp_disabled: true
             })
         }
     });
@@ -440,9 +440,9 @@ function showCalendarFrame(){
 function hideCalendarFrame(){
     $(".sidebar").show();
     canvas.forEachObject(function(obj){
-        if (obj.class == "temp-disabled"){
+        if (obj.temp_disabled){
             obj.set({
-                class: "element",
+                temp_disabled: undefined,
                 visible: true
             })
         }
