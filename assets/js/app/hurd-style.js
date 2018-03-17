@@ -103,7 +103,7 @@ function addHurdStyle(){
         fontWeight: 'bold'
     });
 
-    var text3 = new fabric.IText("<h3 style='text-transform: uppercase'>Example header</h3>" + dummyText, {
+    var text3 = new fabric.IText(dummyText, {
         fontSize: 10,
         left: 200,
         top: 300,
@@ -140,7 +140,84 @@ function addHurdStyle(){
         opacity:.2
     });
 
-    var dotBox1 = new fabric.Rect({
+    tickBox = new fabric.Rect({
+        top: 200,
+        left: 600,
+        width: 200,
+        height: 200,
+        selectable: false,
+        fill: 'transparent',
+        strokeWidth: 1,
+        stroke: '#EEE',
+        strokeDashArray: [1, 2]
+    });
+
+    var boundaryText1 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
+        fontSize: 10,
+        left: 20,
+        top: 0,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText2 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
+        fontSize: 10,
+        left: 230,
+        top: 20,
+        angle: 90,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText3 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
+        fontSize: 10,
+        left: 0,
+        top: 230,
+        angle: -90,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText4 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
+        fontSize: 10,
+        left: 20,
+        top: 220,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundary = new fabric.Group([boundaryText1, boundaryText2, boundaryText3, boundaryText4], {
+        left: 585,
+        top: 185,
+        selectable: false,
+        draggable: false,
+        hasBorders: false,
+        hasControls: false,
+        hasRotatingPoint: false,
+        perPixelTargetFind: true
+    });
+
+    var dashedBox1 = new fabric.Rect({
         top: 520,
         left: 500,
         width: 100,
@@ -151,7 +228,7 @@ function addHurdStyle(){
         strokeDashArray: [5, 5]
     });
 
-    var dotBox2 = new fabric.Rect({
+    var dashedBox2 = new fabric.Rect({
         top: 520,
         left: 610,
         width: 100,
@@ -188,10 +265,13 @@ function addHurdStyle(){
     rect1.sendToBack();
     rect2.sendToBack();
 
-    canvas.add(dotBox1);
-    canvas.add(dotBox2);
-    dotBox1.sendToBack();
-    dotBox2.sendToBack();
+    canvas.add(tickBox);
+    canvas.add(boundary);
+
+    canvas.add(dashedBox1);
+    canvas.add(dashedBox2);
+    dashedBox1.sendToBack();
+    dashedBox2.sendToBack();
 
     canvas.renderAll();
 }

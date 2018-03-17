@@ -50,6 +50,8 @@ var rings = [], selectedRing = null, positionBeforeRing = null;
 
 var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
+var tickBox = null;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false
@@ -87,6 +89,7 @@ function init(){
     addFeedButton();
     addRingButton();
     addBLineCircleButton();
+    addTweenButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();

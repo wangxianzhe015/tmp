@@ -151,6 +151,57 @@ function addRingButton(){
     }).appendTo("#right-sidebar");
 }
 
+function addTweenButton(){
+    $("<img/>", {
+        id: "tween-button",
+        src: "./assets/images/icons/sign-in-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        if (tickBox == null) return false;
+        var top, left;
+        canvas.forEachObject(function(obj){
+            if (obj.class == "element" && obj.tickButton.checked){
+                top = tickBox.top + Math.random() * (tickBox.height - radius) + radius / 2;
+                left = tickBox.left + Math.random() * (tickBox.width - radius) + radius / 2;
+                obj.animate({
+                    scaleX: 0.5,
+                    scaleY: 0.5,
+                    top: top,
+                    left: left
+                }, {
+                    duration: 1000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
+                obj.newPoint.animate({
+                    left: left,
+                    top: top - Math.sqrt(3) * (radius - border / 2) / 4
+                }, {
+                    duration: 1000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
+                obj.tickButton.animate({
+                    scaleX: 0.5,
+                    scaleY: 0.5,
+                    left: left + radius / 2,
+                    top: top - Math.sqrt(3) * (radius - border / 2) / 4
+                }, {
+                    duration: 1000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
+                setTimeout(function(){
+                    obj.lines.forEach(function(line){
+                        adjustLine(line);
+                    });
+                }, 1000);
+            }
+        });
+        removeImageTools(true);
+    }).appendTo("#right-sidebar");
+}
+
 function addBLineCircleButton(){
     $("<img/>", {
         id: "bline-circle-button",

@@ -283,8 +283,8 @@ function adjustLine(line){
             factor = -1;
         }
         angle = factor * Math.atan((control.left - point.left - groupX) / (control.top - point.top - groupY));
-        tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
-        tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+        tmpX = control.left - (distance - point.scaleX * Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+        tmpY = control.top - factor * (distance - point.scaleX * Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
         line.path[0][1] = tmpX;
         line.path[0][2] = tmpY;
         line.leftCircle.set({
@@ -305,8 +305,8 @@ function adjustLine(line){
             angleOffset += 5 / actualRadius;
             toggleDirection *= -1;
             newPoint.set({
-                left: groupX + point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
-                top: groupY + point.top - Math.cos(angleOffset) * actualRadius
+                left: groupX + point.left + point.scaleX * toggleDirection * Math.sin(angleOffset) * actualRadius,
+                top: groupY + point.top - point.scaleX * Math.cos(angleOffset) * actualRadius
             });
             newPoint.setCoords();
             overlap = false;
@@ -400,8 +400,8 @@ function adjustLine(line){
             factor = -1;
         }
         angle = factor * Math.atan((control.left - point.left - groupX) / (control.top - point.top - groupY));
-        tmpX = control.left - (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
-        tmpY = control.top - factor * (distance - Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
+        tmpX = control.left - (distance - point.scaleX * Math.sqrt(3) * (radius - border / 2) / 2) * Math.sin(angle);
+        tmpY = control.top - factor * (distance - point.scaleX * Math.sqrt(3) * (radius - border / 2) / 2) * Math.cos(angle);
         line.path[1][3] = tmpX;
         line.path[1][4] = tmpY;
         line.rightCircle.set({
@@ -422,8 +422,8 @@ function adjustLine(line){
             angleOffset += 5 / actualRadius;
             toggleDirection *= -1;
             newPoint.set({
-                left: groupX + point.left + toggleDirection * Math.sin(angleOffset) * actualRadius,
-                top: groupY + point.top - Math.cos(angleOffset) * actualRadius
+                left: groupX + point.left + point.scaleX * toggleDirection * Math.sin(angleOffset) * actualRadius,
+                top: groupY + point.top - point.scaleX * Math.cos(angleOffset) * actualRadius
             });
             newPoint.setCoords();
             overlap = false;

@@ -102,8 +102,8 @@ canvas.on('mouse:move',function(moveEventOptions){
             angle = Math.acos((xPos - startX) / distance);
             var circleRadius = Math.sqrt(3) * (radius - border / 2) / 2;
             newBezierLine.set({
-                x1: startX + circleRadius * Math.cos(angle),
-                y1: startY - circleRadius * Math.sin(angle) * factor,
+                x1: startX + circleRadius * Math.cos(angle) * startElement.scaleX,
+                y1: startY - circleRadius * Math.sin(angle) * factor * startElement.scaleX,
                 x2: xPos,
                 y2: yPos
             });
@@ -354,7 +354,7 @@ canvas.on('mouse:down',function(e){
                 left: object.left - 30,
                 top: object.top + object._objects[1].top - 10
             }).show();
-        } else if (e.target.class == "new-bezier-point") {
+        } else if (object.class == "new-bezier-point") {
             newBezierLine = new fabric.Line([downPoint.x, downPoint.y, downPoint.x, downPoint.y], {
                 fill: 'gray',
                 stroke: 'gray',
@@ -366,16 +366,16 @@ canvas.on('mouse:down',function(e){
             canvas.add(newBezierLine);
             canvas.discardActiveObject();
             canvas.renderAll();
-        } else if (e.target.class == "bezier-start-point" || e.target.class == "bezier-end-point"){
-            rmBezierLine = e.target.master;
+        } else if (object.class == "bezier-start-point" || object.class == "bezier-end-point") {
+            rmBezierLine = object.master;
             $("<img/>").attr({
                 class: "bezier-line-control-btn",
                 src: "./assets/images/icons/cancel-24.png"
-            }).on("click", function(){
+            }).on("click", function () {
                 var lines = [], $textCell;
-                if (rmBezierLine != null){
+                if (rmBezierLine != null) {
                     if (rmBezierLine.leftElement instanceof jQuery) {
-                        if (rmBezierLine.leftElement.hasClass("image-tooltip")){
+                        if (rmBezierLine.leftElement.hasClass("image-tooltip")) {
                             $textCell = rmBezierLine.leftElement;
                         } else {
                             $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
@@ -394,8 +394,8 @@ canvas.on('mouse:down',function(e){
                             }
                         });
                     }
-                    if (rmBezierLine.rightElement instanceof jQuery){
-                        if (rmBezierLine.rightElement.hasClass("image-tooltip")){
+                    if (rmBezierLine.rightElement instanceof jQuery) {
+                        if (rmBezierLine.rightElement.hasClass("image-tooltip")) {
                             $textCell = rmBezierLine.rightElement;
                         } else {
                             $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
@@ -430,9 +430,9 @@ canvas.on('mouse:down',function(e){
             $("<img/>").attr({
                 class: "bezier-line-control-btn",
                 src: "./assets/images/icons/line-type-24.png"
-            }).on("click", function(){
-                if (rmBezierLine != null){
-                    if (rmBezierLine.type == "dashed"){
+            }).on("click", function () {
+                if (rmBezierLine != null) {
+                    if (rmBezierLine.type == "dashed") {
                         rmBezierLine.strokeDashArray = [1, 0];
                         rmBezierLine.type = "solid";
                     } else {
@@ -449,10 +449,20 @@ canvas.on('mouse:down',function(e){
                 position: "absolute"
             }).appendTo("body");
 
-            setTimeout(function(){
+            setTimeout(function () {
                 $(".bezier-line-control-btn").remove();
                 rmBezierLine = null;
             }, 2000);
+        } else if (object.class == 'element-tick-button'){
+            if (object.checked){
+                object._objects[1].setSrc("assets/images/icons/check-o-gray-16.png");
+                object._objects[1].set({width: 16, height: 16, angle: 0});
+                object.checked = false;
+            } else {
+                object._objects[1].setSrc("assets/images/icons/check-o-16.png");
+                object._objects[1].set({width: 16, height: 16, angle: 0});
+                object.checked = true;
+            }
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
@@ -737,16 +747,35 @@ canvas.on('object:moving', function(e){
         elementsInfo[e.target.id].x = e.target.left;
         elementsInfo[e.target.id].y = e.target.top;
 
+        if (e.target.tickButton.checked && !(e.target.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(e.target))){
+            e.target.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+            e.target.tickButton.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+            //e.target.animate({
+            //    scaleX: 1,
+            //    scaleY: 1
+            //}, {
+            //    duration: 1000,
+            //    onChange: canvas.renderAll.bind(canvas),
+            //    easing: fabric.util.ease.easeOutCirc
+            //});
+        }
+
         e.target.newPoint.set({
             //left: e.target.newPoint.left + e.e.movementX,
             //top: e.target.newPoint.top + e.e.movementY
             left: e.target.left,
-            top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
+            top: e.target.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         });
         e.target.newPoint.setCoords();
         e.target.tickButton.set({
-            left: e.target.left + radius,
-            top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
+            left: e.target.left + e.target.scaleX * radius,
+            top: e.target.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         });
         e.target.tickButton.setCoords();
         e.target.lines.forEach(function(line){
@@ -762,12 +791,12 @@ canvas.on('object:moving', function(e){
             if (shape.class == "element") {
                 shape.newPoint.set({
                     left: offsetX + shape.left,
-                    top: offsetY + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
+                    top: offsetY + shape.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
                 });
                 shape.newPoint.setCoords();
                 shape.tickButton.set({
-                    left: offsetX + shape.left + radius,
-                    top: offsetY + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
+                    left: offsetX + shape.left + e.target.scaleX * radius,
+                    top: offsetY + shape.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
                 });
                 shape.tickButton.setCoords();
                 shape.lines.forEach(function (line) {
