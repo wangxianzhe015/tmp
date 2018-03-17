@@ -744,6 +744,11 @@ canvas.on('object:moving', function(e){
             top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
         });
         e.target.newPoint.setCoords();
+        e.target.tickButton.set({
+            left: e.target.left + radius,
+            top: e.target.top - Math.sqrt(3) * (radius - border / 2) / 2
+        });
+        e.target.tickButton.setCoords();
         e.target.lines.forEach(function(line){
             adjustLine(line);
         });
@@ -760,6 +765,11 @@ canvas.on('object:moving', function(e){
                     top: offsetY + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
                 });
                 shape.newPoint.setCoords();
+                shape.tickButton.set({
+                    left: offsetX + shape.left + radius,
+                    top: offsetY + shape.top - Math.sqrt(3) * (radius - border / 2) / 2
+                });
+                shape.tickButton.setCoords();
                 shape.lines.forEach(function (line) {
                     adjustLine(line);
                 });

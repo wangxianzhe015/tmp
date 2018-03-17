@@ -159,7 +159,7 @@ function addBLineCircleButton(){
     }).on("click", function(){
         bLineCircleOpacity = (bLineCircleOpacity + 1) % 2;
         canvas.forEachObject(function(obj){
-            if (obj.class == "new-bezier-point" || obj.class == "bezier-start-point" || obj.class == "bezier-end-point") {
+            if (obj.class == "new-bezier-point" || obj.class == "bezier-start-point" || obj.class == "bezier-end-point" || obj.class == "element-tick-button") {
                 obj.set("opacity", bLineCircleOpacity);
             }
         });

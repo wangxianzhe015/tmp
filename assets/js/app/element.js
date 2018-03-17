@@ -547,6 +547,35 @@ function addNewHexagon(name, type, index, left, top, datatext){
         element.datatext = datatext;
     }
 
+    fabric.Image.fromURL("assets/images/icons/check-o-24.png", function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: 10,
+            height: 10,
+            fill: 'transparent',
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, width: 16, height: 16, angle: 0});
+        var tickButton = new fabric.Group([rect, oImg], {
+            left: element.left + radius,
+            top: element.top - Math.sqrt(3) * (radius - border / 2) / 2,
+            class: 'element-tick-button',
+            originX: 'center',
+            originY: 'center',
+            selectable: true,
+            hoverCursor: 'pointer',
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false,
+            perPixelTargetFind: true
+        });
+
+        element.tickButton = tickButton;
+        canvas.add(tickButton);
+    });
+
     var newPoint = new fabric.Circle({
         left: element.left,
         top: element.top - Math.sqrt(3) * (radius - border / 2) / 2,
@@ -564,6 +593,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
 
     canvas.add(element);
     canvas.add(newPoint);
+    element.bringForward();
     newPoint.bringForward();
     element.newPoint = newPoint;
     newPoint.master = element;
@@ -654,6 +684,7 @@ function addNewCircle(name, type, index, left, top, datatext){
     });
 
     canvas.add(newPoint);
+    element.bringForward();
     newPoint.bringForward();
     element.newPoint = newPoint;
     newPoint.master = element;

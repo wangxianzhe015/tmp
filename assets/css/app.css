@@ -876,7 +876,6 @@ textarea.form-control{
     vertical-align: top;
     display: none;
 }
-
 /* Progress Bar */
 .progress {
     background: rgba(255, 255, 255, 0.08) none repeat scroll 0% 0%;
@@ -1279,8 +1278,8 @@ textarea.default-textarea{
     z-index: 1001;
 }
 #right-sidebar{
-    width: 24px;
-    padding: 13px;
+    width: 44px;
+    padding: 0;
     height: 100%;
     position: fixed;
     right: -50px;
@@ -1290,6 +1289,9 @@ textarea.default-textarea{
 }
 .icon-button{
     cursor: pointer;
+    width: 24px;
+    height: 24px;
+    padding: 10px;
 }
 .icon-button:hover{
     background-color: #333333;
@@ -1298,9 +1300,6 @@ textarea.default-textarea{
     display: block;
     transform: scaleY(-1);
     position: relative;
-    width: 24px;
-    height: 24px;
-    padding: 10px;
 }
 #left-sidebar .icon-button#back-button{
     position: absolute;

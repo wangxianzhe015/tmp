@@ -76,6 +76,8 @@ function init(){
     drawGrid();
     initHandlers();
 
+    addHurdStyle();
+
     addBrowseButton();
     addButtons();
     addSearchButton();
