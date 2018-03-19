@@ -1327,7 +1327,7 @@ function replacePolyWithImage(element, url){
 function toggleElements(){
     var visible = elementsStatus=='show';
     canvas.forEachObject(function(el){
-        if (el.class == 'element' || el.class == 'group'){
+        if (el.class == 'element' || el.class == 'bezier-start-point' || el.class == 'bezier-end-point' || el.class == 'new-bezier-point' || el.class == 'b-point' || el.class == 'group' || el.class == 'element-tick-button'){
             el.setVisible(visible);
         }
     });
