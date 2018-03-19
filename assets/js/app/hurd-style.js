@@ -10,7 +10,7 @@ function addHurdStyle(){
         "Lorem Ipsum is simply dummy text of the \n" +
         "printing and typesetting industry. Lorem Ipsum \n" +
         "has been the industrys standard dummy text \n" +
-        "ever since the 1500s\n";
+        "ever since the 1500s";
     var vLine1 = new fabric.Line([150, 0, 150, canvas.height], {
         fill: '',
         stroke: '#DDD',
@@ -79,41 +79,104 @@ function addHurdStyle(){
 
     var text1 = new fabric.IText(dummyText, {
         fontSize: 12,
-        left: 300,
-        top: 200,
-        selectable: false,
+        left: 10,
+        top: 10,
+        selectable: true,
         //originX: 'center',
         //originY: 'center',
         lineHeight: 1,
         fill: 'white',
+        opacity: .8,
         fontFamily: 'VagRounded',
         fontWeight: 'bold'
     });
 
+    var backRect1 = new fabric.Rect({
+        top: 0,
+        left: 0,
+        width: text1.width + 20,
+        height: text1.height + 20,
+        rx: 5,
+        ry: 5,
+        fill: '#333',
+        selectable: false,
+        //strokeWidth: 1,
+        //stroke: '#EEE',
+        opacity:.4
+    });
+
+    var textBox1 = new fabric.Group([text1, backRect1], {
+        left: 300,
+        top: 200,
+        selectable: false
+    });
+
     var text2 = new fabric.IText(dummyText, {
         fontSize: 10,
-        left: 200,
-        top: 300,
+        left: 10,
+        top: 10,
         selectable: false,
         //originX: 'center',
         //originY: 'center',
         lineHeight: 1,
         fill: 'white',
+        opacity: .6,
         fontFamily: 'SanFrancisco',
         fontWeight: 'bold'
     });
 
-    var text3 = new fabric.IText(dummyText, {
-        fontSize: 10,
+    var backRect2 = new fabric.Rect({
+        top: 0,
+        left: 0,
+        width: text2.width + 20,
+        height: text2.height + 20,
+        rx: 5,
+        ry: 5,
+        fill: '#333',
+        selectable: false,
+        //strokeWidth: 1,
+        //stroke: '#EEE',
+        opacity:.4
+    });
+
+    var textBox2 = new fabric.Group([text2, backRect2], {
         left: 200,
         top: 300,
+        selectable: false
+    });
+
+    var text3 = new fabric.IText(dummyText, {
+        fontSize: 8,
+        left: 10,
+        top: 10,
         selectable: false,
         //originX: 'center',
         //originY: 'center',
         lineHeight: 1,
         fill: 'white',
+        opacity: .5,
         fontFamily: 'SanFrancisco',
         fontWeight: 'bold'
+    });
+
+    var backRect3 = new fabric.Rect({
+        top: 0,
+        left: 0,
+        width: text3.width + 20,
+        height: text3.height + 20,
+        rx: 5,
+        ry: 5,
+        fill: '#333',
+        selectable: false,
+        //strokeWidth: 1,
+        //stroke: '#EEE',
+        opacity:.4
+    });
+
+    var textBox3 = new fabric.Group([text3, backRect3], {
+        left: 230,
+        top: 100,
+        selectable: false
     });
 
     var rect1 = new fabric.Rect({
@@ -253,12 +316,9 @@ function addHurdStyle(){
     canvas.add(hLine1);
     hLine1.sendToBack();
 
-    canvas.add(text1);
-    canvas.add(text2);
-    canvas.add(text3);
-    text1.sendToBack();
-    text2.sendToBack();
-    text3.sendToBack();
+    canvas.add(textBox3);
+    canvas.add(textBox2);
+    canvas.add(textBox1);
 
     canvas.add(rect1);
     canvas.add(rect2);
