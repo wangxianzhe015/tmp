@@ -48,12 +48,25 @@ function clusterElements(key){
                     left: offsetToMove[obj.id].x
                 }, {
                     duration: 2000,
-                    onChange: canvas.renderAll.bind(canvas),
+                    onChange: function(){
+                        obj.lines.forEach(function(line){
+                            adjustLine(line);
+                        });
+                        canvas.renderAll.bind(canvas)
+                    },
                     easing: fabric.util.ease.easeOutCirc
                 });
                 obj.newPoint.animate({
-                    top: offsetToMove[obj.id].y - Math.sqrt(3) * (radius - border / 2) / 2,
+                    top: offsetToMove[obj.id].y - obj.scaleX * Math.sqrt(3) * (radius - border / 2) / 2,
                     left: offsetToMove[obj.id].x
+                }, {
+                    duration: 2000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
+                obj.tickButton.animate({
+                    top: offsetToMove[obj.id].y - obj.scaleX * Math.sqrt(3) * (radius - border / 2) / 2,
+                    left: offsetToMove[obj.id].x + obj.scaleX * radius
                 }, {
                     duration: 2000,
                     onChange: canvas.renderAll.bind(canvas),
@@ -66,7 +79,7 @@ function clusterElements(key){
                     cluster: ''
                 }).setCoords();
                 obj.newPoint.set({
-                    top: offsetToMove[obj.id].y - Math.sqrt(3) * (radius - border / 2) / 2,
+                    top: offsetToMove[obj.id].y - obj.scaleX * Math.sqrt(3) * (radius - border / 2) / 2,
                     left: offsetToMove[obj.id].x
                 }).setCoords();
             }

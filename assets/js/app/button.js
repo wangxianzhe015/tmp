@@ -188,14 +188,14 @@ function addTweenButton(){
                     top: top - Math.sqrt(3) * (radius - border / 2) / 4
                 }, {
                     duration: 1000,
-                    onChange: canvas.renderAll.bind(canvas),
+                    onChange: function(){
+                        obj.lines.forEach(function(line){
+                            adjustLine(line);
+                        });
+                        canvas.renderAll.bind(canvas);
+                    },
                     easing: fabric.util.ease.easeOutCirc
                 });
-                setTimeout(function(){
-                    obj.lines.forEach(function(line){
-                        adjustLine(line);
-                    });
-                }, 1000);
             }
         });
         removeImageTools(true);

@@ -179,6 +179,74 @@ function addHurdStyle(){
         selectable: false
     });
 
+    var text4 = new fabric.IText(dummyText, {
+        fontSize: 8,
+        left: 10,
+        top: 10,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        opacity: .5,
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var topLine1 = new fabric.Line([0, 0, text4.width + 20, 0], {
+        selectable: false,
+        strokeWidth: 1,
+        stroke: '#EEE',
+        opacity:.4
+    });
+
+    var bottomLine1 = new fabric.Line([0, text4.height + 20, text4.width + 20, text4.height + 20], {
+        selectable: false,
+        strokeWidth: 1,
+        stroke: '#EEE',
+        opacity:.4
+    });
+
+    var textBox4 = new fabric.Group([text4, topLine1, bottomLine1], {
+        left: 980,
+        top: 300,
+        selectable: false
+    });
+
+    var text5 = new fabric.IText(dummyText, {
+        fontSize: 8,
+        left: 10,
+        top: 10,
+        selectable: false,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        opacity: .5,
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var topLine2 = new fabric.Line([0, 0, text5.width + 20, 0], {
+        selectable: false,
+        strokeWidth: 1,
+        stroke: '#EEE',
+        opacity:.4
+    });
+
+    var bottomLine2 = new fabric.Line([0, text5.height + 20, text5.width + 20, text5.height + 20], {
+        selectable: false,
+        strokeWidth: 1,
+        stroke: '#EEE',
+        opacity:.4
+    });
+
+    var textBox5 = new fabric.Group([text5, topLine2, bottomLine2], {
+        left: 980,
+        top: 330 + textBox4.height,
+        selectable: false
+    });
+
     var rect1 = new fabric.Rect({
         top: 400,
         left: 1000,
@@ -302,36 +370,53 @@ function addHurdStyle(){
         strokeDashArray: [5, 5]
     });
 
-    canvas.add(vLine1);
-    canvas.add(vLine2);
-    canvas.add(vLine3);
-    canvas.add(vLine4);
-    canvas.add(vLine5);
-    vLine1.sendToBack();
-    vLine2.sendToBack();
-    vLine3.sendToBack();
-    vLine4.sendToBack();
-    vLine5.sendToBack();
+    addCrosshairLine("vertical", 400);
+    addCrosshairLine("horizontal", 550);
 
+    canvas.add(vLine1, vLine2, vLine3, vLine4, vLine5);
     canvas.add(hLine1);
-    hLine1.sendToBack();
-
-    canvas.add(textBox3);
-    canvas.add(textBox2);
-    canvas.add(textBox1);
-
-    canvas.add(rect1);
-    canvas.add(rect2);
-    rect1.sendToBack();
-    rect2.sendToBack();
-
+    canvas.add(textBox5, textBox4, textBox3, textBox2, textBox1);
+    canvas.add(rect1, rect2);
     canvas.add(tickBox);
     canvas.add(boundary);
-
-    canvas.add(dashedBox1);
-    canvas.add(dashedBox2);
-    dashedBox1.sendToBack();
-    dashedBox2.sendToBack();
+    canvas.add(dashedBox1, dashedBox2);
 
     canvas.renderAll();
+}
+
+function addCrosshairLine(type, offset){
+    var crosshairLine = new fabric.IText("+", {
+        fontSize: 12,
+        selectable: false,
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    if (type == "vertical"){
+        crosshairLine.set({
+            top: 0,
+            left: offset,
+            angle: 90
+        });
+    } else {
+        crosshairLine.set({
+            left: 0,
+            top: offset
+        });
+    }
+
+    var count = 0;
+    if (type == "vertical"){
+        count = canvas.height / crosshairLine.width;
+    } else {
+        count = canvas.width / crosshairLine.width;
+    }
+
+    for (var i = 0; i < count; i ++){
+        crosshairLine.text = crosshairLine.text + " +";
+    }
+
+    canvas.add(crosshairLine);
 }

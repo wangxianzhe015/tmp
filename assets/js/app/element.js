@@ -895,7 +895,7 @@ function addElements(newElements){
                         collapseGroup(newgroup);
                     }
                 },
-                ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'cornerSize', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'cluster', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects']
+                ['class', 'id', 'category', 'status', 'cornerStyle', 'cornerColor', 'cornerSize', 'isParent', 'datatext', 'progress', 'tags', 'comments', 'cluster', 'checklistLabel', 'checklistCheckbox', 'position', 'beatTab', 'beatTabText', 'jsonObjects', 'tickButton']
             );
         } else if (object.class == 'canvas'){
             document.body.className = object.backgroundColor;
@@ -1000,7 +1000,8 @@ function cloneElement(object){
         checklistLabel: object.checklistLabel,
         checklistCheckbox: object.checklistCheckbox,
         jsonObjects: object.jsonObjects,
-        datatext: object.datatext
+        datatext: object.datatext,
+        lines: object.lines
     });
     if (object.cluster != undefined) element.cluster = object.cluster;
 
@@ -1018,10 +1019,21 @@ function cloneElement(object){
     canvas.add(element);
 
     var newPoint = fabric.util.object.clone(object.newPoint);
-    canvas.add(newPoint);
+    newPoint.set({
+        left: element.left,
+        top: element.top - element.scaleX * Math.sqrt(3) * (radius - border / 2) / 2,
+        master: element
+    });
+    var tickButton = fabric.util.object.clone(object.tickButton);
+    tickButton.set({
+        left: element.left + element.scaleX * radius,
+        top: element.top - element.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+    });
+    canvas.add(newPoint, tickButton);
     canvas.bringForward(newPoint);
 
     element.newPoint = newPoint;
+    element.tickButton = tickButton;
 
     elementsInfo[newID] = {
         x: element.left,
