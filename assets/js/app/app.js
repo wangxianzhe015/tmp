@@ -9,6 +9,7 @@ var borderColor = "rgba(13,13,13,0)";
 var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
 var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
+var nextAction = '';
 
 var resizable = false;
 var rotatable = true;
@@ -42,7 +43,7 @@ var regexTimer,regexSearchCount=0;
 
 var topbar = null, leftbar = null, rightbar = null;
 
-var addingTextCell = false, textCellScrollTimer = 0;
+var textCellScrollTimer = 0;
 
 var foreignText = "输入文本！";
 
@@ -50,7 +51,7 @@ var rings = [], selectedRing = null, positionBeforeRing = null;
 
 var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
-var tickBoxes = [], addingTickBox = false;
+var tickBoxes = [];
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({

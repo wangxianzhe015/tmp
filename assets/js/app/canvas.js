@@ -189,10 +189,13 @@ canvas.on('mouse:down',function(e){
                 }
             } else if (object.id == 'add-new-text') {
                 showNotification("Click where to put text cell.");
-                addingTextCell = true;
+                nextAction = 'add-text-cell'
             } else if (object.id == 'add-new-box') {
                 showNotification("Drag where to put text box.");
-                addingTickBox = true;
+                nextAction = 'add-tickbox';
+            } else if (object.id == 'add-new-line') {
+                showNotification("Point where to put line and direction.");
+                nextAction = 'add-new-line';
             }
         } else if (object.class == 'element') {
             if (resizable){
@@ -391,7 +394,6 @@ canvas.on('mouse:down',function(e){
             });
             newBezierLine.startElement = e.target.master;
             canvas.add(newBezierLine);
-            canvas.discardActiveObject();
             canvas.renderAll();
         } else if (object.class == "bezier-start-point" || object.class == "bezier-end-point") {
             rmBezierLine = object.master;
@@ -513,9 +515,9 @@ canvas.on('mouse:down',function(e){
             }
         }
 
-        if (addingTextCell){
+        if (nextAction == 'add-text-cell'){
             addTextTooltip(downPoint.x, downPoint.y);
-            addingTextCell = false;
+            nextAction = '';
         }
     }
 });
@@ -538,13 +540,18 @@ canvas.on('mouse:up',function(e){
 
     if (mouseDrag && e.target == null){
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
-        if (addingTickBox){
+        if (nextAction == 'add-tickbox'){
             var x1 = downPoint.x > upPoint.x ? upPoint.x : downPoint.x;
             var x2 = downPoint.x < upPoint.x ? upPoint.x : downPoint.x;
             var y1 = downPoint.y > upPoint.y ? upPoint.y : downPoint.y;
             var y2 = downPoint.y < upPoint.y ? upPoint.y : downPoint.y;
             drawTickBox(x1, y1, x2, y2);
-            addingTickBox = false;
+            nextAction = '';
+            return;
+        } else if (nextAction == 'add-new-line') {
+            var offsetX = Math.abs(upPoint.x - downPoint.x), offsetY = Math.abs(upPoint.y - downPoint.y), direction = offsetX > offsetY ? "horizontal" : "vertical";
+            addCrosshairLine(direction, offsetX > offsetY ? downPoint.y : downPoint.x);
+            nextAction = '';
             return;
         }
         if (canvas.getActiveGroup() == null && canvas.getActiveObject() == null) {
@@ -700,6 +707,9 @@ canvas.on('before:selection:cleared', function(e){
             });
             e.target.selectable = false;
         }
+    } else if (e.target != null && e.target.class == 'boundary-text') {
+        e.target.set("opacity", 0);
+        canvas.renderAll();
     }
 });
 
@@ -716,9 +726,22 @@ canvas.on('object:selected', function(e){
             });
             e.target.control.selectable = true;
         }
+    } else if (e.target.class == "boundary-text") {
+        e.target.set("opacity", 1);
+        canvas.renderAll();
     } else if (e.target.class != "group"){
         obj = canvas.getActiveGroup();
         if (obj != null){
+            var isElementGroup = true;
+            obj._objects.forEach(function(_obj){
+                if (_obj.class != "element") {
+                    isElementGroup = false;
+                }
+            });
+            if (!isElementGroup) {
+                canvas.deactivateAll();
+                return;
+            }
             obj.setControlsVisibility({
                 mt: false,
                 mb: false,
@@ -767,7 +790,7 @@ canvas.on('object:moving', function(e){
         canvas.renderAll();
     }
     if (e.target.class == 'element') {
-        var pos = nearPosition(e.e.offsetX, e.e.offsetY);
+        var pos = nearPosition(e.e.offsetX, e.e.offsetY), isInTickbox = false;
         if (snapToGrid) {
             e.target.set({
                 left: pos.left,
@@ -785,16 +808,19 @@ canvas.on('object:moving', function(e){
 
         tickBoxes.forEach(function(tickBox){
             if (e.target.tickButton.checked && !(e.target.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(e.target))){
-                e.target.set({
-                    scaleX: 1,
-                    scaleY: 1
-                });
-                e.target.tickButton.set({
-                    scaleX: 1,
-                    scaleY: 1
-                });
+                isInTickbox = true;
             }
         });
+        if (isInTickbox){
+            e.target.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+            e.target.tickButton.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+        }
 
         e.target.newPoint.set({
             left: e.target.left,
@@ -884,6 +910,10 @@ canvas.on('object:scaling', function(e){
         e.target.setCoords();
         canvas.renderAll();
     }
+});
+
+canvas.on('selection:created', function(e){
+    console.log(e);
 });
 
 canvas.on('selection:cleared', function(e){

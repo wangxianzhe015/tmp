@@ -333,6 +333,7 @@ function addAddButtons(left, top) {
     var circleImgSrc = "./assets/images/icons/circle-24.png";
     var textImgSrc = "./assets/images/icons/text-24.png";
     var boxImgSrc = "./assets/images/icons/box-24.png";
+    var lineImgSrc = "./assets/images/icons/line-24.png";
 
     fabric.Image.fromURL(plusImgSrc, function(oImg) {
         var rect = new fabric.Rect({
@@ -456,6 +457,40 @@ function addAddButtons(left, top) {
             class: 'button',
             isTemporary: true,
             category: 'box',
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        canvas.add(addButton);
+        setTimeout(function(){
+            canvas.remove(addButton);
+            canvas.renderAll();
+        }, 2000);
+    });
+
+    fabric.Image.fromURL(lineImgSrc, function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var addButton = new fabric.Group([rect, oImg], {
+            left: left + 160,
+            top: top,
+            id: 'add-new-line',
+            class: 'button',
+            isTemporary: true,
+            category: 'line',
             originX: 'center',
             originY: 'center',
             selectable: false,
