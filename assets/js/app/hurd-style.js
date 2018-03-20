@@ -306,15 +306,54 @@ function addHurdStyle(){
 }
 
 function addCrosshairLine(type, offset){
-    var crosshairLine = new fabric.IText("+", {
+    var unitWidth = parseInt(new fabric.Text("+ ", {
         fontSize: 12,
-        selectable: true,
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    }).width);
+    var count = 0;
+    if (type == "vertical"){
+        count = canvas.height / unitWidth;
+    } else {
+        count = canvas.width / unitWidth;
+    }
+
+    var text = "";
+    for (var i = 0; i < count; i ++){
+        text += "+ ";
+    }
+
+    var crosshairLine = new fabric.Text(text, {
+        fontSize: 12,
+        selectable: false,
+        hasRotatingPoint: false,
         class: "crosshair-line",
         hoverCursor: "pointer",
         lineHeight: 1,
         fill: 'white',
         fontFamily: 'VagRounded',
         fontWeight: 'bold'
+    });
+    crosshairLine.setControlsVisibility({
+        mt: true,
+        mb: true,
+        ml: true,
+        mr: true,
+        tr: false,
+        tl: false,
+        br: false,
+        bl: false
+    });
+
+    crosshairLine.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: true,
+        mr: true,
+        tr: false,
+        tl: false,
+        br: false,
+        bl: false
     });
 
     if (type == "vertical"){
@@ -330,17 +369,7 @@ function addCrosshairLine(type, offset){
         });
     }
 
-    var count = 0;
-    if (type == "vertical"){
-        count = canvas.height / crosshairLine.width;
-    } else {
-        count = canvas.width / crosshairLine.width;
-    }
-
-    for (var i = 0; i < count; i ++){
-        crosshairLine.text = crosshairLine.text + " +";
-    }
-
+    crosshairLine.setCoords();
     canvas.add(crosshairLine);
 }
 

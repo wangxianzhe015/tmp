@@ -56,6 +56,14 @@ canvas.on('mouse:over', function(e) {
     } else if (e.target != null && e.target.class == "dot") {
         removeDotTooltip();
         addDotTooltip(e.target);
+    } else if (e.target != null && e.target.class == "crosshair-line") {
+        targetHudLine = e.target;
+        targetHudLine.timer = setTimeout(function(){
+            if (targetHudLine != null) {
+                targetHudLine.set("selectable", true);
+                canvas.setActiveObject(targetHudLine);
+            }
+        }, 2000);
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -70,6 +78,10 @@ canvas.on('mouse:out', function(e){
         if (newBezierLine != null){
             newBezierLine.set("stroke", "gray");
         }
+    } else if (e.target != null && e.target.class == "crosshair-line") {
+        clearTimeout(targetHudLine.timer);
+        targetHudLine.set("selectable", false);
+        canvas.deactivateAll();
     }
     canvas.renderAll();
 });
@@ -196,6 +208,15 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'add-new-line') {
                 showNotification("Point where to put line and direction.");
                 nextAction = 'add-new-line';
+            } else if (object.id == 'change-hud-line') {
+                if (targetHudLine != null){
+                    var text = targetHudLine.text;
+                    if (text.indexOf("+") > -1){
+                        targetHudLine.text = text.replace(/[+\s]/g, "--");
+                    } else {
+                        targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
+                    }
+                }
             }
         } else if (object.class == 'element') {
             if (resizable){
@@ -482,8 +503,8 @@ canvas.on('mouse:down',function(e){
                 $(".bezier-line-control-btn").remove();
                 rmBezierLine = null;
             }, 2000);
-        } else if (object.class == 'element-tick-button'){
-            if (object.checked){
+        } else if (object.class == 'element-tick-button') {
+            if (object.checked) {
                 object._objects[1].setSrc("assets/images/icons/check-o-gray-16.png");
                 object._objects[1].set({width: 16, height: 16, angle: 0});
                 object.checked = false;
@@ -492,6 +513,39 @@ canvas.on('mouse:down',function(e){
                 object._objects[1].set({width: 16, height: 16, angle: 0});
                 object.checked = true;
             }
+        } else if (object.class == 'crosshair-line') {
+            fabric.Image.fromURL("./assets/images/icons/plug-24.png", function(oImg) {
+                var rect = new fabric.Rect({
+                    left: 0,
+                    top: 0,
+                    width: buttonSize,
+                    height: buttonSize,
+                    fill: buttonColor,
+                    strokeWidth: 2
+                });
+                // scale image down, and flip it, before adding it onto canvas
+                oImg.set({left: 0, top: 0, angle: 0});
+                var btn = new fabric.Group([rect, oImg], {
+                    left: downPoint.x + 30,
+                    top: downPoint.y - 30,
+                    id: 'change-hud-line',
+                    class: 'button',
+                    isTemporary: true,
+                    originX: 'center',
+                    originY: 'center',
+                    selectable: false,
+                    draggable: false,
+                    hasBorders: false,
+                    hasControls: false,
+                    hasRotatingPoint: false
+                });
+
+                canvas.add(btn);
+                setTimeout(function(){
+                    canvas.remove(btn);
+                    canvas.renderAll();
+                }, 2000);
+            });
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;

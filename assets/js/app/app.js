@@ -53,6 +53,8 @@ var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
 var tickBoxes = [];
 
+var targetHudLine = null;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false

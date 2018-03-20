@@ -171,7 +171,7 @@ function getWrappedCanvasText(t, canvas, maxW, maxH, justify){
     var currentLine = '';
     var breakLineCount = 0;
 
-    n = 0;
+    var n = 0;
     while (n < words.length) {
         var isNewLine = currentLine == "";
         var testOverlap = currentLine + ' ' + words[n];
