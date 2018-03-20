@@ -157,6 +157,12 @@ function addTweenButton(){
         src: "./assets/images/icons/sign-in-24.png",
         class: "icon-button"
     }).on("click", function(){
+        var tickBox = null;
+        canvas.forEachObject(function(obj){
+            if (obj.class == "tickbox"){
+                tickBox = obj;
+            }
+        });
         if (tickBox == null) return false;
         var top, left;
         canvas.forEachObject(function(obj){
@@ -326,6 +332,7 @@ function addAddButtons(left, top) {
     var plusImgSrc = "./assets/images/icons/plus-24.png";
     var circleImgSrc = "./assets/images/icons/circle-24.png";
     var textImgSrc = "./assets/images/icons/text-24.png";
+    var boxImgSrc = "./assets/images/icons/box-24.png";
 
     fabric.Image.fromURL(plusImgSrc, function(oImg) {
         var rect = new fabric.Rect({
@@ -415,6 +422,40 @@ function addAddButtons(left, top) {
             class: 'button',
             isTemporary: true,
             category: 'text',
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        canvas.add(addButton);
+        setTimeout(function(){
+            canvas.remove(addButton);
+            canvas.renderAll();
+        }, 2000);
+    });
+
+    fabric.Image.fromURL(boxImgSrc, function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var addButton = new fabric.Group([rect, oImg], {
+            left: left + 120,
+            top: top,
+            id: 'add-new-box',
+            class: 'button',
+            isTemporary: true,
+            category: 'box',
             originX: 'center',
             originY: 'center',
             selectable: false,

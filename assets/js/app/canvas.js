@@ -142,6 +142,30 @@ canvas.on('mouse:move',function(moveEventOptions){
     } else {
         setTimeout(removeImageTools,500);
     }
+    var activeObject = canvas.getActiveObject();
+    if (activeObject != null && activeObject.class == "tickbox" && mouseDrag) {
+        activeObject.topText.set({
+            left: activeObject.left,
+            top: activeObject.top - 15
+        });
+        activeObject.rightText.set({
+            left: activeObject.left + activeObject.scaleX * activeObject.width + 15,
+            top: activeObject.top
+        });
+        activeObject.leftText.set({
+            left: activeObject.left - 15,
+            top: activeObject.top + activeObject.scaleY * activeObject.height
+        });
+        activeObject.bottomText.set({
+            left: activeObject.left - 15,
+            top: activeObject.top + activeObject.scaleY * activeObject.height + 5
+        });
+        activeObject.topText.setCoords();
+        activeObject.rightText.setCoords();
+        activeObject.leftText.setCoords();
+        activeObject.bottomText.setCoords();
+        canvas.renderAll();
+    }
 });
 
 canvas.on('mouse:down',function(e){
@@ -166,8 +190,11 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'add-new-text') {
                 showNotification("Click where to put text cell.");
                 addingTextCell = true;
+            } else if (object.id == 'add-new-box') {
+                showNotification("Drag where to put text box.");
+                addingTickBox = true;
             }
-        }else if (object.class == 'element') {
+        } else if (object.class == 'element') {
             if (resizable){
                 object.setControlsVisibility({
                     mt: true,
@@ -511,6 +538,15 @@ canvas.on('mouse:up',function(e){
 
     if (mouseDrag && e.target == null){
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
+        if (addingTickBox){
+            var x1 = downPoint.x > upPoint.x ? upPoint.x : downPoint.x;
+            var x2 = downPoint.x < upPoint.x ? upPoint.x : downPoint.x;
+            var y1 = downPoint.y > upPoint.y ? upPoint.y : downPoint.y;
+            var y2 = downPoint.y < upPoint.y ? upPoint.y : downPoint.y;
+            drawTickBox(x1, y1, x2, y2);
+            addingTickBox = false;
+            return;
+        }
         if (canvas.getActiveGroup() == null && canvas.getActiveObject() == null) {
             if (Math.abs(downPoint.x - upPoint.x) < 20 && Math.abs(downPoint.y - upPoint.y) < 20) {
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
@@ -638,10 +674,10 @@ canvas.on('mouse:up',function(e){
 });
 
 canvas.on('mouse:dblclick', function (e) {
-    return false;
     var object = e.target;
     if (object != null) {
         if (object.class == 'element') {
+            return;
             targetElement = object;
             editElement();
         }
@@ -747,28 +783,20 @@ canvas.on('object:moving', function(e){
         elementsInfo[e.target.id].x = e.target.left;
         elementsInfo[e.target.id].y = e.target.top;
 
-        if (e.target.tickButton.checked && !(e.target.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(e.target))){
-            e.target.set({
-                scaleX: 1,
-                scaleY: 1
-            });
-            e.target.tickButton.set({
-                scaleX: 1,
-                scaleY: 1
-            });
-            //e.target.animate({
-            //    scaleX: 1,
-            //    scaleY: 1
-            //}, {
-            //    duration: 1000,
-            //    onChange: canvas.renderAll.bind(canvas),
-            //    easing: fabric.util.ease.easeOutCirc
-            //});
-        }
+        tickBoxes.forEach(function(tickBox){
+            if (e.target.tickButton.checked && !(e.target.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(e.target))){
+                e.target.set({
+                    scaleX: 1,
+                    scaleY: 1
+                });
+                e.target.tickButton.set({
+                    scaleX: 1,
+                    scaleY: 1
+                });
+            }
+        });
 
         e.target.newPoint.set({
-            //left: e.target.newPoint.left + e.e.movementX,
-            //top: e.target.newPoint.top + e.e.movementY
             left: e.target.left,
             top: e.target.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         });
@@ -827,6 +855,37 @@ canvas.on('object:moving', function(e){
     removeImageTools(true);
 });
 
+canvas.on('object:scaling', function(e){
+    if (e.target.class == "tickbox") {
+        e.target.set({
+            scaleX: 1,
+            scaleY: 1
+        });
+        if (e.e.pageX < e.target.left + e.target.width / 4) {
+            e.target.set({
+                left: e.e.pageX,
+                width: e.target.width - e.e.movementX
+            });
+        } else if (e.e.pageX > e.target.left + 3 * e.target.width / 4) {
+            e.target.set({
+                width: e.e.pageX - e.target.left
+            })
+        }
+        if (e.e.pageY < e.target.top + e.target.height / 4) {
+            e.target.set({
+                top: e.e.pageY,
+                height: e.target.height - e.e.movementY
+            });
+        } else if (e.e.pageY > e.target.top + 3 * e.target.height / 4) {
+            e.target.set({
+                height: e.e.pageY - e.target.top
+            })
+        }
+        e.target.setCoords();
+        canvas.renderAll();
+    }
+});
+
 canvas.on('selection:cleared', function(e){
     if (threeDots != null){
         removeThreeDots();
@@ -845,6 +904,20 @@ canvas.on('selection:cleared', function(e){
         });
         e.target.hasRotatingPoint = false;
         canvas.renderAll();
+    }
+});
+
+canvas.on('text:changed', function(e){
+    if (e.target.class == "boundary-text"){
+        var text = e.target.text, newText = "";
+        text.split("\n").forEach(function(txt, i){
+            if (i > 0) {
+                newText = newText + " " + txt;
+            } else {
+                newText = txt;
+            }
+        });
+        e.target.text = newText;
     }
 });
 

@@ -271,83 +271,6 @@ function addHurdStyle(){
         opacity:.2
     });
 
-    tickBox = new fabric.Rect({
-        top: 200,
-        left: 600,
-        width: 200,
-        height: 200,
-        selectable: false,
-        fill: 'transparent',
-        strokeWidth: 1,
-        stroke: '#EEE',
-        strokeDashArray: [1, 2]
-    });
-
-    var boundaryText1 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
-        fontSize: 10,
-        left: 20,
-        top: 0,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var boundaryText2 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
-        fontSize: 10,
-        left: 230,
-        top: 20,
-        angle: 90,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var boundaryText3 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
-        fontSize: 10,
-        left: 0,
-        top: 230,
-        angle: -90,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var boundaryText4 = new fabric.IText("Lorem Ipsum is simply dummy text of the printing.", {
-        fontSize: 10,
-        left: 20,
-        top: 220,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var boundary = new fabric.Group([boundaryText1, boundaryText2, boundaryText3, boundaryText4], {
-        left: 585,
-        top: 185,
-        selectable: false,
-        draggable: false,
-        hasBorders: false,
-        hasControls: false,
-        hasRotatingPoint: false,
-        perPixelTargetFind: true
-    });
-
     var dashedBox1 = new fabric.Rect({
         top: 520,
         left: 500,
@@ -377,8 +300,6 @@ function addHurdStyle(){
     canvas.add(hLine1);
     canvas.add(textBox5, textBox4, textBox3, textBox2, textBox1);
     canvas.add(rect1, rect2);
-    canvas.add(tickBox);
-    canvas.add(boundary);
     canvas.add(dashedBox1, dashedBox2);
 
     canvas.renderAll();
@@ -387,7 +308,9 @@ function addHurdStyle(){
 function addCrosshairLine(type, offset){
     var crosshairLine = new fabric.IText("+", {
         fontSize: 12,
-        selectable: false,
+        selectable: true,
+        class: "crosshair-line",
+        hoverCursor: "pointer",
         lineHeight: 1,
         fill: 'white',
         fontFamily: 'VagRounded',
@@ -419,4 +342,111 @@ function addCrosshairLine(type, offset){
     }
 
     canvas.add(crosshairLine);
+}
+
+function drawTickBox(x1, y1, x2, y2){
+    var tickBox = new fabric.Rect({
+        left: x1,
+        top: y1,
+        width: x2 - x1,
+        height: y2 - y1,
+        selectable: true,
+        hasRotatingPoint: false,
+        class: "tickbox",
+        fill: 'transparent',
+        strokeWidth: 1,
+        stroke: '#EEE',
+        strokeDashArray: [1, 2]
+    });
+
+    var boundaryText1 = new fabric.IText("This is top boundary text. Double-click and edit text.", {
+        fontSize: 10,
+        left: x1,
+        top: y1 - 15,
+        width: tickBox.width + 20,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: true,
+        class: 'boundary-text',
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText2 = new fabric.IText("This is right boundary text. Double-click and edit text.", {
+        fontSize: 10,
+        left: x2 + 15,
+        top: y1,
+        angle: 90,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: true,
+        class: 'boundary-text',
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText3 = new fabric.IText("This is left boundary text. Double-click and edit text.", {
+        fontSize: 10,
+        left: x1 - 15,
+        top: y2,
+        angle: -90,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: true,
+        class: 'boundary-text',
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText4 = new fabric.IText("This is bottom boundary text. Double-click and edit text.", {
+        fontSize: 10,
+        left: x1 - 15,
+        top: y2 + 5,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: true,
+        class: 'boundary-text',
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    tickBox.set({
+        topText: boundaryText1,
+        rightText: boundaryText2,
+        leftText: boundaryText3,
+        bottomText: boundaryText4
+    });
+
+    tickBoxes.push(tickBox);
+
+    canvas.add(boundaryText1, boundaryText2, boundaryText3, boundaryText4, tickBox);
+    tickBox.sendToBack();
 }

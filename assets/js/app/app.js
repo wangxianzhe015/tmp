@@ -50,7 +50,7 @@ var rings = [], selectedRing = null, positionBeforeRing = null;
 
 var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
-var tickBox = null;
+var tickBoxes = [], addingTickBox = false;
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
