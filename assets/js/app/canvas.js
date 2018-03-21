@@ -210,11 +210,18 @@ canvas.on('mouse:down',function(e){
                 nextAction = 'add-new-line';
             } else if (object.id == 'change-hud-line') {
                 if (targetHudLine != null){
-                    var text = targetHudLine.text;
-                    if (text.indexOf("+") > -1){
-                        targetHudLine.text = text.replace(/[+\s]/g, "--");
+                    //var text = targetHudLine.text;
+                    //if (text.indexOf("+") > -1){
+                    //    targetHudLine.text = text.replace(/[+\s]/g, "--");
+                    //} else {
+                    //    targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
+                    //}
+                    if (targetHudLine._objects[0].opacity == 0) {
+                        targetHudLine._objects[0].opacity = 0.5;
+                        targetHudLine._objects[1].opacity = 0;
                     } else {
-                        targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
+                        targetHudLine._objects[0].opacity = 0;
+                        targetHudLine._objects[1].opacity = 0.5;
                     }
                 }
             }
@@ -514,6 +521,7 @@ canvas.on('mouse:down',function(e){
                 object.checked = true;
             }
         } else if (object.class == 'crosshair-line') {
+            if (canvas.getActiveObject() == object) return;
             fabric.Image.fromURL("./assets/images/icons/plug-24.png", function(oImg) {
                 var rect = new fabric.Rect({
                     left: 0,
@@ -919,6 +927,12 @@ canvas.on('object:moving', function(e){
             e.target.line.path[1][2] = e.target.top;
         }
         adjustLine(e.target.line);
+    } else if (e.target.class == "crosshair-line") {
+        if (e.target.category == "vertical") {
+            e.target.set("top", 0);
+        } else {
+            e.target.set("left", 0);
+        }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);

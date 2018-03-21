@@ -11,71 +11,6 @@ function addHurdStyle(){
         "printing and typesetting industry. Lorem Ipsum \n" +
         "has been the industrys standard dummy text \n" +
         "ever since the 1500s";
-    var vLine1 = new fabric.Line([150, 0, 150, canvas.height], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var vLine2 = new fabric.Line([180, 0, 180, canvas.height], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var vLine3 = new fabric.Line([210, 0, 210, canvas.height], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var vLine4 = new fabric.Line([900, 0, 900, canvas.height], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var vLine5 = new fabric.Line([950, 0, 950, canvas.height], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
-
-    var hLine1 = new fabric.Line([0, 500, canvas.width, 500], {
-        fill: '',
-        stroke: '#DDD',
-        strokeWidth: .5,
-        opacity: .5,
-        selectable: false,
-        class: "v-line",
-        objectCaching: false,
-        perPixelTargetFind: true
-    });
 
     var text1 = new fabric.IText(dummyText, {
         fontSize: 12,
@@ -293,11 +228,15 @@ function addHurdStyle(){
         strokeDashArray: [5, 5]
     });
 
+    addCrosshairLine("vertical", 150, "thin");
+    addCrosshairLine("vertical", 180, "thin");
+    addCrosshairLine("vertical", 210, "thin");
+    addCrosshairLine("vertical", 900, "thin");
+    addCrosshairLine("vertical", 950, "thin");
+    addCrosshairLine("horizontal", 500, "thin");
     addCrosshairLine("vertical", 400);
     addCrosshairLine("horizontal", 550);
 
-    canvas.add(vLine1, vLine2, vLine3, vLine4, vLine5);
-    canvas.add(hLine1);
     canvas.add(textBox5, textBox4, textBox3, textBox2, textBox1);
     canvas.add(rect1, rect2);
     canvas.add(dashedBox1, dashedBox2);
@@ -305,14 +244,16 @@ function addHurdStyle(){
     canvas.renderAll();
 }
 
-function addCrosshairLine(type, offset){
-    var unitWidth = parseInt(new fabric.Text("+ ", {
+function addCrosshairLine(direction, offset, type){
+    type = type==undefined?"cross":type;
+    var tempTextObj = new fabric.Text("+ ", {
         fontSize: 12,
         fontFamily: 'VagRounded',
         fontWeight: 'bold'
-    }).width);
+    });
+    var unitWidth = parseInt(tempTextObj.width), unitHeight = parseInt(tempTextObj.height);
     var count = 0;
-    if (type == "vertical"){
+    if (direction == "vertical"){
         count = canvas.height / unitWidth;
     } else {
         count = canvas.width / unitWidth;
@@ -323,17 +264,32 @@ function addCrosshairLine(type, offset){
         text += "+ ";
     }
 
-    var crosshairLine = new fabric.Text(text, {
+    var crosshairText = new fabric.Text(text, {
         fontSize: 12,
-        selectable: false,
-        hasRotatingPoint: false,
-        class: "crosshair-line",
-        hoverCursor: "pointer",
         lineHeight: 1,
         fill: 'white',
         fontFamily: 'VagRounded',
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        opacity: type=="cross"?0.5:0
     });
+
+    var thinLine = new fabric.Line([0, unitHeight / 2, direction=="vertical"?canvas.height:canvas.width, unitHeight / 2], {
+        fill: '',
+        stroke: '#DDD',
+        strokeWidth: .5,
+        opacity: type=="cross"?0:0.5,
+        selectable: false,
+        objectCaching: false,
+        perPixelTargetFind: true
+    });
+
+    var crosshairLine = new fabric.Group([crosshairText, thinLine], {
+        selectable: false,
+        hasRotatingPoint: false,
+        class: "crosshair-line",
+        hoverCursor: "pointer"
+    });
+
     crosshairLine.setControlsVisibility({
         mt: true,
         mb: true,
@@ -356,14 +312,16 @@ function addCrosshairLine(type, offset){
         bl: false
     });
 
-    if (type == "vertical"){
+    if (direction == "vertical"){
         crosshairLine.set({
+            category: "vertical",
             top: 0,
             left: offset,
             angle: 90
         });
     } else {
         crosshairLine.set({
+            category: "horizontal",
             left: 0,
             top: offset
         });
