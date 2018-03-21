@@ -209,20 +209,23 @@ canvas.on('mouse:down',function(e){
                 showNotification("Point where to put line and direction.");
                 nextAction = 'add-new-line';
             } else if (object.id == 'change-hud-line') {
-                if (targetHudLine != null){
+                var target = object.target;
+                if (target != null){
                     //var text = targetHudLine.text;
                     //if (text.indexOf("+") > -1){
                     //    targetHudLine.text = text.replace(/[+\s]/g, "--");
                     //} else {
                     //    targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
                     //}
-                    if (targetHudLine._objects[0].opacity == 0) {
-                        targetHudLine._objects[0].opacity = 0.5;
-                        targetHudLine._objects[1].opacity = 0;
+                    if (target._objects[0].opacity == 0) {
+                        target._objects[0].opacity = 0.5;
+                        target._objects[1].opacity = 0;
                     } else {
-                        targetHudLine._objects[0].opacity = 0;
-                        targetHudLine._objects[1].opacity = 0.5;
+                        target._objects[0].opacity = 0;
+                        target._objects[1].opacity = 0.5;
                     }
+                    canvas.remove(object);
+                    target.changeButton = null;
                 }
             }
         } else if (object.class == 'element') {
@@ -521,7 +524,7 @@ canvas.on('mouse:down',function(e){
                 object.checked = true;
             }
         } else if (object.class == 'crosshair-line') {
-            if (canvas.getActiveObject() == object) return;
+            if (canvas.getActiveObject() == object || targetHudLine.changeButton != null) return;
             fabric.Image.fromURL("./assets/images/icons/plug-24.png", function(oImg) {
                 var rect = new fabric.Rect({
                     left: 0,
@@ -548,9 +551,12 @@ canvas.on('mouse:down',function(e){
                     hasRotatingPoint: false
                 });
 
+                targetHudLine.changeButton = btn;
+                btn.target = targetHudLine;
                 canvas.add(btn);
                 setTimeout(function(){
                     canvas.remove(btn);
+                    btn.target.changeButton = null;
                     canvas.renderAll();
                 }, 2000);
             });
