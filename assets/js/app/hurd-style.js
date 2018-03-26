@@ -12,176 +12,6 @@ function addHurdStyle(){
         "has been the industrys standard dummy text \n" +
         "ever since the 1500s";
 
-    var text1 = new fabric.IText(dummyText, {
-        fontSize: 12,
-        left: 10,
-        top: 10,
-        selectable: true,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        opacity: .8,
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var backRect1 = new fabric.Rect({
-        top: 0,
-        left: 0,
-        width: text1.width + 20,
-        height: text1.height + 20,
-        rx: 5,
-        ry: 5,
-        fill: '#333',
-        selectable: false,
-        //strokeWidth: 1,
-        //stroke: '#EEE',
-        opacity:.4
-    });
-
-    var textBox1 = new fabric.Group([text1, backRect1], {
-        left: 300,
-        top: 200,
-        selectable: false
-    });
-
-    var text2 = new fabric.IText(dummyText, {
-        fontSize: 10,
-        left: 10,
-        top: 10,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        opacity: .6,
-        fontFamily: 'SanFrancisco',
-        fontWeight: 'bold'
-    });
-
-    var backRect2 = new fabric.Rect({
-        top: 0,
-        left: 0,
-        width: text2.width + 20,
-        height: text2.height + 20,
-        rx: 5,
-        ry: 5,
-        fill: '#333',
-        selectable: false,
-        //strokeWidth: 1,
-        //stroke: '#EEE',
-        opacity:.4
-    });
-
-    var textBox2 = new fabric.Group([text2, backRect2], {
-        left: 200,
-        top: 300,
-        selectable: false
-    });
-
-    var text3 = new fabric.IText(dummyText, {
-        fontSize: 8,
-        left: 10,
-        top: 10,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        opacity: .5,
-        fontFamily: 'SanFrancisco',
-        fontWeight: 'bold'
-    });
-
-    var backRect3 = new fabric.Rect({
-        top: 0,
-        left: 0,
-        width: text3.width + 20,
-        height: text3.height + 20,
-        rx: 5,
-        ry: 5,
-        fill: '#333',
-        selectable: false,
-        //strokeWidth: 1,
-        //stroke: '#EEE',
-        opacity:.4
-    });
-
-    var textBox3 = new fabric.Group([text3, backRect3], {
-        left: 230,
-        top: 100,
-        selectable: false
-    });
-
-    var text4 = new fabric.IText(dummyText, {
-        fontSize: 8,
-        left: 10,
-        top: 10,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        opacity: .5,
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var topLine1 = new fabric.Line([0, 0, text4.width + 20, 0], {
-        selectable: false,
-        strokeWidth: 1,
-        stroke: '#EEE',
-        opacity:.4
-    });
-
-    var bottomLine1 = new fabric.Line([0, text4.height + 20, text4.width + 20, text4.height + 20], {
-        selectable: false,
-        strokeWidth: 1,
-        stroke: '#EEE',
-        opacity:.4
-    });
-
-    var textBox4 = new fabric.Group([text4, topLine1, bottomLine1], {
-        left: 980,
-        top: 300,
-        selectable: false
-    });
-
-    var text5 = new fabric.IText(dummyText, {
-        fontSize: 8,
-        left: 10,
-        top: 10,
-        selectable: false,
-        //originX: 'center',
-        //originY: 'center',
-        lineHeight: 1,
-        fill: 'white',
-        opacity: .5,
-        fontFamily: 'VagRounded',
-        fontWeight: 'bold'
-    });
-
-    var topLine2 = new fabric.Line([0, 0, text5.width + 20, 0], {
-        selectable: false,
-        strokeWidth: 1,
-        stroke: '#EEE',
-        opacity:.4
-    });
-
-    var bottomLine2 = new fabric.Line([0, text5.height + 20, text5.width + 20, text5.height + 20], {
-        selectable: false,
-        strokeWidth: 1,
-        stroke: '#EEE',
-        opacity:.4
-    });
-
-    var textBox5 = new fabric.Group([text5, topLine2, bottomLine2], {
-        left: 980,
-        top: 330 + textBox4.height,
-        selectable: false
-    });
-
     var rect1 = new fabric.Rect({
         top: 400,
         left: 1000,
@@ -228,6 +58,13 @@ function addHurdStyle(){
         strokeDashArray: [5, 5]
     });
 
+    addBackgroundTextBox(200, 200, dummyText, "VagRounded", 10);
+    addBackgroundTextBox(300, 250, dummyText, "SanFrancisco", 8);
+    addBackgroundTextBox(250, 300, dummyText, "SanFrancisco", 12);
+
+    addDividerTextBox(930, 200, dummyText, "VagRounded", 10);
+    addDividerTextBox(930, 350, dummyText, "VagRounded", 10);
+
     addCrosshairLine("vertical", 150, "thin");
     addCrosshairLine("vertical", 180, "thin");
     addCrosshairLine("vertical", 210, "thin");
@@ -237,7 +74,6 @@ function addHurdStyle(){
     addCrosshairLine("vertical", 400);
     addCrosshairLine("horizontal", 550);
 
-    canvas.add(textBox5, textBox4, textBox3, textBox2, textBox1);
     canvas.add(rect1, rect2);
     canvas.add(dashedBox1, dashedBox2);
 
@@ -339,6 +175,8 @@ function drawTickBox(x1, y1, x2, y2){
         height: y2 - y1,
         selectable: true,
         hasRotatingPoint: false,
+        cornerSize: 7,
+        hasBorders: false,
         class: "tickbox",
         fill: 'transparent',
         strokeWidth: 1,
@@ -411,8 +249,8 @@ function drawTickBox(x1, y1, x2, y2){
 
     var boundaryText4 = new fabric.IText("This is bottom boundary text. Double-click and edit text.", {
         fontSize: 10,
-        left: x1 - 15,
         top: y2 + 5,
+        textAlign: "right",
         selectable: true,
         lockMovementX: true,
         lockMovementY: true,
@@ -429,6 +267,11 @@ function drawTickBox(x1, y1, x2, y2){
         fontWeight: 'bold'
     });
 
+    boundaryText4.set({
+        left: x2 - boundaryText4.width,
+        right: x2
+    });
+
     tickBox.set({
         topText: boundaryText1,
         rightText: boundaryText2,
@@ -440,4 +283,78 @@ function drawTickBox(x1, y1, x2, y2){
 
     canvas.add(boundaryText1, boundaryText2, boundaryText3, boundaryText4, tickBox);
     tickBox.sendToBack();
+}
+
+function addDividerTextBox(x1, y1, text, fontName, fontSize){
+    text = text==undefined?"Edit text":text;
+    fontName = fontName==undefined?"VagRounded":fontName;
+    fontSize = fontSize==undefined?12:fontSize;
+    var textBox = new fabric.IText(text, {
+        fontSize: fontSize,
+        left: x1 + 10,
+        top: y1 + 10,
+        class: "divider-textbox",
+        hasRotatingPoint: false,
+        //hasBorders: false,
+        hasControls: false,
+        lineHeight: 1,
+        fill: 'white',
+        opacity: .5,
+        fontFamily: fontName,
+        fontWeight: 'bold'
+    });
+
+    var backRect = new fabric.Rect({
+        top: y1,
+        left: x1,
+        width: textBox.width + 20,
+        height: textBox.height + 20,
+        strokeDashArray: [textBox.width + 20, textBox.height + 20],
+        class: "divider-textbox-back",
+        fill: 'transparent',
+        selectable: false,
+        strokeWidth: 1,
+        stroke: '#EEE',
+        opacity: .4
+    });
+
+    textBox.backgroundBox = backRect;
+
+    canvas.add(backRect, textBox);
+}
+
+function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
+    text = text==undefined?"Edit text":text;
+    fontName = fontName==undefined?"VagRounded":fontName;
+    fontSize = fontSize==undefined?12:fontSize;
+    var textBox = new fabric.IText(text, {
+        fontSize: fontSize,
+        left: x1 + 10,
+        top: y1 + 10,
+        class: "background-textbox",
+        hasRotatingPoint: false,
+        hasControls: false,
+        lineHeight: 1,
+        fill: 'white',
+        opacity: .5,
+        fontFamily: fontName,
+        fontWeight: 'bold'
+    });
+
+    var backRect = new fabric.Rect({
+        top: y1,
+        left: x1,
+        width: textBox.width + 20,
+        height: textBox.height + 20,
+        rx: 5,
+        ry: 5,
+        fill: '#333',
+        selectable: false,
+        //strokeWidth: 1,
+        //stroke: '#EEE',
+        opacity: .4
+    });
+
+    textBox.backgroundBox = backRect;
+    canvas.add(backRect, textBox);
 }

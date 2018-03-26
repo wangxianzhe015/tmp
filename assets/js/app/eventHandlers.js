@@ -15,6 +15,23 @@ function initHandlers(){
         }
     }).on("load", function(){
         setTimeout(hideLoadingDiv, 2000);
+    }).on("keyup", function(e){
+        var obj = canvas.getActiveObject();
+        if (obj != null) {
+            if (obj.class == "background-textbox") {
+                obj.backgroundBox.set({
+                    width: obj.width + 20,
+                    height: obj.height + 20
+                });
+            } else if (obj.class == "divider-textbox") {
+                obj.backgroundBox.set({
+                    width: obj.width + 20,
+                    height: obj.height + 20,
+                    strokeDashArray: [obj.width + 20, obj.height + 20]
+                });
+            }
+        }
+
     });
 
     $(document).on("mousemove", function(e){

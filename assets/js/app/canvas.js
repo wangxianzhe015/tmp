@@ -168,8 +168,9 @@ canvas.on('mouse:move',function(moveEventOptions){
             left: activeObject.left - 15,
             top: activeObject.top + activeObject.scaleY * activeObject.height
         });
+        activeObject.bottomText.right = activeObject.left + activeObject.width;
         activeObject.bottomText.set({
-            left: activeObject.left - 15,
+            left: activeObject.bottomText.right - activeObject.bottomText.width,
             top: activeObject.top + activeObject.scaleY * activeObject.height + 5
         });
         activeObject.topText.setCoords();
@@ -208,6 +209,12 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'add-new-line') {
                 showNotification("Point where to put line and direction.");
                 nextAction = 'add-new-line';
+            } else if (object.id == 'add-new-background-textbox') {
+                showNotification("Point where to put textbox.");
+                nextAction = 'add-new-background-textbox';
+            } else if (object.id == 'add-new-divider-textbox') {
+                showNotification("Point where to put textbox.");
+                nextAction = 'add-new-divider-textbox';
             } else if (object.id == 'change-hud-line') {
                 var target = object.target;
                 if (target != null){
@@ -586,6 +593,12 @@ canvas.on('mouse:down',function(e){
         if (nextAction == 'add-text-cell'){
             addTextTooltip(downPoint.x, downPoint.y);
             nextAction = '';
+        } else if (nextAction == 'add-new-background-textbox') {
+            addBackgroundTextBox(downPoint.x, downPoint.y);
+            nextAction = '';
+        } else if (nextAction == 'add-new-divider-textbox') {
+            addDividerTextBox(downPoint.x, downPoint.y);
+            nextAction = '';
         }
     }
 });
@@ -934,11 +947,16 @@ canvas.on('object:moving', function(e){
         }
         adjustLine(e.target.line);
     } else if (e.target.class == "crosshair-line") {
-        if (e.target.category == "vertical") {
-            e.target.set("top", 0);
-        } else {
-            e.target.set("left", 0);
-        }
+        //if (e.target.category == "vertical") {
+        //    e.target.set("top", 0);
+        //} else {
+        //    e.target.set("left", 0);
+        //}
+    } else if (e.target.class == "divider-textbox" || e.target.class == "background-textbox") {
+        e.target.backgroundBox.set({
+            left: e.target.left - 10,
+            top: e.target.top - 10
+        });
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
@@ -983,11 +1001,14 @@ canvas.on('object:scaling', function(e){
         }
         e.target.setCoords();
         canvas.renderAll();
+    } else if (e.target.class == "crosshair-line") {
+        e.target.set("scaleX", 1);
+        canvas.renderAll();
     }
 });
 
 canvas.on('selection:created', function(e){
-    console.log(e);
+
 });
 
 canvas.on('selection:cleared', function(e){
@@ -1012,17 +1033,39 @@ canvas.on('selection:cleared', function(e){
 });
 
 canvas.on('text:changed', function(e){
-    if (e.target.class == "boundary-text"){
+    if (e.target.class == "boundary-text") {
         var text = e.target.text, newText = "";
-        text.split("\n").forEach(function(txt, i){
+        text.split("\n").forEach(function (txt, i) {
             if (i > 0) {
-                newText = newText + " " + txt;
+                newText = newText + txt;
             } else {
                 newText = txt;
+                if (text != txt) {
+                    e.target.setSelectionStart(txt.length);
+                    e.target.setSelectionEnd(txt.length);
+                }
             }
         });
         e.target.text = newText;
+        canvas.renderAll();
+
+        if (e.target.right != null) {
+            e.target.set("left", e.target.right - e.target.width);
+            e.target.setCoords();
+        }
     }
+    //} else if (e.target.class == "background-textbox") {
+    //    e.target.backgroundBox.set({
+    //        width: e.target.width + 20,
+    //        height: e.target.height + 20
+    //    });
+    //} else if (e.target.class == "divider-textbox") {
+    //    e.target.backgroundBox.set({
+    //        width: e.target.width + 20,
+    //        height: e.target.height + 20,
+    //        strokeDashArray: [e.target.width + 20, e.target.height + 20]
+    //    });
+    //}
 });
 
 function initTargetElement(){
