@@ -295,7 +295,7 @@ function addDividerTextBox(x1, y1, text, fontName, fontSize){
         top: y1 + 10,
         class: "divider-textbox",
         hasRotatingPoint: false,
-        //hasBorders: false,
+        hasBorders: false,
         hasControls: false,
         lineHeight: 1,
         fill: 'white',
@@ -334,6 +334,7 @@ function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
         class: "background-textbox",
         hasRotatingPoint: false,
         hasControls: false,
+        hasBorders: false,
         lineHeight: 1,
         fill: 'white',
         opacity: .5,
@@ -352,9 +353,49 @@ function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
         selectable: false,
         //strokeWidth: 1,
         //stroke: '#EEE',
-        opacity: .4
+        opacity:.4
     });
 
     textBox.backgroundBox = backRect;
     canvas.add(backRect, textBox);
+}
+
+function addBringForwardButton(x, y, parent){
+    fabric.Image.fromURL("assets/images/icons/external-24.png", function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var bringButton = new fabric.Group([rect, oImg], {
+            left: x,
+            top: y,
+            id: 'textbox-bring-button',
+            class: 'button',
+            isTemporary: true,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.bringButton = bringButton;
+        bringButton.master = parent;
+
+        canvas.add(bringButton);
+        setTimeout(function(){
+            canvas.remove(bringButton);
+            delete bringButton.master.bringButton;
+            canvas.renderAll();
+        }, 2000);
+    });
+
 }

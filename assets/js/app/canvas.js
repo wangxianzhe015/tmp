@@ -215,6 +215,9 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'add-new-divider-textbox') {
                 showNotification("Point where to put textbox.");
                 nextAction = 'add-new-divider-textbox';
+            } else if (object.id == 'textbox-bring-button') {
+                object.master.backgroundBox.bringToFront();
+                object.master.bringToFront();
             } else if (object.id == 'change-hud-line') {
                 var target = object.target;
                 if (target != null){
@@ -532,7 +535,7 @@ canvas.on('mouse:down',function(e){
             }
         } else if (object.class == 'crosshair-line') {
             if (canvas.getActiveObject() == object || targetHudLine.changeButton != null) return;
-            fabric.Image.fromURL("./assets/images/icons/plug-24.png", function(oImg) {
+            fabric.Image.fromURL("./assets/images/icons/plug-24.png", function (oImg) {
                 var rect = new fabric.Rect({
                     left: 0,
                     top: 0,
@@ -561,7 +564,7 @@ canvas.on('mouse:down',function(e){
                 targetHudLine.changeButton = btn;
                 btn.target = targetHudLine;
                 canvas.add(btn);
-                setTimeout(function(){
+                setTimeout(function () {
                     canvas.remove(btn);
                     btn.target.changeButton = null;
                     canvas.renderAll();
@@ -619,6 +622,7 @@ canvas.on('mouse:up',function(e){
         return false;
     }
 
+    var object = e.target;
     if (mouseDrag && e.target == null){
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
         if (nextAction == 'add-tickbox'){
@@ -746,15 +750,18 @@ canvas.on('mouse:up',function(e){
                 //});
             }
         }
+    } else if (!mouseDrag && e.target != null){
+        if (object.class == "background-textbox" || object.class == "divider-textbox") {
+            addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
+        }
     }
 
     setTimeout(function(){
         $(".regex-search-box.empty").remove();
     }, 2000);
 
-    var obj = e.target;
-    if (obj != null && obj.class == 'dot'){
-        obj.setOpacity(0);
+    if (object != null && object.class == 'dot'){
+        object.setOpacity(0);
     }
     mouseDrag = false;
 
@@ -957,6 +964,14 @@ canvas.on('object:moving', function(e){
             left: e.target.left - 10,
             top: e.target.top - 10
         });
+        e.target.backgroundBox.setCoords();
+        if (e.target.bringButton != null) {
+            e.target.bringButton.set({
+                left: e.target.left + e.target.width + buttonSize,
+                top: e.target.top - buttonSize
+            });
+            e.target.bringButton.setCoords();
+        }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
