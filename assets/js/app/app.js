@@ -9,6 +9,8 @@ var borderColor = "rgba(13,13,13,0)";
 var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
 var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
+var fisheyeCanvas = document.getElementById('f-c'),f_ctx;
+var bgCanvas;
 var nextAction = '';
 
 var resizable = false;
@@ -93,6 +95,7 @@ function init(){
     addRingButton();
     addBLineCircleButton();
     addTweenButton();
+    addFishEyeButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();
@@ -102,6 +105,7 @@ function init(){
 
     loadFormations();
     loadPeople();
+
 }
 
 

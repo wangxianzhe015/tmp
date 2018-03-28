@@ -208,6 +208,17 @@ function addTweenButton(){
     }).appendTo("#right-sidebar");
 }
 
+function addFishEyeButton(){
+    $("<img/>", {
+        id: "fish-eye-button",
+        src: "./assets/images/icons/unhide-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        hideRightSidebar();
+        setTimeout(fisheyeHandler, 100);
+    }).appendTo("#right-sidebar");
+}
+
 function addBLineCircleButton(){
     $("<img/>", {
         id: "bline-circle-button",
