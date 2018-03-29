@@ -9,7 +9,7 @@ function distortion(e) {
     fisheyeCanvas.style.left = cx - size / 2 + 'px';
     fisheyeCanvas.style.top = cy - size / 2 + 'px';
 
-    f_ctx = fisheyeCanvas.getContext("2d");
+    //f_ctx = fisheyeCanvas.getContext("2d");
     f_ctx.fillStyle = '#FFF';
     f_ctx.fillRect(0, 0, size, size);
     f_ctx.drawImage(
@@ -99,6 +99,8 @@ function fisheyeHandler(){
                 });
                 document.body.appendChild(newCanvas);
                 bgCanvas = newCanvas;
+                $("#f-c").show();
+                $("#right-sidebar").show();
 
                 window.addEventListener("mousemove", distortion);
 
@@ -107,7 +109,9 @@ function fisheyeHandler(){
 
     } else {
         $("#bg-canvas").remove();
-        window.removeEventListener("mousemove");
+        $("#f-c").hide();
+        window.removeEventListener("mousemove", distortion);
         bgCanvas = null;
+        $("#right-sidebar").show();
     }
 }

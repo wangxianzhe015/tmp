@@ -211,11 +211,15 @@ function addTweenButton(){
 function addFishEyeButton(){
     $("<img/>", {
         id: "fish-eye-button",
-        src: "./assets/images/icons/unhide-24.png",
+        src: "./assets/images/icons/fish-24.png",
         class: "icon-button"
     }).on("click", function(){
-        hideRightSidebar();
-        setTimeout(fisheyeHandler, 100);
+        $("#right-sidebar").hide();
+        var $obj = $("#pattern-parallax-check");
+        if ($obj.prop("checked")){
+            $obj.click();
+        }
+        fisheyeHandler();
     }).appendTo("#right-sidebar");
 }
 

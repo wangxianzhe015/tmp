@@ -1254,6 +1254,7 @@ textarea.default-textarea{
     height: 150px;
     background-color: rgba(0,0,0,.7);
     color: white;
+    z-index: 50;
 }
 #top-sidebar #topbar-notification{
     width: 60%;

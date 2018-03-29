@@ -592,16 +592,21 @@ function initHandlers(){
     });
 
     $("#pattern-parallax-check").on("click", function(){
+        var el = document.getElementById("background-image");
         if ($(this).prop('checked')){
             $("#background-image").css({
                 width: 1.5 * window.innerWidth,
                 height: 1.5 * window.innerHeight
             });
+            el.style.left = "-" + window.pageXOffset / 2 + "px";
+            el.style.top = "-" + window.pageYOffset / 2 + "px";
         } else {
             $("#background-image").css({
                 width: 2 * window.innerWidth,
                 height: 2 * window.innerHeight
             });
+            el.style.left = "-" + window.pageXOffset + "px";
+            el.style.top = "-" + window.pageYOffset + "px";
         }
     }).click();
 
