@@ -58,9 +58,9 @@ function addHurdStyle(){
         strokeDashArray: [5, 5]
     });
 
-    addBackgroundTextBox(200, 200, dummyText, "VagRounded", 10);
-    addBackgroundTextBox(300, 250, dummyText, "SanFrancisco", 8);
-    addBackgroundTextBox(250, 300, dummyText, "SanFrancisco", 12);
+    addBackgroundTextBox(200, 200, dummyText, 200, 200, "VagRounded", 10);
+    addBackgroundTextBox(300, 250, dummyText, 200, 200, "SanFrancisco", 8);
+    addBackgroundTextBox(250, 300, dummyText, 200, 200, "SanFrancisco", 12);
 
     addDividerTextBox(930, 200, dummyText, "VagRounded", 10);
     addDividerTextBox(930, 350, dummyText, "VagRounded", 10);
@@ -323,12 +323,24 @@ function addDividerTextBox(x1, y1, text, fontName, fontSize){
     canvas.add(backRect, textBox);
 }
 
-function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
+function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     text = text==undefined?"Edit text":text;
+    width = width==undefined?200:width;
+    height = height==undefined?200:height;
     fontName = fontName==undefined?"VagRounded":fontName;
     fontSize = fontSize==undefined?12:fontSize;
     var textBox = new fabric.IText(text, {
         fontSize: fontSize,
+        class: "background-textbox",
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: fontName,
+        fontWeight: 'bold'
+    });
+
+    var formatted = wrapCanvasText(textBox, canvas, width, height, 'left');
+
+    formatted.set({
         left: x1 + 10,
         top: y1 + 10,
         class: "background-textbox",
@@ -345,8 +357,8 @@ function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
     var backRect = new fabric.Rect({
         top: y1,
         left: x1,
-        width: textBox.width + 20,
-        height: textBox.height + 20,
+        width: formatted.width + 20,
+        height: formatted.height + 20,
         rx: 5,
         ry: 5,
         fill: '#333',
@@ -356,8 +368,8 @@ function addBackgroundTextBox(x1, y1, text, fontName, fontSize) {
         opacity:.4
     });
 
-    textBox.backgroundBox = backRect;
-    canvas.add(backRect, textBox);
+    formatted.backgroundBox = backRect;
+    canvas.add(backRect, formatted);
 }
 
 function addBringForwardButton(x, y, parent){

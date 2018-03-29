@@ -230,37 +230,25 @@ function addDownloadJSONButton(){
         class: "icon-button"
     }).on("click", function(){
         $.getJSON("/books.json", function(result){
-            var $tooltip = addTextTooltip(window.scrollX + window.innerWidth / 2, window.scrollY + window.innerHeight / 2);
-            $tooltip.find("textarea").val("").attr("readonly", true).css("resize", "none");
             //var header = [], dataSet = [], oneData = [];
-            //var left = 50, top = 50;
+            var left = 50, top = 50, text = "";
             $.each(result["books"], function(i, field){
                 $.each(field, function(key, value){
                     //if (i == 0) header.push({title: key});
                     //oneData.push(value);
-                    $tooltip.find("textarea").val($tooltip.find("textarea").val() + value + ",");
+                    //$tooltip.find("textarea").val($tooltip.find("textarea").val() + value + ",");
+                    text = text + ", " + value
                 });
                 //dataSet.push(oneData);
-                $tooltip.find("textarea").val($tooltip.find("textarea").val() + "\n\n");
-                //left += 250;
-                //if (left > window.innerHeight * 2){
-                //    left = 50;
-                //    top += 50;
-                //}
+                //$tooltip.find("textarea").val($tooltip.find("textarea").val() + "\n\n");
+                addBackgroundTextBox(left, top, text);
+                text = "";
+                left += 250;
+                if (left > window.innerWidth * 2){
+                    left = 50;
+                    top += 250;
+                }
             });
-
-
-            //var $table = $('<table></table>');
-            //$tooltip.find("textarea").replaceWith($table);
-            //$table.DataTable( {
-            //    bAutoWidth: false,
-            //    data: dataSet,
-            //    columns: header,
-            //    "columnDefs": [ { "defaultContent": "-", "targets": "_all" } ]
-            //});
-            //
-            //$table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);
-
         });
     }).appendTo("#right-sidebar");
 }
