@@ -655,7 +655,7 @@ function addTextTooltip(left, top){
             });
             $ttip.stop().animate({scrollTop: $(this).position().top - 20, scrollLeft: $(this).position().left - 20}, 1000);
         }
-    }).appendTo("body");
+    }).appendTo("body").show();
 
     var newPoint = new fabric.Circle({
         left: left,
@@ -677,4 +677,5 @@ function addTextTooltip(left, top){
     $tooltip.data("newPoint", newPoint);
     newPoint.master = $tooltip;
 
+    return $tooltip;
 }

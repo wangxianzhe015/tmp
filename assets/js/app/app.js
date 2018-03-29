@@ -96,6 +96,7 @@ function init(){
     addBLineCircleButton();
     addTweenButton();
     addFishEyeButton();
+    addDownloadJSONButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();
