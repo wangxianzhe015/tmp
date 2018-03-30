@@ -88,12 +88,12 @@ function addCrosshairLine(direction, offset, type){
         fontWeight: 'bold'
     });
     var unitWidth = tempTextObj.width, unitHeight = tempTextObj.height;
-    var count = 0;
-    if (direction == "vertical"){
-        count = canvas.height / unitWidth;
-    } else {
-        count = canvas.width / unitWidth;
-    }
+    var count = 600 / unitWidth;
+    //if (direction == "vertical"){
+    //    count = canvas.height / unitWidth;
+    //} else {
+    //    count = canvas.width / unitWidth;
+    //}
 
     var text = "";
     for (var i = 0; i < count; i ++){
@@ -109,7 +109,8 @@ function addCrosshairLine(direction, offset, type){
         opacity: type=="cross"?0.5:0
     });
 
-    var thinLine = new fabric.Line([0, unitHeight / 2, direction=="vertical"?canvas.height:canvas.width, unitHeight / 2], {
+    //var thinLine = new fabric.Line([0, unitHeight / 2, direction=="vertical"?canvas.height:canvas.width, unitHeight / 2], {
+    var thinLine = new fabric.Line([0, unitHeight / 2, 600, unitHeight / 2], {
         fill: '',
         stroke: '#DDD',
         strokeWidth: .5,
@@ -210,21 +211,24 @@ function crossPointHandler(cLine){
             });
             point.setCoords();
         } else {
-            $.each(vLine.crossPoints, function(i, p){
-                if (point == p){
-                    vLine.crossPoints.slice(i, 1);
-                }
-            });
-            $.each(hLine.crossPoints, function(i, p){
-                if (point == p){
-                    hLine.crossPoints.slice(i, 1);
-                }
-            });
-            vLine.intersectLines.slice(vLine.intersectLines.indexOf(hLine.id), 1);
-            hLine.intersectLines.slice(hLine.intersectLines.indexOf(vLine.id), 1);
-            canvas.remove(point).renderAll();
+            if (vLine.intersectLines.indexOf(hLine.id) > -1) {
+                $.each(vLine.crossPoints, function (i, p) {
+                    if (point == p) {
+                        delete vLine.crossPoints[i];
+                    }
+                });
+                $.each(hLine.crossPoints, function (i, p) {
+                    if (point == p) {
+                        delete hLine.crossPoints[i];
+                    }
+                });
+                delete vLine.intersectLines[vLine.intersectLines.indexOf(hLine.id)];
+                delete hLine.intersectLines[hLine.intersectLines.indexOf(vLine.id)];
+                canvas.remove(point).renderAll();
+            }
         }
     });
+    addCrossPoints(cLine);
 }
 
 function drawTickBox(x1, y1, x2, y2){
