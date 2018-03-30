@@ -235,9 +235,15 @@ canvas.on('mouse:down',function(e){
                     if (target._objects[0].opacity == 0) {
                         target._objects[0].opacity = 0.5;
                         target._objects[1].opacity = 0;
+                        target.crossPoints.forEach(function(point){
+                            point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
+                        });
                     } else {
                         target._objects[0].opacity = 0;
                         target._objects[1].opacity = 0.5;
+                        target.crossPoints.forEach(function(point){
+                            point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
+                        });
                     }
                     canvas.remove(object);
                     target.changeButton = null;
@@ -857,8 +863,9 @@ canvas.on('object:selected', function(e){
 
 canvas.on('object:moving', function(e){
 
-    e.target.setCoords();
-    if (e.target == tempPoly || e.target == tempText){
+    var object = e.target;
+    object.setCoords();
+    if (object == tempPoly || object == tempText){
         var polyPos = getObjPosition(tempPoly);
         var textPos = getObjPosition(tempText);
         if (polyPos.left > textPos.left){
@@ -883,68 +890,68 @@ canvas.on('object:moving', function(e){
         }
         canvas.renderAll();
     }
-    if (e.target.class == 'element') {
+    if (object.class == 'element') {
         var pos = nearPosition(e.e.offsetX, e.e.offsetY), isInTickbox = false;
         if (snapToGrid) {
-            e.target.set({
+            object.set({
                 left: pos.left,
                 top: pos.top,
                 position: pos.id
             });
 
         } else {
-            e.target.set({
+            object.set({
                 position: pos.id
             });
         }
-        elementsInfo[e.target.id].x = e.target.left;
-        elementsInfo[e.target.id].y = e.target.top;
+        elementsInfo[object.id].x = object.left;
+        elementsInfo[object.id].y = object.top;
 
         tickBoxes.forEach(function(tickBox){
-            if (e.target.tickButton.checked && !(e.target.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(e.target))){
+            if (object.tickButton.checked && !(object.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(object))){
                 isInTickbox = true;
             }
         });
         if (isInTickbox){
-            e.target.set({
+            object.set({
                 scaleX: 1,
                 scaleY: 1
             });
-            e.target.tickButton.set({
+            object.tickButton.set({
                 scaleX: 1,
                 scaleY: 1
             });
         }
 
-        e.target.newPoint.set({
-            left: e.target.left,
-            top: e.target.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+        object.newPoint.set({
+            left: object.left,
+            top: object.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         });
-        e.target.newPoint.setCoords();
-        e.target.tickButton.set({
-            left: e.target.left + e.target.scaleX * radius,
-            top: e.target.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+        object.newPoint.setCoords();
+        object.tickButton.set({
+            left: object.left + object.scaleX * radius,
+            top: object.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         });
-        e.target.tickButton.setCoords();
-        e.target.lines.forEach(function(line){
+        object.tickButton.setCoords();
+        object.lines.forEach(function(line){
             adjustLine(line);
         });
         canvas.discardActiveObject();
 
         canvas.renderAll();
-    } else if (e.target.class == 'group' || e.target == canvas.getActiveGroup()){
-        var obj = e.target.class == 'group'? e.target: canvas.getActiveGroup(), offsetX = obj.left + obj.width / 2, offsetY = obj.top + obj.height / 2;
+    } else if (object.class == 'group' || object == canvas.getActiveGroup()){
+        var obj = object.class == 'group'? object: canvas.getActiveGroup(), offsetX = obj.left + obj.width / 2, offsetY = obj.top + obj.height / 2;
         moveThreeDots(obj);
         obj._objects.forEach(function(shape){
             if (shape.class == "element") {
                 shape.newPoint.set({
                     left: offsetX + shape.left,
-                    top: offsetY + shape.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+                    top: offsetY + shape.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
                 });
                 shape.newPoint.setCoords();
                 shape.tickButton.set({
-                    left: offsetX + shape.left + e.target.scaleX * radius,
-                    top: offsetY + shape.top - e.target.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+                    left: offsetX + shape.left + object.scaleX * radius,
+                    top: offsetY + shape.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
                 });
                 shape.tickButton.setCoords();
                 shape.lines.forEach(function (line) {
@@ -952,38 +959,39 @@ canvas.on('object:moving', function(e){
                 });
             }
         });
-    } else if (e.target.class == "b-point") {
+    } else if (object.class == "b-point") {
 
-        if (e.target.line) {
-            e.target.line.path[1][1] = e.target.left;
-            e.target.line.path[1][2] = e.target.top;
+        if (object.line) {
+            object.line.path[1][1] = object.left;
+            object.line.path[1][2] = object.top;
         }
-        adjustLine(e.target.line);
-    } else if (e.target.class == "crosshair-line") {
-        if (e.target.category == "vertical") {
-            e.target.set("right", e.target.top + e.target.width);
+        adjustLine(object.line);
+    } else if (object.class == "crosshair-line") {
+        if (object.category == "vertical") {
+            object.set("right", object.top + object.width);
         } else {
-            e.target.set("right", e.target.left + e.target.width);
+            object.set("right", object.left + object.width);
         }
-    } else if (e.target.class == "divider-textbox" || e.target.class == "background-textbox") {
-        e.target.backgroundBox.set({
-            left: e.target.left - 10,
-            top: e.target.top - 10
+        crossPointHandler(object);
+    } else if (object.class == "divider-textbox" || object.class == "background-textbox") {
+        object.backgroundBox.set({
+            left: object.left - 10,
+            top: object.top - 10
         });
-        e.target.backgroundBox.setCoords();
-        if (e.target.bringButton != null) {
-            e.target.bringButton.set({
-                left: e.target.left + e.target.width + buttonSize,
-                top: e.target.top - buttonSize
+        object.backgroundBox.setCoords();
+        if (object.bringButton != null) {
+            object.bringButton.set({
+                left: object.left + object.width + buttonSize,
+                top: object.top - buttonSize
             });
-            e.target.bringButton.setCoords();
+            object.bringButton.setCoords();
         }
-        if (e.target.closeButton != null) {
-            e.target.closeButton.set({
-                left: e.target.left + e.target.width + buttonSize + 5,
-                top: e.target.top + 3
+        if (object.closeButton != null) {
+            object.closeButton.set({
+                left: object.left + object.width + buttonSize + 5,
+                top: object.top + 3
             });
-            e.target.closeButton.setCoords();
+            object.closeButton.setCoords();
         }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
@@ -1031,12 +1039,11 @@ canvas.on('object:scaling', function(e){
         object.setCoords();
         canvas.renderAll();
     } else if (object.class == "crosshair-line") {
-        var unitWidth = parseInt(new fabric.Text("+ ", {
+        var unitWidth = new fabric.Text("+ ", {
             fontSize: 12,
             fontFamily: 'VagRounded',
             fontWeight: 'bold'
-        }).width),
-            width = object.width;
+        }).width, width = object.width;
         if (object.category == "vertical") {
             if (object.top + width / 2 > event.pageY){
                 object.set({
@@ -1067,7 +1074,7 @@ canvas.on('object:scaling', function(e){
             left: - object.width / 2
         });
         var text = "+";
-        for (var i = 0; i < parseInt(object.width/ unitWidth); i ++){
+        for (var i = 0; i <= parseInt(object.width/ unitWidth); i ++){
             text += " +";
         }
         object._objects[0].set({

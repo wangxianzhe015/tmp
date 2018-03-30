@@ -87,7 +87,7 @@ function addCrosshairLine(direction, offset, type){
         fontFamily: 'VagRounded',
         fontWeight: 'bold'
     });
-    var unitWidth = parseInt(tempTextObj.width), unitHeight = parseInt(tempTextObj.height);
+    var unitWidth = tempTextObj.width, unitHeight = tempTextObj.height;
     var count = 0;
     if (direction == "vertical"){
         count = canvas.height / unitWidth;
@@ -120,9 +120,12 @@ function addCrosshairLine(direction, offset, type){
     });
 
     var crosshairLine = new fabric.Group([crosshairText, thinLine], {
+        id: "crosshair-line-" + parseInt(Math.random() * 10000000000000000000),
         selectable: false,
         hasRotatingPoint: false,
         class: "crosshair-line",
+        crossPoints: [],
+        intersectLines: [],
         hoverCursor: "pointer"
     });
 
@@ -156,6 +159,72 @@ function addCrosshairLine(direction, offset, type){
 
     crosshairLine.setCoords();
     canvas.add(crosshairLine);
+
+    addCrossPoints(crosshairLine);
+}
+
+function addCrossPoints(crosshairLine) {
+    canvas.forEachObject(function(obj){
+        if (obj.class == "crosshair-line" && obj.category != crosshairLine.category && (crosshairLine.intersectsWithObject(obj) || obj.intersectsWithObject(crosshairLine)) && crosshairLine.intersectLines.indexOf(obj.id) < 0){
+            var circle = new fabric.Circle({radius: 8, stroke: '#DDD', strokeWidth: 1, fill: 'transparent', opacity:.3});
+            var point = new fabric.Circle({radius: 2, fill: '#DDD', opacity:.5, left: 6, top: 6});
+            var crossPoint = new fabric.Group([circle, point], {
+                selectable: false,
+                originX: "center",
+                originY: "center",
+                opacity: Math.min(obj._objects[1].opacity, crosshairLine._objects[1].opacity)
+            });
+            if (obj.category == "vertical") {
+                crossPoint.set({
+                    left: obj.left - obj.height / 2,
+                    top: crosshairLine.top + crosshairLine.height / 2,
+                    verticalLine: obj,
+                    horizontalLine: crosshairLine
+                });
+            } else {
+                crossPoint.set({
+                    left: crosshairLine.left - crosshairLine.height / 2,
+                    top: obj.top + obj.height / 2,
+                    verticalLine: crosshairLine,
+                    horizontalLine: obj
+                });
+            }
+            obj.crossPoints.push(crossPoint);
+            obj.intersectLines.push(crosshairLine.id);
+            crosshairLine.crossPoints.push(crossPoint);
+            crosshairLine.intersectLines.push(obj.id);
+            canvas.add(crossPoint);
+        }
+    });
+}
+
+function crossPointHandler(cLine){
+    var vLine, hLine;
+    cLine.crossPoints.forEach(function(point){
+        vLine = point.verticalLine;
+        hLine = point.horizontalLine;
+        if (vLine.intersectsWithObject(hLine) || hLine.intersectsWithObject(vLine)){
+            point.set({
+                left: vLine.left - vLine.height / 2,
+                top: hLine.top + hLine.height / 2
+            });
+            point.setCoords();
+        } else {
+            $.each(vLine.crossPoints, function(i, p){
+                if (point == p){
+                    vLine.crossPoints.slice(i, 1);
+                }
+            });
+            $.each(hLine.crossPoints, function(i, p){
+                if (point == p){
+                    hLine.crossPoints.slice(i, 1);
+                }
+            });
+            vLine.intersectLines.slice(vLine.intersectLines.indexOf(hLine.id), 1);
+            hLine.intersectLines.slice(hLine.intersectLines.indexOf(vLine.id), 1);
+            canvas.remove(point).renderAll();
+        }
+    });
 }
 
 function drawTickBox(x1, y1, x2, y2){
