@@ -218,6 +218,11 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'textbox-bring-button') {
                 object.master.backgroundBox.bringToFront();
                 object.master.bringToFront();
+            } else if (object.id == 'textbox-close-button') {
+                if (object.master.bringButton != null) {
+                    canvas.remove(object.master.bringButton);
+                }
+                canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
             } else if (object.id == 'change-hud-line') {
                 var target = object.target;
                 if (target != null){
@@ -753,6 +758,7 @@ canvas.on('mouse:up',function(e){
     } else if (!mouseDrag && e.target != null){
         if (object.class == "background-textbox" || object.class == "divider-textbox") {
             addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
+            addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
         }
     }
 
@@ -971,6 +977,13 @@ canvas.on('object:moving', function(e){
                 top: e.target.top - buttonSize
             });
             e.target.bringButton.setCoords();
+        }
+        if (e.target.closeButton != null) {
+            e.target.closeButton.set({
+                left: e.target.left + e.target.width + buttonSize + 5,
+                top: e.target.top + 3
+            });
+            e.target.closeButton.setCoords();
         }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){

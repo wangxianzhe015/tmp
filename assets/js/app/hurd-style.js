@@ -410,3 +410,43 @@ function addBringForwardButton(x, y, parent){
     });
 
 }
+
+function addCloseButton(x, y, parent){
+    fabric.Image.fromURL("assets/images/icons/remove-24.png", function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0, scaleX: 0.6, scaleY: 0.6});
+        var closeButton = new fabric.Group([rect, oImg], {
+            left: x,
+            top: y,
+            id: 'textbox-close-button',
+            class: 'button',
+            isTemporary: true,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.closeButton = closeButton;
+        closeButton.master = parent;
+
+        canvas.add(closeButton);
+        setTimeout(function(){
+            canvas.remove(closeButton);
+            delete closeButton.master.closeButton;
+            canvas.renderAll();
+        }, 2000);
+    });
+
+}
