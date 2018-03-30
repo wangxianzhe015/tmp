@@ -954,11 +954,11 @@ canvas.on('object:moving', function(e){
         }
         adjustLine(e.target.line);
     } else if (e.target.class == "crosshair-line") {
-        //if (e.target.category == "vertical") {
-        //    e.target.set("top", 0);
-        //} else {
-        //    e.target.set("left", 0);
-        //}
+        if (e.target.category == "vertical") {
+            e.target.set("right", e.target.top + e.target.width);
+        } else {
+            e.target.set("right", e.target.left + e.target.width);
+        }
     } else if (e.target.class == "divider-textbox" || e.target.class == "background-textbox") {
         e.target.backgroundBox.set({
             left: e.target.left - 10,
@@ -989,35 +989,79 @@ canvas.on('object:moving', function(e){
 });
 
 canvas.on('object:scaling', function(e){
-    if (e.target.class == "tickbox") {
-        e.target.set({
+    var object = e.target, event = e.e;
+    if (object.class == "tickbox") {
+        object.set({
             scaleX: 1,
             scaleY: 1
         });
-        if (e.e.pageX < e.target.left + e.target.width / 4) {
-            e.target.set({
-                left: e.e.pageX,
-                width: e.target.width - e.e.movementX
+        if (event.pageX < object.left + object.width / 4) {
+            object.set({
+                left: event.pageX,
+                width: object.width - event.movementX
             });
-        } else if (e.e.pageX > e.target.left + 3 * e.target.width / 4) {
-            e.target.set({
-                width: e.e.pageX - e.target.left
+        } else if (event.pageX > object.left + 3 * object.width / 4) {
+            object.set({
+                width: event.pageX - object.left
             })
         }
-        if (e.e.pageY < e.target.top + e.target.height / 4) {
-            e.target.set({
-                top: e.e.pageY,
-                height: e.target.height - e.e.movementY
+        if (event.pageY < object.top + object.height / 4) {
+            object.set({
+                top: event.pageY,
+                height: object.height - event.movementY
             });
-        } else if (e.e.pageY > e.target.top + 3 * e.target.height / 4) {
-            e.target.set({
-                height: e.e.pageY - e.target.top
+        } else if (event.pageY > object.top + 3 * object.height / 4) {
+            object.set({
+                height: event.pageY - object.top
             })
         }
-        e.target.setCoords();
+        object.setCoords();
         canvas.renderAll();
-    } else if (e.target.class == "crosshair-line") {
-        e.target.set("scaleX", 1);
+    } else if (object.class == "crosshair-line") {
+        var unitWidth = parseInt(new fabric.Text("+ ", {
+            fontSize: 12,
+            fontFamily: 'VagRounded',
+            fontWeight: 'bold'
+        }).width),
+            width = object.width;
+        if (object.category == "vertical") {
+            if (object.top + width / 2 > event.pageY){
+                object.set({
+                    top: event.pageY,
+                    width: object.right - event.pageY
+                });
+            } else if (object.top + width / 2 < event.pageY) {
+                object.set({
+                    width: event.pageY - object.top,
+                    right: event.pageY
+                });
+            }
+        } else {
+            if (object.left + width / 2 > event.pageX){
+                object.set({
+                    left: event.pageX,
+                    width: object.right - event.pageX
+                });
+            } else if (object.left + width / 2 < event.pageX) {
+                object.set({
+                    width: event.pageX - object.left,
+                    right: event.pageX
+                });
+            }
+        }
+        object._objects[1].set({
+            width: object.width,
+            left: - object.width / 2
+        });
+        var text = "+";
+        for (var i = 0; i < parseInt(object.width/ unitWidth); i ++){
+            text += " +";
+        }
+        object._objects[0].set({
+            text: text,
+            left: - object.width / 2
+        });
+        object.set("scaleX", 1);
         canvas.renderAll();
     }
 });
@@ -1048,25 +1092,18 @@ canvas.on('selection:cleared', function(e){
 });
 
 canvas.on('text:changed', function(e){
-    if (e.target.class == "boundary-text") {
-        var text = e.target.text, newText = "";
-        text.split("\n").forEach(function (txt, i) {
-            if (i > 0) {
-                newText = newText + txt;
-            } else {
-                newText = txt;
-                if (text != txt) {
-                    e.target.setSelectionStart(txt.length);
-                    e.target.setSelectionEnd(txt.length);
-                }
-            }
+    var object = e.target;
+    if (object.class == "boundary-text") {
+        var newText = "";
+        $.each(object._textLines, function(i, line){
+            newText += line;
         });
-        e.target.text = newText;
+        object.text = newText;
         canvas.renderAll();
 
-        if (e.target.right != null) {
-            e.target.set("left", e.target.right - e.target.width);
-            e.target.setCoords();
+        if (object.right != null) {
+            object.set("left", object.right - object.width);
+            object.setCoords();
         }
     }
     //} else if (e.target.class == "background-textbox") {

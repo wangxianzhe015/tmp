@@ -488,7 +488,6 @@ function showUploadDiv(){
     }).show();
 }
 
-
 function addTextTooltip(left, top){
     var $tooltip = $("<div></div>", {
         class: "image-tooltip second text",
@@ -678,4 +677,11 @@ function addTextTooltip(left, top){
     newPoint.master = $tooltip;
 
     return $tooltip;
+}
+
+function showJsonUrlTooltip(){
+    removeImageTools(true);
+    mouseOverElement = true;
+
+    $("#json-url-tooltip").show();
 }

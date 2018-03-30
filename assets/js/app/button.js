@@ -229,28 +229,22 @@ function addDownloadJSONButton(){
         src: "./assets/images/icons/curly-bracket-24.png",
         class: "icon-button"
     }).on("click", function(){
-        $.getJSON("/books.json", function(result){
-            //var header = [], dataSet = [], oneData = [];
-            var left = 50, top = 50, text = "";
-            $.each(result["books"], function(i, field){
-                $.each(field, function(key, value){
-                    //if (i == 0) header.push({title: key});
-                    //oneData.push(value);
-                    //$tooltip.find("textarea").val($tooltip.find("textarea").val() + value + ",");
-                    text = text + ", " + value
-                });
-                //dataSet.push(oneData);
-                //$tooltip.find("textarea").val($tooltip.find("textarea").val() + "\n\n");
-                addBackgroundTextBox(left, top, text);
-                text = "";
-                left += 250;
-                if (left > window.innerWidth * 2){
-                    left = 50;
-                    top += 250;
-                }
-            });
-        });
-    }).appendTo("#right-sidebar");
+        //$.getJSON("/books.json", function(result){
+        //    var left = 50, top = 50, text = "";
+        //    $.each(result["books"], function(i, field){
+        //        $.each(field, function(key, value){
+        //            text = text + ", " + value
+        //        });
+        //        addBackgroundTextBox(left, top, text);
+        //        text = "";
+        //        left += 250;
+        //        if (left > window.innerWidth * 2){
+        //            left = 50;
+        //            top += 250;
+        //        }
+        //    });
+        //});
+    }).on("mouseover", showJsonUrlTooltip).appendTo("#right-sidebar");
 }
 
 function addBLineCircleButton(){

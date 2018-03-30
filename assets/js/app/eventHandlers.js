@@ -1686,6 +1686,59 @@ function initHandlers(){
         $(".custom-accordion-add-btn").trigger("click");
     }
 
+    $("#json-url-btn").on("click", function(){
+        $(this).parents(".image-tooltip").hide();
+        var urls = $("#json-url").val();
+        if (urls == "") return;
+        $(".loader-container").fadeIn();
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            accepts: {
+                json: "application/json, text/javascript"
+            },
+            data: {
+                action: "load-json-from-url",
+                url: urls
+            },
+            success: function(res){
+                try {
+                    var left = 50, top = 50, text = "";
+                    var objs = $.parseJSON(res), order = 0;
+                    $.each(objs, function(i, obj){
+                        $.each(obj["books"], function(i, data){
+                            $.each(data, function(key, value){
+                                if (order == 0) {
+                                    text = value;
+                                } else {
+                                    text = text + ", " + value;
+                                }
+                                order ++;
+                            });
+                            addBackgroundTextBox(left, top, text, 200, 500);
+                            text = "";
+                            order = 0;
+                            left += 250;
+                            if (left > window.innerWidth * 2){
+                                left = 50;
+                                top += 250;
+                            }
+                            if (top > window.innerHeight * 2) {
+                                left = 25;
+                                top = 25;
+                            }
+                        });
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            },
+            complete: function(){
+                $(".loader-container").fadeOut();
+            }
+        });
+    });
+
     $(document).keyup(function(e){
         e.preventDefault();
         if (e.keyCode == "27"){

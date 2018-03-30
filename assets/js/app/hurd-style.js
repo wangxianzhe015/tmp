@@ -62,8 +62,8 @@ function addHurdStyle(){
     addBackgroundTextBox(300, 250, dummyText, 200, 200, "SanFrancisco", 8);
     addBackgroundTextBox(250, 300, dummyText, 200, 200, "SanFrancisco", 12);
 
-    addDividerTextBox(930, 200, dummyText, "VagRounded", 10);
-    addDividerTextBox(930, 350, dummyText, "VagRounded", 10);
+    addDividerTextBox(930, 200, dummyText, 200, 200, "VagRounded", 10);
+    addDividerTextBox(930, 350, dummyText, 200, 200, "VagRounded", 10);
 
     addCrosshairLine("vertical", 150, "thin");
     addCrosshairLine("vertical", 180, "thin");
@@ -127,17 +127,6 @@ function addCrosshairLine(direction, offset, type){
     });
 
     crosshairLine.setControlsVisibility({
-        mt: true,
-        mb: true,
-        ml: true,
-        mr: true,
-        tr: false,
-        tl: false,
-        br: false,
-        bl: false
-    });
-
-    crosshairLine.setControlsVisibility({
         mt: false,
         mb: false,
         ml: true,
@@ -153,13 +142,15 @@ function addCrosshairLine(direction, offset, type){
             category: "vertical",
             top: 0,
             left: offset,
-            angle: 90
+            angle: 90,
+            right: crosshairLine.width
         });
     } else {
         crosshairLine.set({
             category: "horizontal",
             left: 0,
-            top: offset
+            top: offset,
+            right: crosshairLine.width
         });
     }
 
@@ -285,12 +276,23 @@ function drawTickBox(x1, y1, x2, y2){
     tickBox.sendToBack();
 }
 
-function addDividerTextBox(x1, y1, text, fontName, fontSize){
+function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
     text = text==undefined?"Edit text":text;
+    width = width==undefined?200:width;
+    height = height==undefined?200:height;
     fontName = fontName==undefined?"VagRounded":fontName;
     fontSize = fontSize==undefined?12:fontSize;
     var textBox = new fabric.IText(text, {
         fontSize: fontSize,
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: fontName,
+        fontWeight: 'bold'
+    });
+
+    var formatted = wrapCanvasText(textBox, canvas, width, height, 'left');
+
+    formatted.set({
         left: x1 + 10,
         top: y1 + 10,
         class: "divider-textbox",
@@ -299,17 +301,15 @@ function addDividerTextBox(x1, y1, text, fontName, fontSize){
         hasControls: false,
         lineHeight: 1,
         fill: 'white',
-        opacity: .5,
-        fontFamily: fontName,
-        fontWeight: 'bold'
+        opacity: .5
     });
 
     var backRect = new fabric.Rect({
         top: y1,
         left: x1,
-        width: textBox.width + 20,
-        height: textBox.height + 20,
-        strokeDashArray: [textBox.width + 20, textBox.height + 20],
+        width: formatted.width + 20,
+        height: formatted.height + 20,
+        strokeDashArray: [formatted.width + 20, formatted.height + 20],
         class: "divider-textbox-back",
         fill: 'transparent',
         selectable: false,
@@ -318,9 +318,9 @@ function addDividerTextBox(x1, y1, text, fontName, fontSize){
         opacity: .4
     });
 
-    textBox.backgroundBox = backRect;
+    formatted.backgroundBox = backRect;
 
-    canvas.add(backRect, textBox);
+    canvas.add(backRect, formatted);
 }
 
 function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
@@ -331,7 +331,6 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     fontSize = fontSize==undefined?12:fontSize;
     var textBox = new fabric.IText(text, {
         fontSize: fontSize,
-        class: "background-textbox",
         lineHeight: 1,
         fill: 'white',
         fontFamily: fontName,

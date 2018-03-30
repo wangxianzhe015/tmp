@@ -86,6 +86,9 @@ switch ($action) {
     case 'get-tagger-file':
         getTaggerFile();
         break;
+    case 'load-json-from-url':
+        loadJSONFromURL();
+        break;
 }
 
 function save(){
@@ -524,4 +527,22 @@ function getTaggerFile(){
         echo "fail";
     }
 
+}
+
+function loadJSONFromURL(){
+    $urls = $_POST['url'];
+    $data = [];
+    foreach (explode("\n", $urls) as $url) {
+        if ($url != "") {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            array_push($data, json_decode($result));
+        }
+    }
+
+    echo json_encode($data);
 }
