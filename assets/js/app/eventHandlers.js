@@ -1746,6 +1746,8 @@ function initHandlers(){
                             });
                             var box = addBackgroundTextBox(left, top, text, 200, 500);
                             box.id = firstKey;
+                            var $listObj = $("#json-object-id-list");
+                            $listObj.val($listObj.val() + box.id + "\n");
                             text = "";
                             order = 0;
                             left += 250;

@@ -58,12 +58,19 @@ canvas.on('mouse:over', function(e) {
         addDotTooltip(e.target);
     } else if (e.target != null && e.target.class == "crosshair-line") {
         targetHudLine = e.target;
-        targetHudLine.timer = setTimeout(function(){
+        targetHudLine.timer = setTimeout(function () {
             if (targetHudLine != null) {
                 targetHudLine.set("selectable", true);
                 canvas.setActiveObject(targetHudLine);
             }
         }, 2000);
+    } else if (e.target != null && e.target.class == "tickbox") {
+        removeImageTools(true);
+        mouseOverElement = true;
+        $("#json-object-id-tooltip").css({
+            "left": e.target.left + e.target.width,
+            "top": e.target.top
+        }).show();
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -803,6 +810,8 @@ canvas.on('mouse:up',function(e){
                                                 top = 25;
                                             }
                                             box.id = obj.split(",")[0];
+                                            var $listObj = $("#json-object-id-list");
+                                            $listObj.val($listObj.val() + box.id + "\n");
                                         });
                                         $that.parent().remove();
                                         regexSearchCount--;

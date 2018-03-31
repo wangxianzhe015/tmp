@@ -64,6 +64,8 @@ function addHurdStyle(){
     //addBackgroundTextBox(300, 250, dummyText, 200, 200, "SanFrancisco", 8);
     //addBackgroundTextBox(250, 300, dummyText, 200, 200, "SanFrancisco", 12);
 
+    drawTickBox(200, 200, 500, 500);
+
     addDividerTextBox(930, 200, dummyText, 200, 200, "VagRounded", 10);
     addDividerTextBox(930, 350, dummyText, 200, 200, "VagRounded", 10);
 
