@@ -1468,6 +1468,34 @@ function initHandlers(){
         $.getScript("data/callback/" + fileName + ".txt",function(){});
     });
 
+    $("#sql-setting-btn").on("click", function(){
+        return "temporarily disabled";
+        var host = $("#sql-server").val();
+        var db = $("#sql-dbname").val();
+        var user = $("#sql-username").val();
+        var pwd = $("#sql-password").val();
+
+        if (host == "" || db == "" || user == "") {
+            alert("Error", "Input all values!");
+            return;
+        }
+
+        $.ajax({
+            url: "action.php",
+            type: "POST",
+            data: {
+                action: "sql-setting",
+                host: host,
+                db: db,
+                user: user,
+                pwd: pwd
+            },
+            success: function(res){
+                alert("Success", res);
+            }
+        });
+    });
+
     $("#add-people-btn").on("click", function(){
         $.ajax({
             url: "action.php",
@@ -1703,19 +1731,21 @@ function initHandlers(){
             },
             success: function(res){
                 try {
-                    var left = 50, top = 50, text = "";
+                    var left = 50, top = 50, text = "", firstKey;
                     var objs = $.parseJSON(res), order = 0;
                     $.each(objs, function(i, obj){
                         $.each(obj["books"], function(i, data){
                             $.each(data, function(key, value){
                                 if (order == 0) {
                                     text = value;
+                                    firstKey = key;
                                 } else {
                                     text = text + ", " + value;
                                 }
                                 order ++;
                             });
-                            addBackgroundTextBox(left, top, text, 200, 500);
+                            var box = addBackgroundTextBox(left, top, text, 200, 500);
+                            box.id = firstKey;
                             text = "";
                             order = 0;
                             left += 250;

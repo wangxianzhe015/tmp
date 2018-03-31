@@ -222,6 +222,42 @@ canvas.on('mouse:down',function(e){
                 if (object.master.bringButton != null) {
                     canvas.remove(object.master.bringButton);
                 }
+                if (object.master.tickButton != null) {
+                    canvas.remove(object.master.tickButton);
+                }
+                canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
+            } else if (object.id == 'textbox-tick-button') {
+                if (object.master.bringButton != null) {
+                    canvas.remove(object.master.bringButton);
+                }
+                if (object.master.closeButton != null) {
+                    canvas.remove(object.master.closeButton);
+                }
+                var idTag = new fabric.IText(object.master.id, {
+                    left: object.left,
+                    top: object.top,
+                    lineHeight: 1,
+                    fill: 'white',
+                    fontSize: 12,
+                    fontFamily: 'SanFransisco',
+                    hasRotatingPoint: false,
+                    hasControls: false
+                });
+                canvas.add(idTag);
+                var dBox = null;
+                canvas.forEachObject(function(obj){
+                    if (obj.class == "dashedbox") dBox = obj;
+                });
+                if (dBox != null) {
+                    idTag.animate({
+                        top: dBox.top + Math.random() * (dBox.height - idTag.height),
+                        left: dBox.left + Math.random() * (dBox.width - idTag.width)
+                    }, {
+                        duration: 2000,
+                        onChange: canvas.renderAll.bind(canvas),
+                        easing: fabric.util.ease.easeOutCirc
+                    });
+                }
                 canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
             } else if (object.id == 'change-hud-line') {
                 var target = object.target;
@@ -581,12 +617,15 @@ canvas.on('mouse:down',function(e){
                     canvas.renderAll();
                 }, 2000);
             });
+        } else if (object.class == "background-textbox" || object.class == "divider-textbox") {
+            if (object.bringButton == null) addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
+            if (object.closeButton == null) addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
+            if (object.tickButton == null) addTickButton(object.left + object.width + buttonSize, object.top+ buttonSize, object);
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
             }
         }
-
     } else {
         initTargetElement();
         if (groupTargetClock > 0){
@@ -634,9 +673,9 @@ canvas.on('mouse:up',function(e){
     }
 
     var object = e.target;
-    if (mouseDrag && e.target == null){
+    if (mouseDrag && e.target == null) {
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
-        if (nextAction == 'add-tickbox'){
+        if (nextAction == 'add-tickbox') {
             var x1 = downPoint.x > upPoint.x ? upPoint.x : downPoint.x;
             var x2 = downPoint.x < upPoint.x ? upPoint.x : downPoint.x;
             var y1 = downPoint.y > upPoint.y ? upPoint.y : downPoint.y;
@@ -659,7 +698,7 @@ canvas.on('mouse:up',function(e){
 
                 regexSearchCount++;
                 var box = $('<div/>', {
-                    id: 'regex-search-box-'+regexSearchCount,
+                    id: 'regex-search-box-' + regexSearchCount,
                     'class': 'regex-search-box empty'
                 }).css({
                     top: downPoint.y + 40,
@@ -676,23 +715,25 @@ canvas.on('mouse:up',function(e){
                     left: '-10px',
                     cursor: 'pointer',
                     color: 'white'
-                }).on("click", function(){
+                }).on("click", function () {
                     $(this).parent().remove();
                     canvas.forEachObject(function (obj) {
                         if (obj.class === 'element') {
                             obj.setVisible(true);
                             obj.newPoint.setVisible(true);
-                            obj.lines.forEach(function(line){
+                            obj.tickButton.setVisible(true);
+                            obj.lines.forEach(function (line) {
                                 line.setVisible(true);
                                 line.leftCircle.setVisible(true);
                                 line.rightCircle.setVisible(true);
                             });
-                            $(".regex-search-input").each(function(i,el){
+                            $(".regex-search-input").each(function (i, el) {
                                 var regexExp = new RegExp($(el).val().toUpperCase(), "g");
                                 if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
                                     obj.setVisible(false);
                                     obj.newPoint.setVisible(false);
-                                    obj.lines.forEach(function(line){
+                                    obj.tickButton.setVisible(false);
+                                    obj.lines.forEach(function (line) {
                                         line.setVisible(false);
                                         line.leftCircle.setVisible(false);
                                         line.rightCircle.setVisible(false);
@@ -705,41 +746,99 @@ canvas.on('mouse:up',function(e){
                     regexSearchCount--;
                 }).appendTo(box).hide();
 
-                $('<input/>',{
+                $('<input/>', {
                     type: 'text',
                     class: 'regex-search-input',
-                    id: 'regex-search-input-'+regexSearchCount
-                }).on('keyup', function(e){
+                    id: 'regex-search-input-' + regexSearchCount
+                }).on('keyup', function (e) {
                     $(this).parent().removeClass('empty');
                     $(this).parent().find(".remove-regex-search").show();
                     if (parseInt($(this).parent().css("left")) + parseInt($(this).css("width")) + 20 < canvas.getWidth()) {
                         $(this).css("width", ($(this).val().length + 1) * 20 + "px");
                     }
                     if (e.keyCode === 13) {
-                        var regexExp = new RegExp($(this).val().toUpperCase(), "g");
-                        canvas.forEachObject(function (obj) {
-                            if (obj.class === 'element') {
-                                //obj.setVisible(true);
-                                if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
-                                    obj.setVisible(false);
-                                    obj.newPoint.setVisible(false);
-                                    obj.lines.forEach(function(line){
-                                        line.setVisible(false);
-                                        line.leftCircle.setVisible(false);
-                                        line.rightCircle.setVisible(false);
-                                    });
-                                }
+                        var input = $(this).val().trim().toUpperCase(), $that = $(this);
+                        if (input.indexOf("SQL:") == 0) {
+                            var host = $("#sql-server").val();
+                            var db = $("#sql-dbname").val();
+                            var user = $("#sql-username").val();
+                            var pwd = $("#sql-password").val();
+
+                            if (host == "" || db == "" || user == "") {
+                                alert("Error", "Provide Connection Settings!<br/>You can enter information on \"SQL\" Tab of Setting dialog.");
+                                return;
                             }
-                        });
-                        canvas.renderAll();
-                        $(this).attr('readonly', true);
-                        $(this).parent().find(".suggest-list").remove();
+
+                            $(".loader-container").fadeIn();
+                            $.ajax({
+                                url: "action.php",
+                                type: "POST",
+                                data: {
+                                    action: "load-json-from-sql",
+                                    query: input.trim(),
+                                    host: host,
+                                    db: db,
+                                    user: user,
+                                    pwd: pwd
+                                },
+                                success: function (res) {
+                                    if (res == "connection_fail") {
+                                        alert("Alert", "Connection failed.");
+                                    } else if (res == "query_fail") {
+                                        alert("Alert", "Query failed.");
+                                    } else {
+                                        var objects = $.parseJSON(res);
+                                        var left = 50, top = 50;
+                                        $.each(objects, function (obj) {
+                                            var box = addBackgroundTextBox(left, top, obj, 200, 500);
+                                            left += 250;
+                                            if (left > window.innerWidth * 2) {
+                                                left = 50;
+                                                top += 250;
+                                            }
+                                            if (top > window.innerHeight * 2) {
+                                                left = 25;
+                                                top = 25;
+                                            }
+                                        });
+                                        $that.parent().remove();
+                                        regexSearchCount--;
+                                    }
+                                },
+                                complete: function () {
+                                    $(".loader-container").fadeOut();
+                                }
+                            });
+                        } else {
+                            var regexExp = new RegExp(input, "g");
+                            canvas.forEachObject(function (obj) {
+                                if (obj.class === 'element') {
+                                    //obj.setVisible(true);
+                                    if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
+                                        obj.setVisible(false);
+                                        obj.newPoint.setVisible(false);
+                                        obj.tickButton.setVisible(false);
+                                        obj.lines.forEach(function (line) {
+                                            line.setVisible(false);
+                                            line.leftCircle.setVisible(false);
+                                            line.rightCircle.setVisible(false);
+                                        });
+                                    }
+                                }
+                            });
+                            canvas.renderAll();
+                            $(this).attr('readonly', true);
+                            $(this).parent().find(".suggest-list").remove();
+                        }
                     } else {
-                        var txt = $(this).val(),parent='#'+$(this).parent().attr('id');
-                        if (regexTimer){
+                        var txt = $(this).val().trim().toUpperCase(), parent = '#' + $(this).parent().attr('id');
+                        if (txt.indexOf("SQL:") == 0) return;
+                        if (regexTimer) {
                             clearTimeout(regexTimer);
                         }
-                        regexTimer = setTimeout(function(){regexSearch(parent,txt);}, 300);
+                        regexTimer = setTimeout(function () {
+                            regexSearch(parent, txt);
+                        }, 300);
                         $(this).parent().find(".suggest-list").hide();
                     }
                 }).appendTo(box).focus();
@@ -760,11 +859,6 @@ canvas.on('mouse:up',function(e){
                 //    }
                 //});
             }
-        }
-    } else if (!mouseDrag && e.target != null){
-        if (object.class == "background-textbox" || object.class == "divider-textbox") {
-            addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
-            addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
         }
     }
 
@@ -992,6 +1086,13 @@ canvas.on('object:moving', function(e){
                 top: object.top + 3
             });
             object.closeButton.setCoords();
+        }
+        if (object.tickButton != null) {
+            object.tickButton.set({
+                left: object.left + object.width + buttonSize,
+                top: object.top + buttonSize
+            });
+            object.tickButton.setCoords();
         }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){

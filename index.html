@@ -292,6 +292,9 @@
         <li>
             <a data-tab="#callback-tab">Callback</a>
         </li>
+        <li>
+            <a data-tab="#sql-setting-tab">PostgreSQL</a>
+        </li>
     </ul>
     <div class="ttip">
         <div id="theme" class="tab-pane active">
@@ -391,6 +394,27 @@
                 </div>
             </div>
             <ul class="tags" id="callback-tags"></ul>
+        </div>
+        <div id="sql-setting-tab" class="tab-pane">
+            <div class="form-group">
+                <label for="sql-server">Server</label>
+                <input type="text" id="sql-server" class="form-control" placeholder="<Type>"/>
+            </div>
+            <div class="form-group">
+                <label for="sql-dbname">DB name</label>
+                <input type="text" id="sql-dbname" class="form-control" placeholder="<Type>"/>
+            </div>
+            <div class="form-group">
+                <label for="sql-username">User name</label>
+                <input type="text" id="sql-username" class="form-control" placeholder="<Type>"/>
+            </div>
+            <div class="form-group">
+                <label for="sql-password">Password</label>
+                <input type="text" id="sql-password" class="form-control" placeholder="<Type>"/>
+            </div>
+            <div class="form-group">
+                <button class="normal-btn" id="sql-setting-btn">Confirm</button>
+            </div>
         </div>
     </div>
 </div>

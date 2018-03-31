@@ -41,6 +41,7 @@ function addHurdStyle(){
         left: 500,
         width: 100,
         height: 100,
+        class: "dashedbox",
         fill: 'transparent',
         strokeWidth: 1,
         stroke: '#EEE',
@@ -52,15 +53,16 @@ function addHurdStyle(){
         left: 610,
         width: 100,
         height: 100,
+        class: "dashedbox",
         fill: 'transparent',
         strokeWidth: 1,
         stroke: '#EEE',
         strokeDashArray: [5, 5]
     });
 
-    addBackgroundTextBox(200, 200, dummyText, 200, 200, "VagRounded", 10);
-    addBackgroundTextBox(300, 250, dummyText, 200, 200, "SanFrancisco", 8);
-    addBackgroundTextBox(250, 300, dummyText, 200, 200, "SanFrancisco", 12);
+    //addBackgroundTextBox(200, 200, dummyText, 200, 200, "VagRounded", 10);
+    //addBackgroundTextBox(300, 250, dummyText, 200, 200, "SanFrancisco", 8);
+    //addBackgroundTextBox(250, 300, dummyText, 200, 200, "SanFrancisco", 12);
 
     addDividerTextBox(930, 200, dummyText, 200, 200, "VagRounded", 10);
     addDividerTextBox(930, 350, dummyText, 200, 200, "VagRounded", 10);
@@ -368,6 +370,7 @@ function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
     formatted.set({
         left: x1 + 10,
         top: y1 + 10,
+        id: "default-textbox-" + parseInt(Math.random() * 10000),
         class: "divider-textbox",
         hasRotatingPoint: false,
         hasBorders: false,
@@ -394,6 +397,8 @@ function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
     formatted.backgroundBox = backRect;
 
     canvas.add(backRect, formatted);
+
+    return formatted;
 }
 
 function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
@@ -415,6 +420,7 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     formatted.set({
         left: x1 + 10,
         top: y1 + 10,
+        id: "default-textbox-" + parseInt(Math.random() * 10000),
         class: "background-textbox",
         hasRotatingPoint: false,
         hasControls: false,
@@ -442,6 +448,8 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
 
     formatted.backgroundBox = backRect;
     canvas.add(backRect, formatted);
+
+    return formatted;
 }
 
 function addBringForwardButton(x, y, parent){
@@ -518,6 +526,46 @@ function addCloseButton(x, y, parent){
         setTimeout(function(){
             canvas.remove(closeButton);
             delete closeButton.master.closeButton;
+            canvas.renderAll();
+        }, 2000);
+    });
+
+}
+
+function addTickButton(x, y, parent){
+    fabric.Image.fromURL("assets/images/icons/check-24.png", function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var tickButton = new fabric.Group([rect, oImg], {
+            left: x,
+            top: y,
+            id: 'textbox-tick-button',
+            class: 'button',
+            isTemporary: true,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.tickButton = tickButton;
+        tickButton.master = parent;
+
+        canvas.add(tickButton);
+        setTimeout(function(){
+            canvas.remove(tickButton);
+            delete tickButton.master.tickButton;
             canvas.renderAll();
         }, 2000);
     });

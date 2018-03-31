@@ -89,6 +89,12 @@ switch ($action) {
     case 'load-json-from-url':
         loadJSONFromURL();
         break;
+    case 'load-json-from-sql':
+        loadJSONFromPGSQL();
+        break;
+    case 'sql-setting':
+        saveSQLSettings();
+        break;
 }
 
 function save(){
@@ -479,7 +485,7 @@ function getWrapperWords(){
 
 function setWrapperWords(){
     $data = $_POST['data'];
-    echo $data;
+//    echo $data;
     $myFile = fopen("./data/wrapper/words.json", "wr") or die("Unable to open file!");
     if ($myFile) {
         fwrite($myFile, $data);
@@ -545,4 +551,55 @@ function loadJSONFromURL(){
     }
 
     echo json_encode($data);
+}
+
+function saveSQLSettings(){
+    $host = $_POST['host'];
+    $db = $_POST['db'];
+    $user = $_POST['user'];
+    $pwd = $_POST['pwd'];
+
+    $setting = [
+        "host" => $host,
+        "db" => $db,
+        "user" => $user,
+        "pwd" => $pwd
+    ];
+
+    $myFile = fopen("./data/pgsql/setting.json", "wr") or die("Unable to open file!");
+    if ($myFile) {
+        fwrite($myFile, json_encode($setting));
+        fclose($myFile);
+        echo "Settings saved successfully";
+    } else {
+        echo "Settings save fail";
+    }
+
+}
+
+function loadJSONFromPGSQL(){
+    $host = $_POST['host'];
+    $db = $_POST['db'];
+    $user = $_POST['user'];
+    $pwd = $_POST['pwd'];
+
+    $dbconn = pg_connect("host=$host dbname=$db user=$user password=$pwd")
+    or die('connection_fail');
+
+    $query = trim($_POST['query']);
+    $result = pg_query($query) or die('query_fail');
+
+    $array = [];
+    $row = "";
+
+    while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
+        foreach ($line as $col_value) {
+            $row = $row . ", " . $col_value;
+        }
+        array_push($array, $row);
+    }
+    pg_free_result($result);
+    pg_close($dbconn);
+
+    echo json_encode($array);
 }

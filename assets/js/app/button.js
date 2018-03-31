@@ -228,22 +228,6 @@ function addDownloadJSONButton(){
         id: "download-json-button",
         src: "./assets/images/icons/curly-bracket-24.png",
         class: "icon-button"
-    }).on("click", function(){
-        //$.getJSON("/books.json", function(result){
-        //    var left = 50, top = 50, text = "";
-        //    $.each(result["books"], function(i, field){
-        //        $.each(field, function(key, value){
-        //            text = text + ", " + value
-        //        });
-        //        addBackgroundTextBox(left, top, text);
-        //        text = "";
-        //        left += 250;
-        //        if (left > window.innerWidth * 2){
-        //            left = 50;
-        //            top += 250;
-        //        }
-        //    });
-        //});
     }).on("mouseover", showJsonUrlTooltip).appendTo("#right-sidebar");
 }
 
