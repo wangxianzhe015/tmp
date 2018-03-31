@@ -579,11 +579,12 @@ function saveSQLSettings(){
 
 function loadJSONFromPGSQL(){
     $host = $_POST['host'];
+    $port = $_POST['port'];
     $db = $_POST['db'];
     $user = $_POST['user'];
     $pwd = $_POST['pwd'];
 
-    $dbconn = pg_connect("host=$host dbname=$db user=$user password=$pwd")
+    $dbconn = pg_connect("host=$host port=$port dbname=$db user=$user password=$pwd")
     or die('connection_fail');
 
     $query = trim($_POST['query']);

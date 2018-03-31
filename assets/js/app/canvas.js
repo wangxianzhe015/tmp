@@ -760,6 +760,7 @@ canvas.on('mouse:up',function(e){
                         var input = $(this).val().trim().toUpperCase(), $that = $(this);
                         if (input.indexOf("SQL:") == 0) {
                             var host = $("#sql-server").val();
+                            var port = $("#sql-port").val();
                             var db = $("#sql-dbname").val();
                             var user = $("#sql-username").val();
                             var pwd = $("#sql-password").val();
@@ -777,6 +778,7 @@ canvas.on('mouse:up',function(e){
                                     action: "load-json-from-sql",
                                     query: input.trim(),
                                     host: host,
+                                    port: port,
                                     db: db,
                                     user: user,
                                     pwd: pwd
