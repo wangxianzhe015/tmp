@@ -776,7 +776,7 @@ canvas.on('mouse:up',function(e){
                                 type: "POST",
                                 data: {
                                     action: "load-json-from-sql",
-                                    query: input.trim(),
+                                    query: input.substr(4).trim(),
                                     host: host,
                                     port: port,
                                     db: db,
