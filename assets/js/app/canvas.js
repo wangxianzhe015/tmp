@@ -802,12 +802,7 @@ canvas.on('mouse:up',function(e){
                                                 left = 25;
                                                 top = 25;
                                             }
-                                            var words = input.split(" ");
-                                            $.each(words, function(i, word){
-                                                if (word.trim().toUpperCase() == "SELECT"){
-                                                    box.id = words[i + 1].trim();
-                                                }
-                                            });
+                                            box.id = obj.split(",")[0];
                                         });
                                         $that.parent().remove();
                                         regexSearchCount--;
