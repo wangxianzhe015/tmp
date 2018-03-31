@@ -588,7 +588,8 @@ function loadJSONFromPGSQL(){
     or die('connection_fail');
 
     $query = trim($_POST['query']);
-    $result = pg_query($query) or die('query_fail');
+    $result = pg_query($query);
+//    $result = pg_query($query) or die('query_fail');
 
     $array = [];
     $row = "";

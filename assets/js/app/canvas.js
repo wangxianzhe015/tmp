@@ -246,7 +246,7 @@ canvas.on('mouse:down',function(e){
                 canvas.add(idTag);
                 var dBox = null;
                 canvas.forEachObject(function(obj){
-                    if (obj.class == "dashedbox") dBox = obj;
+                    if (obj.class == "tickbox") dBox = obj;
                 });
                 if (dBox != null) {
                     idTag.animate({
