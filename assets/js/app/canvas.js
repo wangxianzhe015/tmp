@@ -757,8 +757,8 @@ canvas.on('mouse:up',function(e){
                         $(this).css("width", ($(this).val().length + 1) * 20 + "px");
                     }
                     if (e.keyCode === 13) {
-                        var input = $(this).val().trim().toUpperCase(), $that = $(this);
-                        if (input.indexOf("SQL:") == 0) {
+                        var input = $(this).val().trim(), $that = $(this);
+                        if (input.toUpperCase().indexOf("SQL:") == 0) {
                             var host = $("#sql-server").val();
                             var port = $("#sql-port").val();
                             var db = $("#sql-dbname").val();
@@ -812,7 +812,7 @@ canvas.on('mouse:up',function(e){
                                 }
                             });
                         } else {
-                            var regexExp = new RegExp(input, "g");
+                            var regexExp = new RegExp(input.toUpperCase(), "g");
                             canvas.forEachObject(function (obj) {
                                 if (obj.class === 'element') {
                                     //obj.setVisible(true);
