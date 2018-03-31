@@ -592,12 +592,20 @@ function loadJSONFromPGSQL(){
 
     $array = [];
     $row = "";
+    $order = 0;
 
     while ($line = pg_fetch_array($result, null, PGSQL_ASSOC)) {
         foreach ($line as $col_value) {
-            $row = $row . ", " . $col_value;
+            if ($order == 0) {
+                $row = $col_value;
+            } else {
+                $row = $row . ", " . $col_value;
+            }
+            $order ++;
         }
         array_push($array, $row);
+        $order = 0;
+        $row = "";
     }
     pg_free_result($result);
     pg_close($dbconn);
