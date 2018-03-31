@@ -791,7 +791,7 @@ canvas.on('mouse:up',function(e){
                                     } else {
                                         var objects = $.parseJSON(res);
                                         var left = 50, top = 50;
-                                        $.each(objects, function (obj) {
+                                        $.each(objects, function (i, obj) {
                                             var box = addBackgroundTextBox(left, top, obj, 200, 500);
                                             left += 250;
                                             if (left > window.innerWidth * 2) {
@@ -802,6 +802,12 @@ canvas.on('mouse:up',function(e){
                                                 left = 25;
                                                 top = 25;
                                             }
+                                            var words = input.split(" ");
+                                            $.each(words, function(i, word){
+                                                if (word.trim().toUpperCase() == "SELECT"){
+                                                    box.id = words[i + 1].trim();
+                                                }
+                                            });
                                         });
                                         $that.parent().remove();
                                         regexSearchCount--;
