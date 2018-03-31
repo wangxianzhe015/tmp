@@ -588,6 +588,12 @@ function loadJSONFromPGSQL(){
     or die('connection_fail');
 
     $query = trim($_POST['query']);
+    if (strpos($query, "limit") < 0){
+        if (strpos($query, ";")) {
+            $query = substr($query, 0, strpos($query, ";"));
+        }
+        $query = $query . " limit 1000;";
+    }
 //    $result = pg_query($query);
     $result = pg_query($query) or die('query_fail');
 
