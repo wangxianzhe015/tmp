@@ -1803,3 +1803,20 @@ textarea.default-textarea{
 .bezier-line-control-btn{
     cursor: pointer;
 }
+
+#json-object-button-div{
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    background-color: transparent;
+    width: 100%;
+}
+
+#json-object-button-container{
+    margin: 0 auto;
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 5px;
+    padding: 5px 10px;
+    width: fit-content;
+    text-align: center;
+}

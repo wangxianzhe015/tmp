@@ -57,6 +57,8 @@ var tickBoxes = [];
 
 var targetHudLine = null;
 
+var pgJsonObjects = null;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false

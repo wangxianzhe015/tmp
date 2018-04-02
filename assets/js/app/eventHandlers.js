@@ -1771,6 +1771,21 @@ function initHandlers(){
         });
     });
 
+    $("#json-object-button-container").delegate("button", "click", function(e){
+        var $target = $(this);
+        if ($target.hasClass("json-group-btn")){
+
+        } else {
+            if (pgJsonObjects == null) return;
+            var currentPage = $target.data("current-page") + 1;
+            var perPage = $target.data("per-page");
+            if (pgJsonObjects.length < currentPage * perPage) currentPage = 0;
+            var start = currentPage * perPage;
+            $target.data("current-page", currentPage);
+            drawPGJSONObjects(start, Math.min(start + perPage - 1, pgJsonObjects.length));
+        }
+    });
+
     $(document).keyup(function(e){
         e.preventDefault();
         if (e.keyCode == "27"){

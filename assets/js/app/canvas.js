@@ -796,35 +796,10 @@ canvas.on('mouse:up',function(e){
                                     } else if (res == "query_fail") {
                                         alert("Alert", "Query failed.");
                                     } else {
-                                        var objects = $.parseJSON(res), obj;
-                                        var left = 50, top = 50, count = 0, firstValue = "";
-                                        $.each(objects, function (i, fields) {
-                                            $.each(fields, function(key, value){
-                                                if (count == 0) {
-                                                    firstValue = value;
-                                                    obj = value;
-                                                } else {
-                                                    obj = obj + ", " + value;
-                                                }
-                                                count ++;
-                                            });
-                                            var box = addBackgroundTextBox(left, top, obj, 200, 500);
-                                            count = 0;
-                                            obj = "";
-                                            left += 250;
-                                            if (left > window.innerWidth * 2) {
-                                                left = 50;
-                                                top += 250;
-                                            }
-                                            if (top > window.innerHeight * 2) {
-                                                left = 25;
-                                                top = 25;
-                                            }
-                                            //box.id = obj.split(",")[0];
-                                            box.id = firstValue;
-                                            var $listObj = $("#json-object-id-list");
-                                            $listObj.val($listObj.val() + box.id + "\n");
-                                        });
+                                        pgJsonObjects = $.parseJSON(res);
+                                        var $obj = $("#json-object-next-btn");
+                                        $obj.data("current-page", 0);
+                                        drawPGJSONObjects(0, Math.min($obj.data("per-page") - 1, pgJsonObjects.length));
                                         $that.parent().remove();
                                         regexSearchCount--;
                                     }

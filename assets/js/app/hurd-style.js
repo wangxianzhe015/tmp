@@ -454,6 +454,43 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     return formatted;
 }
 
+function drawPGJSONObjects(start, end){
+    canvas.forEachObject(function(obj){
+        if (obj.class == "background-textbox") {
+            canvas.remove(obj.backgroundBox);
+            canvas.remove(obj);
+        }
+    });
+    var left = 50, top = 50, count = 0, firstValue = "", obj = "";
+    for (var i = start; i <= end; i ++){
+        $.each(pgJsonObjects[i], function(key, value){
+            if (count == 0) {
+                firstValue = value;
+                obj = value;
+            } else {
+                obj = obj + ", " + value;
+            }
+            count ++;
+        });
+        var box = addBackgroundTextBox(left, top, obj, 200, 500);
+        count = 0;
+        obj = "";
+        left += 250;
+        if (left > window.innerWidth * 2) {
+            left = 50;
+            top += 250;
+        }
+        if (top > window.innerHeight * 2) {
+            left = 25;
+            top = 25;
+        }
+        //box.id = obj.split(",")[0];
+        box.id = firstValue;
+        var $listObj = $("#json-object-id-list");
+        $listObj.val($listObj.val() + box.id + "\n");
+    }
+}
+
 function addBringForwardButton(x, y, parent){
     fabric.Image.fromURL("assets/images/icons/external-24.png", function(oImg) {
         var rect = new fabric.Rect({
