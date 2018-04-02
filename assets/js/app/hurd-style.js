@@ -455,12 +455,13 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
 }
 
 function drawPGJSONObjects(start, end){
-    canvas.forEachObject(function(obj){
-        if (obj != null && obj.class == "background-textbox") {
-            canvas.remove(obj.backgroundBox);
-            canvas.remove(obj);
+    var objects = canvas.getObjects();
+    for (var i = objects.length - 1; i >= 0; i --) {
+        if (objects[i] != null && objects[i].class == "background-textbox") {
+            canvas.remove(objects[i].backgroundBox);
+            canvas.remove(objects[i]);
         }
-    });
+    }
     var left = 50, top = 50, count = 0, firstValue = "", obj = "";
     for (var i = start; i <= end; i ++){
         $.each(pgJsonObjects[i], function(key, value){
