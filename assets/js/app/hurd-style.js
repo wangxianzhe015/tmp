@@ -456,7 +456,7 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
 
 function drawPGJSONObjects(start, end){
     canvas.forEachObject(function(obj){
-        if (obj.class == "background-textbox") {
+        if (obj != null && obj.class == "background-textbox") {
             canvas.remove(obj.backgroundBox);
             canvas.remove(obj);
         }

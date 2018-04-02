@@ -800,6 +800,7 @@ canvas.on('mouse:up',function(e){
                                         var $obj = $("#json-object-next-btn");
                                         $obj.data("current-page", 0);
                                         drawPGJSONObjects(0, Math.min($obj.data("per-page") - 1, pgJsonObjects.length));
+                                        $("#json-object-button-div").show();
                                         $that.parent().remove();
                                         regexSearchCount--;
                                     }
