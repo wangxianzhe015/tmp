@@ -1738,7 +1738,7 @@ function initHandlers(){
                             $.each(data, function(key, value){
                                 if (order == 0) {
                                     text = value;
-                                    firstKey = key;
+                                    firstKey = value;
                                 } else {
                                     text = text + ", " + value;
                                 }

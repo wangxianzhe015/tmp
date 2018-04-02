@@ -806,6 +806,7 @@ canvas.on('mouse:up',function(e){
                                                 } else {
                                                     obj = obj + ", " + value;
                                                 }
+                                                count ++;
                                             });
                                             var box = addBackgroundTextBox(left, top, obj, 200, 500);
                                             count = 0;
