@@ -95,6 +95,16 @@ switch ($action) {
     case 'sql-setting':
         saveSQLSettings();
         break;
+    case 'save-line':
+        saveLineAndBox();
+        break;
+    case 'load-line':
+        loadLineAndBox();
+        break;
+    case 'load-line-file-names':
+        loadLineFileNames();
+        break;
+
 }
 
 function save(){
@@ -619,4 +629,34 @@ function loadJSONFromPGSQL(){
     pg_close($dbconn);
 
     echo json_encode($array);
+}
+
+function saveLineAndBox(){
+    $param = $_POST['objects'];
+    $fileName = $_POST['fileName'];
+    $myFile = fopen("./data/hud/".$fileName.".json", "wr") or die("Unable to open file!");
+    fwrite($myFile, $param);
+    fclose($myFile);
+
+    echo "Save completed";
+}
+
+function loadLineFileNames() {
+    $path = "./data/hud/";
+    $files = scandir($path);
+
+    echo json_encode($files);
+}
+
+function loadLineAndBox() {
+    $fileName = $_POST['fileName'];
+    $myFile = fopen("./data/hud/".$fileName.".json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        $content = fread($myFile, filesize("./data/hud/".$fileName.".json"));
+        fclose($myFile);
+        echo $content;
+    } else {
+        echo "fail";
+    }
+
 }

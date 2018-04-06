@@ -290,6 +290,96 @@ function removeDotTooltip(){
     $("#dot-tooltip").remove();
 }
 
+function dotTooltipHandler(object){
+    if (object.id == "dot1") {
+        if (groupTarget != null && groupTarget.class == "group") {
+            if (groupTarget.expanded) {
+                collapseGroup(groupTarget);
+            } else {
+                expandGroup(groupTarget);
+            }
+        }
+    } else if (object.id == "dot2") {
+        if (groupTarget != null && groupTarget.class == "group") {
+            unGroup(groupTarget);
+            if (groupTargetClock == 0) {
+                groupTargetClock = setInterval(highlightGroup, 600);
+            }
+            showNotification("Select an element to ungroup or <span id='ungroup-all'>Ungroup All</span>");
+            $("#ungroup-all").on("click", function () {
+                unhighlightGroup();
+                ungrouping = false;
+            });
+            ungrouping = true;
+        } else {
+            var objects;
+            if (groupTarget.type == "group") {
+                objects = groupTarget.getObjects();
+            } else {
+                objects = groupTarget;
+            }
+            groupTarget = [];
+            objects.forEach(function (el) {
+                if (el.class != "group") {
+                    groupTarget.push(el);
+                    el.set({
+                        status: ""
+                    });
+                } else {
+                    el.forEachObject(function (ell) {
+                        ell.set({
+                            status: ""
+                        });
+                        groupTarget.push(ell);
+                    });
+                    unGroup(el);
+                }
+            });
+            if (groupTargetClock == 0) {
+                groupTargetClock = setInterval(highlightGroup, 600);
+            }
+            showNotification("Select an element to be parent");
+        }
+    } else if (object.id == "dot3") {
+        if (groupTarget != null && groupTarget.class == "group") {
+            groupTarget.cornerStyle = 'circle';
+            groupTarget.cornerColor = 'white';
+            groupTarget.setControlsVisibility({
+                mt: true,
+                mb: true,
+                ml: true,
+                mr: true,
+                tr: true,
+                tl: true,
+                br: true,
+                bl: true
+            });
+            groupTarget.hasRotatingPoint = true;
+            setTimeout(function () {
+                groupTarget.setControlsVisibility({
+                    mt: false,
+                    mb: false,
+                    ml: false,
+                    mr: false,
+                    tr: false,
+                    tl: false,
+                    br: false,
+                    bl: false
+                });
+                groupTarget.hasRotatingPoint = false;
+                canvas.renderAll();
+            }, 5000);
+            expandGroup(groupTarget);
+            canvas.setActiveObject(groupTarget);
+            canvas.renderAll();
+            //unGroup(groupTarget);
+        }
+    }
+    removeDotTooltip();
+    removeThreeDots();
+    canvas.renderAll();
+}
+
 function highlightGroup(){
     var top, easing;
     if (groupTarget.type == "group") {

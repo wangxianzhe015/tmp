@@ -1353,6 +1353,176 @@ function nameElement(type, original){
     }
 }
 
+function elementDownHandler(object){
+    if (resizable){
+        object.setControlsVisibility({
+            mt: true,
+            mb: true,
+            ml: true,
+            mr: true,
+            tr: true,
+            tl: true,
+            br: true,
+            bl: true
+        });
+    } else {
+        object.setControlsVisibility({
+            mt: false,
+            mb: false,
+            ml: false,
+            mr: false,
+            tr: false,
+            tl: false,
+            br: false,
+            bl: false
+        });
+    }
+    if (rotatable){
+        object.set("hasRotatingPoint", true);
+    } else {
+        object.set("hasRotatingPoint", false);
+    }
+    if (targetElement == null) { // New Click
+        if (tempPoly == null && tempText == null) {
+            //clockID = setInterval(holdElement, 1);
+            //targetElement = object;
+        }
+    } else {
+        if (tempPoly != null && tempText != null) { // Another object is in edit mode
+            if (object != targetElement && object != tempPoly && object != tempText) {
+                initTargetElement();
+            }
+        } else {                                    // object was just clicked
+            //clockID = setInterval(holdElement, 1);
+            //targetElement = object;
+        }
+    }
+    if (object.status == "highlighted"){
+        unhighlightGroup();
+
+        if (ungrouping){
+            if (object.isParent){
+                showNotification("You cannot ungroup a parent.");
+            } else {
+                var targetIndex = 0;
+                for (var i = 0; i < ungroupedObjects.length; i++) {
+                    if (ungroupedObjects[i].id == object.id) {
+                        //ungroupedObjects[i].set({
+                        //    top: ungroupedObjects[i].top
+                        //});
+                        targetIndex = i;
+                        break;
+                    }
+                }
+                ungroupedObjects.splice(targetIndex, 1);
+            }
+            group(ungroupedObjects);
+            ungroupedObjects = [];
+            groupTarget = null;
+            ungrouping = false;
+        } else {
+            if (groupTarget.type == "group"){
+                groupTarget.forEachObject(function(el){
+                    el.isParent = false;
+                });
+            } else {
+                for (var j = 0; j < groupTarget.length; j ++){
+                    groupTarget[j].isParent = false;
+                }
+            }
+            object.isParent = true;
+            group(groupTarget);
+        }
+    }
+}
+
+function saveElements(fileName){
+    var data = [];
+    var canvasData = {};
+    canvasData.width = canvas.getWidth();
+    canvasData.height = canvas.getHeight();
+    canvasData.class = 'canvas';
+    canvasData.backgroundColor = document.body.className;
+    canvasData.elementColor = elementColor;
+    canvasData.isPatternApply = $("#pattern-apply-check").prop('checked');
+    canvasData.pattern = $("#background-pattern").val();
+    data.push(canvasData);
+
+    var viewData = {};
+    viewData.class = 'views';
+    viewData.data = views;
+    data.push(viewData);
+
+    canvas.forEachObject(function(object){
+        if (object.class != 'grid' && (object.class != 'button' || !object.isTemporary)) {
+            var oneData = {};
+            if (object.class == 'element') {
+                oneData = deconstructElement(object, true);
+            } else if (object.class == 'button') {
+                oneData.left = object.left;
+                oneData.top = object.top;
+                oneData.class = object.class;
+                oneData.url = object._objects[1]._originalElement.currentSrc.split(object._objects[1]._originalElement.baseURI)[1];
+            } else if (object.class == 'group') {
+                oneData.left = object.left;
+                oneData.top = object.top;
+                oneData.class = object.class;
+                oneData.expanded = object.expanded;
+                var componentData = [], tempData;
+                object.forEachObject(function(el){
+                    tempData = deconstructElement(el,object.expanded);
+                    componentData.push(tempData);
+                });
+                oneData.children = componentData;
+            }
+            oneData.id = object.id;
+            data.push(oneData);
+        }
+    });
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "save",
+            "elements": JSON.stringify(data),
+            "fileName": fileName
+        },
+        success: function(res){
+            if (currentFile == ''){
+                currentFile = fileName;
+            }
+            $("#save").fadeOut();
+            $("body").css("overflow","auto");
+            alert('Success', res);
+        },
+        complete: function(){
+            $(".loader-container").fadeOut();
+        }
+    });
+}
+
+function loadElements(file){
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load",
+            "fileName": file
+        },
+        success: function(res){
+            var objects = $.parseJSON(res);
+            //removeElements();
+            $("#load").fadeOut();
+            $("body").css("overflow","auto");
+            addElements(objects);
+            currentFile = file;
+        },
+        complete: function(){
+            $(".loader-container").fadeOut();
+        }
+    });
+}
+
 /**
  * Animates an element to a state
  * @param element

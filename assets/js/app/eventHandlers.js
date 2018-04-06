@@ -395,27 +395,35 @@ function initHandlers(){
     });
 
     $("#save-confirm").on("click", function(){
+        $(".loader-container").fadeIn();
         var fileName = $("#save-file-name").val();
+        var saveTarget = $("#save-target").val();
         if (fileName == ''){
             $("#save").fadeOut();
             alert('Error', 'Nothing to save!');
             return false;
         } else {
-            saveElements(fileName);
+            save(fileName, saveTarget);
         }
     });
     $("#load-confirm").on("click", function(){
+        $(".loader-container").fadeIn();
         var fileName = $("#load-file-name").val();
+        var loadTarget = $("#load-target").val();
         if (fileName == ''){
             $("#save").fadeOut();
             alert('Error', 'Nothing to load!');
             return false;
         } else {
-            var workSpaceSave = $("#save-current-workspace").prop('checked');
-            if (workSpaceSave && currentFile != ''){
-                saveElements(currentFile);
+            if (loadTarget == "element") {
+                var workSpaceSave = $("#save-current-workspace").prop('checked');
+                if (workSpaceSave && currentFile != '') {
+                    saveElements(currentFile);
+                }
+                loadElements(fileName);
+            } else if (loadTarget == "line") {
+                loadLineAndBox(fileName);
             }
-            loadElements(fileName);
         }
     });
 
@@ -1782,7 +1790,7 @@ function initHandlers(){
             if (pgJsonObjects.length < currentPage * perPage) currentPage = 0;
             var start = currentPage * perPage;
             $target.data("current-page", currentPage);
-            drawPGJSONObjects(start, Math.min(start + perPage - 1, pgJsonObjects.length));
+            drawTextboxFromPgJSON(start, Math.min(start + perPage - 1, pgJsonObjects.length));
         }
     });
 

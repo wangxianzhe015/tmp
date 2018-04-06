@@ -1,3 +1,27 @@
+function addLeftBarButtons(){
+    addBrowseButton();
+    addChildButtons();
+    addSearchButton();
+    addHideButton();
+    addUploadButton();
+    addChipButton();
+    addFeedButton();
+    addUserButton();
+    addCalendarButton();
+    addIntegrationButton();
+    addTimelineButton();
+}
+
+function addRightBarButtons(){
+    addRingButton();
+    addBLineCircleButton();
+    addTweenButton();
+    addFishEyeButton();
+    addDownloadJSONButton();
+    addLineSaveButton();
+    addLineLoadButton();
+}
+
 function addBrowseButton(){
     $("<img/>", {
         id: "browse-button",
@@ -231,6 +255,29 @@ function addDownloadJSONButton(){
     }).on("mouseover", showJsonUrlTooltip).appendTo("#right-sidebar");
 }
 
+function addLineSaveButton(){
+    $("<img/>", {
+        id: "line-save-button",
+        src: "./assets/images/icons/line-save-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        $("body").css("overflow","hidden");
+        $("#save-target").val("line");
+        $("label[for='save-file-name']").text("Name");
+        $("#save").fadeIn();
+    }).appendTo("#right-sidebar");
+}
+
+function addLineLoadButton(){
+    $("<img/>", {
+        id: "line-load-button",
+        src: "./assets/images/icons/line-load-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        loadLineFileNames();
+    }).appendTo("#right-sidebar");
+}
+
 function addBLineCircleButton(){
     $("<img/>", {
         id: "bline-circle-button",
@@ -272,7 +319,7 @@ function addBackButton(){
     }).appendTo("#left-sidebar");
 }
 
-function addButtons() {
+function addChildButtons() {
     $("<img/>", {
         id: "toggle-lock-button",
         src: "./assets/images/icons/lock-24.png",
@@ -313,6 +360,8 @@ function addButtons() {
         class: "icon-button child"
     }).on("click", function(){
         $("#save-file-name").val(currentFile);
+        $("#save-target").val("element");
+        $("label[for='save-file-name']").text("Workspace");
         $("body").css("overflow","hidden");
         $("#save").fadeIn();
     }).on("mouseover", function(){

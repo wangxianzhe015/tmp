@@ -232,238 +232,29 @@ canvas.on('mouse:down',function(e){
                 if (object.master.tickButton != null) {
                     canvas.remove(object.master.tickButton);
                 }
-                canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
-            } else if (object.id == 'textbox-tick-button') {
-                if (object.master.bringButton != null) {
-                    canvas.remove(object.master.bringButton);
-                }
-                if (object.master.closeButton != null) {
-                    canvas.remove(object.master.closeButton);
-                }
-                var idTag = new fabric.IText(object.master.id, {
-                    left: object.left,
-                    top: object.top,
-                    lineHeight: 1,
-                    fill: 'white',
-                    fontSize: 12,
-                    fontFamily: 'SanFransisco',
-                    hasRotatingPoint: false,
-                    hasControls: false
-                });
-                canvas.add(idTag);
-                var dBox = null;
-                canvas.forEachObject(function(obj){
-                    if (obj.class == "tickbox") dBox = obj;
-                });
-                if (dBox != null) {
-                    idTag.animate({
-                        top: dBox.top + Math.random() * (dBox.height - idTag.height),
-                        left: dBox.left + Math.random() * (dBox.width - idTag.width)
-                    }, {
-                        duration: 2000,
-                        onChange: canvas.renderAll.bind(canvas),
-                        easing: fabric.util.ease.easeOutCirc
-                    });
-                }
-                canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
-            } else if (object.id == 'change-hud-line') {
-                var target = object.target;
-                if (target != null){
-                    //var text = targetHudLine.text;
-                    //if (text.indexOf("+") > -1){
-                    //    targetHudLine.text = text.replace(/[+\s]/g, "--");
-                    //} else {
-                    //    targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
-                    //}
-                    if (target._objects[0].opacity == 0) {
-                        target._objects[0].opacity = 0.5;
-                        target._objects[1].opacity = 0;
-                        target.crossPoints.forEach(function(point){
-                            point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
-                        });
-                    } else {
-                        target._objects[0].opacity = 0;
-                        target._objects[1].opacity = 0.5;
-                        target.crossPoints.forEach(function(point){
-                            point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
-                        });
+                if (object.master.class == "textbox-group") {
+                    var boxes = object.master._objects;
+                    for (var i = 0; i < boxes.length; i ++ ) {
+                        canvas.remove(boxes[i].backgroundBox);
+                        canvas.remove(boxes[i]);
                     }
-                    canvas.remove(object);
-                    target.changeButton = null;
+                } else {
+                    canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
                 }
+            } else if (object.id == 'textbox-tick-button') {
+                showNotification("Select a box!");
+                nextAction = "textbox-tick";
+                actionValue = object;
+            } else if (object.id == 'change-hud-line') {
+                changeCrosshairLine(object);
             }
         } else if (object.class == 'element') {
-            if (resizable){
-                object.setControlsVisibility({
-                    mt: true,
-                    mb: true,
-                    ml: true,
-                    mr: true,
-                    tr: true,
-                    tl: true,
-                    br: true,
-                    bl: true
-                });
-            } else {
-                object.setControlsVisibility({
-                    mt: false,
-                    mb: false,
-                    ml: false,
-                    mr: false,
-                    tr: false,
-                    tl: false,
-                    br: false,
-                    bl: false
-                });
-            }
-            if (rotatable){
-                object.set("hasRotatingPoint", true);
-            } else {
-                object.set("hasRotatingPoint", false);
-            }
-            if (targetElement == null) { // New Click
-                if (tempPoly == null && tempText == null) {
-                    //clockID = setInterval(holdElement, 1);
-                    //targetElement = object;
-                }
-            } else {
-                if (tempPoly != null && tempText != null) { // Another object is in edit mode
-                    if (object != targetElement && object != tempPoly && object != tempText) {
-                        initTargetElement();
-                    }
-                } else {                                    // object was just clicked
-                    //clockID = setInterval(holdElement, 1);
-                    //targetElement = object;
-                }
-            }
-            if (object.status == "highlighted"){
-                unhighlightGroup();
-
-                if (ungrouping){
-                    if (object.isParent){
-                        showNotification("You cannot ungroup a parent.");
-                    } else {
-                        var targetIndex = 0;
-                        for (var i = 0; i < ungroupedObjects.length; i++) {
-                            if (ungroupedObjects[i].id == object.id) {
-                                //ungroupedObjects[i].set({
-                                //    top: ungroupedObjects[i].top
-                                //});
-                                targetIndex = i;
-                                break;
-                            }
-                        }
-                        ungroupedObjects.splice(targetIndex, 1);
-                    }
-                    group(ungroupedObjects);
-                    ungroupedObjects = [];
-                    groupTarget = null;
-                    ungrouping = false;
-                } else {
-                    if (groupTarget.type == "group"){
-                        groupTarget.forEachObject(function(el){
-                            el.isParent = false;
-                        });
-                    } else {
-                        for (var j = 0; j < groupTarget.length; j ++){
-                            groupTarget[j].isParent = false;
-                        }
-                    }
-                    object.isParent = true;
-                    group(groupTarget);
-                }
-            }
+            elementDownHandler(object);
         } else if (object.class == "grid") {
             initTargetElement();
 
         } else if (object.class == "dot") {
-            if (object.id == "dot1") {
-                if (groupTarget != null && groupTarget.class == "group") {
-                    if (groupTarget.expanded) {
-                        collapseGroup(groupTarget);
-                    } else {
-                        expandGroup(groupTarget);
-                    }
-                }
-            } else if (object.id == "dot2") {
-                if (groupTarget != null && groupTarget.class == "group") {
-                    unGroup(groupTarget);
-                    if (groupTargetClock == 0) {
-                        groupTargetClock = setInterval(highlightGroup, 600);
-                    }
-                    showNotification("Select an element to ungroup or <span id='ungroup-all'>Ungroup All</span>");
-                    $("#ungroup-all").on("click", function () {
-                        unhighlightGroup();
-                        ungrouping = false;
-                    });
-                    ungrouping = true;
-                } else {
-                    var objects;
-                    if (groupTarget.type == "group") {
-                        objects = groupTarget.getObjects();
-                    } else {
-                        objects = groupTarget;
-                    }
-                    groupTarget = [];
-                    objects.forEach(function (el) {
-                        if (el.class != "group") {
-                            groupTarget.push(el);
-                            el.set({
-                                status: ""
-                            });
-                        } else {
-                            el.forEachObject(function (ell) {
-                                ell.set({
-                                    status: ""
-                                });
-                                groupTarget.push(ell);
-                            });
-                            unGroup(el);
-                        }
-                    });
-                    if (groupTargetClock == 0) {
-                        groupTargetClock = setInterval(highlightGroup, 600);
-                    }
-                    showNotification("Select an element to be parent");
-                }
-            } else if (object.id == "dot3") {
-                if (groupTarget != null && groupTarget.class == "group") {
-                    groupTarget.cornerStyle = 'circle';
-                    groupTarget.cornerColor = 'white';
-                    groupTarget.setControlsVisibility({
-                        mt: true,
-                        mb: true,
-                        ml: true,
-                        mr: true,
-                        tr: true,
-                        tl: true,
-                        br: true,
-                        bl: true
-                    });
-                    groupTarget.hasRotatingPoint = true;
-                    setTimeout(function () {
-                        groupTarget.setControlsVisibility({
-                            mt: false,
-                            mb: false,
-                            ml: false,
-                            mr: false,
-                            tr: false,
-                            tl: false,
-                            br: false,
-                            bl: false
-                        });
-                        groupTarget.hasRotatingPoint = false;
-                        canvas.renderAll();
-                    }, 5000);
-                    expandGroup(groupTarget);
-                    canvas.setActiveObject(groupTarget);
-                    canvas.renderAll();
-                    //unGroup(groupTarget);
-                }
-            }
-            removeDotTooltip();
-            removeThreeDots();
-            canvas.renderAll();
+            dotTooltipHandler(object);
         } else if (object.class == "ring") {
             //var textPos = {left: object.left + object._objects[1].left, top: object.top + object._objects[1].top};
             selectedRing = object;
@@ -491,92 +282,7 @@ canvas.on('mouse:down',function(e){
             canvas.add(newBezierLine);
             canvas.renderAll();
         } else if (object.class == "bezier-start-point" || object.class == "bezier-end-point") {
-            rmBezierLine = object.master;
-            $("<img/>").attr({
-                class: "bezier-line-control-btn",
-                src: "./assets/images/icons/cancel-24.png"
-            }).on("click", function () {
-                var lines = [], $textCell;
-                if (rmBezierLine != null) {
-                    if (rmBezierLine.leftElement instanceof jQuery) {
-                        if (rmBezierLine.leftElement.hasClass("image-tooltip")) {
-                            $textCell = rmBezierLine.leftElement;
-                        } else {
-                            $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
-                        }
-                        lines = $textCell.data("lines");
-                        lines.forEach(function (line, i) {
-                            if (line.id == rmBezierLine.id) {
-                                lines.splice(i, 1);
-                            }
-                        });
-                        $textCell.data("lines", lines);
-                    } else {
-                        rmBezierLine.leftElement.lines.forEach(function (line, i) {
-                            if (line.id == rmBezierLine.id) {
-                                rmBezierLine.leftElement.lines.splice(i, 1);
-                            }
-                        });
-                    }
-                    if (rmBezierLine.rightElement instanceof jQuery) {
-                        if (rmBezierLine.rightElement.hasClass("image-tooltip")) {
-                            $textCell = rmBezierLine.rightElement;
-                        } else {
-                            $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
-                        }
-                        lines = $textCell.data("lines");
-                        lines.forEach(function (line, i) {
-                            if (line.id == rmBezierLine.id) {
-                                lines.splice(i, 1);
-                            }
-                        });
-                        $textCell.data("lines", lines);
-                    } else {
-                        rmBezierLine.rightElement.lines.forEach(function (line, i) {
-                            if (line.id == rmBezierLine.id) {
-                                rmBezierLine.rightElement.lines.splice(i, 1);
-                            }
-                        });
-                    }
-                    canvas.remove(rmBezierLine.leftCircle);
-                    canvas.remove(rmBezierLine.rightCircle);
-                    canvas.remove(rmBezierLine);
-                    rmBezierLine = null;
-                    canvas.renderAll();
-                }
-                $(".bezier-line-control-btn").remove();
-            }).css({
-                left: e.e.pageX + 20,
-                top: e.e.pageY,
-                position: "absolute"
-            }).appendTo("body");
-
-            $("<img/>").attr({
-                class: "bezier-line-control-btn",
-                src: "./assets/images/icons/line-type-24.png"
-            }).on("click", function () {
-                if (rmBezierLine != null) {
-                    if (rmBezierLine.type == "dashed") {
-                        rmBezierLine.strokeDashArray = [1, 0];
-                        rmBezierLine.type = "solid";
-                    } else {
-                        rmBezierLine.strokeDashArray = [5, 5];
-                        rmBezierLine.type = "dashed";
-                    }
-                    rmBezierLine = null;
-                    canvas.renderAll();
-                }
-                $(".bezier-line-control-btn").remove();
-            }).css({
-                left: e.e.pageX + 54,
-                top: e.e.pageY,
-                position: "absolute"
-            }).appendTo("body");
-
-            setTimeout(function () {
-                $(".bezier-line-control-btn").remove();
-                rmBezierLine = null;
-            }, 2000);
+            bPointClickHandler(object);
         } else if (object.class == 'element-tick-button') {
             if (object.checked) {
                 object._objects[1].setSrc("assets/images/icons/check-o-gray-16.png");
@@ -627,7 +333,13 @@ canvas.on('mouse:down',function(e){
         } else if (object.class == "background-textbox" || object.class == "divider-textbox") {
             if (object.bringButton == null) addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
             if (object.closeButton == null) addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
-            if (object.tickButton == null) addTickButton(object.left + object.width + buttonSize, object.top+ buttonSize, object);
+            if (object.tickButton == null) addTickButton(object.left + object.width + buttonSize, object.top + buttonSize, object);
+        } else if (object.class == "tickbox") {
+            if (nextAction == "textbox-tick") {
+                textboxTickHandler(actionValue, object);
+                nextAction = "";
+                actionValue = "";
+            }
         } else {
             if (canvas.getActiveGroup() == object || canvas.getActiveObject() == object) {
                 showContextMenu = true;
@@ -680,7 +392,7 @@ canvas.on('mouse:up',function(e){
     }
 
     var object = e.target;
-    if (mouseDrag && e.target == null) {
+    if (mouseDrag && object == null) {
         var upPoint = {x: e.e.pageX, y: e.e.pageY};
         if (nextAction == 'add-tickbox') {
             var x1 = downPoint.x > upPoint.x ? upPoint.x : downPoint.x;
@@ -702,163 +414,17 @@ canvas.on('mouse:up',function(e){
             } else if (Math.abs(downPoint.x - upPoint.x) > 20 && Math.abs(downPoint.y - upPoint.y) > 20) {
                 window.scrollTo(downPoint.x - window.innerWidth / 2, downPoint.y - window.innerHeight / 2);
                 addAddButtons(downPoint.x, downPoint.y);
-
-                regexSearchCount++;
-                var box = $('<div/>', {
-                    id: 'regex-search-box-' + regexSearchCount,
-                    'class': 'regex-search-box empty'
-                }).css({
-                    top: downPoint.y + 40,
-                    left: downPoint.x
-                }).appendTo('body');
-
-                $('<span></span>', {
-                    class: 'remove-regex-search',
-                    text: 'x',
-                    title: 'Remove RegEx search'
-                }).css({
-                    position: 'absolute',
-                    top: '25px',
-                    left: '-10px',
-                    cursor: 'pointer',
-                    color: 'white'
-                }).on("click", function () {
-                    $(this).parent().remove();
-                    canvas.forEachObject(function (obj) {
-                        if (obj.class === 'element') {
-                            obj.setVisible(true);
-                            obj.newPoint.setVisible(true);
-                            obj.tickButton.setVisible(true);
-                            obj.lines.forEach(function (line) {
-                                line.setVisible(true);
-                                line.leftCircle.setVisible(true);
-                                line.rightCircle.setVisible(true);
-                            });
-                            $(".regex-search-input").each(function (i, el) {
-                                var regexExp = new RegExp($(el).val().toUpperCase(), "g");
-                                if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
-                                    obj.setVisible(false);
-                                    obj.newPoint.setVisible(false);
-                                    obj.tickButton.setVisible(false);
-                                    obj.lines.forEach(function (line) {
-                                        line.setVisible(false);
-                                        line.leftCircle.setVisible(false);
-                                        line.rightCircle.setVisible(false);
-                                    });
-                                }
-                            });
-                        }
-                    });
-                    canvas.renderAll();
-                    regexSearchCount--;
-                }).appendTo(box).hide();
-
-                $('<input/>', {
-                    type: 'text',
-                    class: 'regex-search-input',
-                    id: 'regex-search-input-' + regexSearchCount
-                }).on('keyup', function (e) {
-                    $(this).parent().removeClass('empty');
-                    $(this).parent().find(".remove-regex-search").show();
-                    if (parseInt($(this).parent().css("left")) + parseInt($(this).css("width")) + 20 < canvas.getWidth()) {
-                        $(this).css("width", ($(this).val().length + 1) * 20 + "px");
-                    }
-                    if (e.keyCode === 13) {
-                        var input = $(this).val().trim(), $that = $(this);
-                        if (input.toUpperCase().indexOf("SQL:") == 0) {
-                            var host = $("#sql-server").val();
-                            var port = $("#sql-port").val();
-                            var db = $("#sql-dbname").val();
-                            var user = $("#sql-username").val();
-                            var pwd = $("#sql-password").val();
-
-                            if (host == "" || db == "" || user == "") {
-                                alert("Error", "Provide Connection Settings!<br/>You can enter information on \"SQL\" Tab of Setting dialog.");
-                                return;
-                            }
-
-                            $(".loader-container").fadeIn();
-                            $.ajax({
-                                url: "action.php",
-                                type: "POST",
-                                data: {
-                                    action: "load-json-from-sql",
-                                    query: input.substr(4).trim(),
-                                    host: host,
-                                    port: port,
-                                    db: db,
-                                    user: user,
-                                    pwd: pwd
-                                },
-                                success: function (res) {
-                                    if (res == "connection_fail") {
-                                        alert("Alert", "Connection failed.");
-                                    } else if (res == "query_fail") {
-                                        alert("Alert", "Query failed.");
-                                    } else {
-                                        pgJsonObjects = $.parseJSON(res);
-                                        var $obj = $("#json-object-next-btn");
-                                        $obj.data("current-page", 0);
-                                        drawPGJSONObjects(0, Math.min($obj.data("per-page") - 1, pgJsonObjects.length));
-                                        $("#json-object-button-div").show();
-                                        $that.parent().remove();
-                                        regexSearchCount--;
-                                    }
-                                },
-                                complete: function () {
-                                    $(".loader-container").fadeOut();
-                                }
-                            });
-                        } else {
-                            var regexExp = new RegExp(input.toUpperCase(), "g");
-                            canvas.forEachObject(function (obj) {
-                                if (obj.class === 'element') {
-                                    //obj.setVisible(true);
-                                    if (!regexExp.test(obj.datatext.toUpperCase()) && !regexExp.test(obj.item(1).getText().toUpperCase()) && !regexExp.test(obj.id.toString().toUpperCase())) {
-                                        obj.setVisible(false);
-                                        obj.newPoint.setVisible(false);
-                                        obj.tickButton.setVisible(false);
-                                        obj.lines.forEach(function (line) {
-                                            line.setVisible(false);
-                                            line.leftCircle.setVisible(false);
-                                            line.rightCircle.setVisible(false);
-                                        });
-                                    }
-                                }
-                            });
-                            canvas.renderAll();
-                            $(this).attr('readonly', true);
-                            $(this).parent().find(".suggest-list").remove();
-                        }
-                    } else {
-                        var txt = $(this).val().trim().toUpperCase(), parent = '#' + $(this).parent().attr('id');
-                        if (txt.indexOf("SQL:") == 0) return;
-                        if (regexTimer) {
-                            clearTimeout(regexTimer);
-                        }
-                        regexTimer = setTimeout(function () {
-                            regexSearch(parent, txt);
-                        }, 300);
-                        $(this).parent().find(".suggest-list").hide();
-                    }
-                }).appendTo(box).focus();
-
-                $('<ul></ul>', {
-                    'class': 'suggest-list'
-                }).appendTo(box);
-
-                //var list = $("#auto-suggest").val().split(',');
-                //list.forEach(function(word){
-                //    if (word !== ''){
-                //        $('<li></li>',{
-                //            text: word
-                //        }).on("click", function(){
-                //            $("#regex-search").val($(this).html());
-                //            $("#regex-search-box").find(".suggest-list").hide().find("li").show();
-                //        }).appendTo("#regex-search-box > .suggest-list");
-                //    }
-                //});
+                addSearchBox();
             }
+        }
+    }
+
+    if (object != null && object.class == "textbox-group") {
+        if (object.closeButton == null) {
+            addCloseButton(object.left + object.width / 2 + buttonSize + 5, object.top - buttonSize, object);
+        }
+        if (object.tickButton == null) {
+            addTickButton(object.left + object.width / 2 + buttonSize, object.top, object);
         }
     }
 
@@ -1093,6 +659,26 @@ canvas.on('object:moving', function(e){
                 top: object.top + buttonSize
             });
             object.tickButton.setCoords();
+        }
+    } else if (object.class == "textbox-group") {
+        object.forEachObject(function(obj){
+            obj.backgroundBox.set({
+                left: obj.left + object.left - 10,
+                top: obj.top + object.top - 10
+            });
+            obj.backgroundBox.setCoords();
+        });
+        if (object.closeButton != null){
+            object.closeButton.set({
+                left: object.left + object.width / 2 + buttonSize + 5,
+                top: object.top - buttonSize
+            });
+        }
+        if (object.tickButton != null) {
+            object.tickButton.set({
+                left: object.left + object.width / 2 + buttonSize,
+                top: object.top
+            });
         }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){

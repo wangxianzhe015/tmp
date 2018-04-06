@@ -437,3 +437,92 @@ function adjustLine(line){
 
     canvas.renderAll();
 }
+
+function bPointClickHandler(object) {
+    rmBezierLine = object.master;
+    $("<img/>").attr({
+        class: "bezier-line-control-btn",
+        src: "./assets/images/icons/cancel-24.png"
+    }).on("click", function () {
+        var lines = [], $textCell;
+        if (rmBezierLine != null) {
+            if (rmBezierLine.leftElement instanceof jQuery) {
+                if (rmBezierLine.leftElement.hasClass("image-tooltip")) {
+                    $textCell = rmBezierLine.leftElement;
+                } else {
+                    $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
+                }
+                lines = $textCell.data("lines");
+                lines.forEach(function (line, i) {
+                    if (line.id == rmBezierLine.id) {
+                        lines.splice(i, 1);
+                    }
+                });
+                $textCell.data("lines", lines);
+            } else {
+                rmBezierLine.leftElement.lines.forEach(function (line, i) {
+                    if (line.id == rmBezierLine.id) {
+                        rmBezierLine.leftElement.lines.splice(i, 1);
+                    }
+                });
+            }
+            if (rmBezierLine.rightElement instanceof jQuery) {
+                if (rmBezierLine.rightElement.hasClass("image-tooltip")) {
+                    $textCell = rmBezierLine.rightElement;
+                } else {
+                    $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
+                }
+                lines = $textCell.data("lines");
+                lines.forEach(function (line, i) {
+                    if (line.id == rmBezierLine.id) {
+                        lines.splice(i, 1);
+                    }
+                });
+                $textCell.data("lines", lines);
+            } else {
+                rmBezierLine.rightElement.lines.forEach(function (line, i) {
+                    if (line.id == rmBezierLine.id) {
+                        rmBezierLine.rightElement.lines.splice(i, 1);
+                    }
+                });
+            }
+            canvas.remove(rmBezierLine.leftCircle);
+            canvas.remove(rmBezierLine.rightCircle);
+            canvas.remove(rmBezierLine);
+            rmBezierLine = null;
+            canvas.renderAll();
+        }
+        $(".bezier-line-control-btn").remove();
+    }).css({
+        left: e.e.pageX + 20,
+        top: e.e.pageY,
+        position: "absolute"
+    }).appendTo("body");
+
+    $("<img/>").attr({
+        class: "bezier-line-control-btn",
+        src: "./assets/images/icons/line-type-24.png"
+    }).on("click", function () {
+        if (rmBezierLine != null) {
+            if (rmBezierLine.type == "dashed") {
+                rmBezierLine.strokeDashArray = [1, 0];
+                rmBezierLine.type = "solid";
+            } else {
+                rmBezierLine.strokeDashArray = [5, 5];
+                rmBezierLine.type = "dashed";
+            }
+            rmBezierLine = null;
+            canvas.renderAll();
+        }
+        $(".bezier-line-control-btn").remove();
+    }).css({
+        left: e.e.pageX + 54,
+        top: e.e.pageY,
+        position: "absolute"
+    }).appendTo("body");
+
+    setTimeout(function () {
+        $(".bezier-line-control-btn").remove();
+        rmBezierLine = null;
+    }, 2000);
+}

@@ -1809,7 +1809,7 @@ textarea.default-textarea{
     bottom: -100%;
     left: 0;
     background-color: transparent;
-    width: 100%;
+    width: 200%;
     display: none;
 }
 

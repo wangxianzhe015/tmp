@@ -66,8 +66,8 @@ function addHurdStyle(){
 
     drawTickBox(200, 200, 500, 500);
 
-    addDividerTextBox(930, 200, dummyText, 200, 200, "VagRounded", 10);
-    addDividerTextBox(930, 350, dummyText, 200, 200, "VagRounded", 10);
+    //addDividerTextBox(930, 200, dummyText, 200, 200, "VagRounded", 10);
+    //addDividerTextBox(930, 350, dummyText, 200, 200, "VagRounded", 10);
 
     addCrosshairLine("vertical", 150, "thin");
     addCrosshairLine("vertical", 180, "thin");
@@ -168,6 +168,33 @@ function addCrosshairLine(direction, offset, type){
     addCrossPoints(crosshairLine);
 }
 
+function changeCrosshairLine(object){
+    var target = object.target;
+    if (target != null){
+        //var text = targetHudLine.text;
+        //if (text.indexOf("+") > -1){
+        //    targetHudLine.text = text.replace(/[+\s]/g, "--");
+        //} else {
+        //    targetHudLine.text = text.replace(/[-]{2}/g, "+ ");
+        //}
+        if (target._objects[0].opacity == 0) {
+            target._objects[0].opacity = 0.5;
+            target._objects[1].opacity = 0;
+            target.crossPoints.forEach(function(point){
+                point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
+            });
+        } else {
+            target._objects[0].opacity = 0;
+            target._objects[1].opacity = 0.5;
+            target.crossPoints.forEach(function(point){
+                point.set("opacity", Math.min(point.verticalLine._objects[1].opacity, point.horizontalLine._objects[1].opacity));
+            });
+        }
+        canvas.remove(object);
+        target.changeButton = null;
+    }
+}
+
 function addCrossPoints(crosshairLine) {
     canvas.forEachObject(function(obj){
         if (obj.class == "crosshair-line" && obj.category != crosshairLine.category && (crosshairLine.intersectsWithObject(obj) || obj.intersectsWithObject(crosshairLine)) && crosshairLine.intersectLines.indexOf(obj.id) < 0){
@@ -177,6 +204,7 @@ function addCrossPoints(crosshairLine) {
                 selectable: false,
                 originX: "center",
                 originY: "center",
+                class: "cross-point",
                 opacity: Math.min(obj._objects[1].opacity, crosshairLine._objects[1].opacity)
             });
             if (obj.category == "vertical") {
@@ -252,7 +280,30 @@ function drawTickBox(x1, y1, x2, y2){
         strokeDashArray: [1, 2]
     });
 
-    var boundaryText1 = new fabric.IText("This is top boundary text. Double-click and edit text.", {
+    addBoundary(x1, y1, x2, y2, tickBox);
+
+    canvas.add(tickBox);
+    tickBox.sendToBack();
+}
+
+/**
+ *
+ * @param x1
+ * @param y1
+ * @param x2
+ * @param y2
+ * @param tickBox
+ * @param text1 is text of TOP boundary
+ * @param text2 is text of RIGHT boundary
+ * @param text3 is text of LEFT boundary
+ * @param text4 is text of BOTTOM boundary
+ */
+function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
+    text1 = text1==undefined?"This is top boundary text. Double-click and edit text.":text1;
+    text2 = text2==undefined?"This is right boundary text. Double-click and edit text.":text2;
+    text3 = text3==undefined?"This is left boundary text. Double-click and edit text.":text3;
+    text4 = text4==undefined?"This is bottom boundary text. Double-click and edit text.":text4;
+    var boundaryText1 = new fabric.IText(text1, {
         fontSize: 10,
         left: x1,
         top: y1 - 15,
@@ -264,6 +315,7 @@ function drawTickBox(x1, y1, x2, y2){
         hasRotatingPoint: false,
         hasBorders: true,
         class: 'boundary-text',
+        category: 'top',
         opacity: 0,
         //originX: 'center',
         //originY: 'center',
@@ -273,7 +325,7 @@ function drawTickBox(x1, y1, x2, y2){
         fontWeight: 'bold'
     });
 
-    var boundaryText2 = new fabric.IText("This is right boundary text. Double-click and edit text.", {
+    var boundaryText2 = new fabric.IText(text2, {
         fontSize: 10,
         left: x2 + 15,
         top: y1,
@@ -285,6 +337,7 @@ function drawTickBox(x1, y1, x2, y2){
         hasRotatingPoint: false,
         hasBorders: true,
         class: 'boundary-text',
+        category: 'right',
         opacity: 0,
         //originX: 'center',
         //originY: 'center',
@@ -294,7 +347,7 @@ function drawTickBox(x1, y1, x2, y2){
         fontWeight: 'bold'
     });
 
-    var boundaryText3 = new fabric.IText("This is left boundary text. Double-click and edit text.", {
+    var boundaryText3 = new fabric.IText(text3, {
         fontSize: 10,
         left: x1 - 15,
         top: y2,
@@ -306,6 +359,7 @@ function drawTickBox(x1, y1, x2, y2){
         hasRotatingPoint: false,
         hasBorders: true,
         class: 'boundary-text',
+        category: 'left',
         opacity: 0,
         //originX: 'center',
         //originY: 'center',
@@ -315,7 +369,7 @@ function drawTickBox(x1, y1, x2, y2){
         fontWeight: 'bold'
     });
 
-    var boundaryText4 = new fabric.IText("This is bottom boundary text. Double-click and edit text.", {
+    var boundaryText4 = new fabric.IText(text4, {
         fontSize: 10,
         top: y2 + 5,
         textAlign: "right",
@@ -326,6 +380,7 @@ function drawTickBox(x1, y1, x2, y2){
         hasRotatingPoint: false,
         hasBorders: true,
         class: 'boundary-text',
+        category: 'bottom',
         opacity: 0,
         //originX: 'center',
         //originY: 'center',
@@ -347,10 +402,7 @@ function drawTickBox(x1, y1, x2, y2){
         bottomText: boundaryText4
     });
 
-    tickBoxes.push(tickBox);
-
-    canvas.add(boundaryText1, boundaryText2, boundaryText3, boundaryText4, tickBox);
-    tickBox.sendToBack();
+    canvas.add(boundaryText1, boundaryText2, boundaryText3, boundaryText4);
 }
 
 function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
@@ -406,7 +458,7 @@ function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
 function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     text = text==undefined?"Edit text":text;
     width = width==undefined?200:width;
-    height = height==undefined?200:height;
+    height = height==undefined?500:height;
     fontName = fontName==undefined?"VagRounded":fontName;
     fontSize = fontSize==undefined?12:fontSize;
     var textBox = new fabric.IText(text, {
@@ -454,14 +506,22 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
     return formatted;
 }
 
-function drawPGJSONObjects(start, end){
+function drawTextboxFromPgJSON(start, end){
     var objects = canvas.getObjects();
     for (var i = objects.length - 1; i >= 0; i --) {
         if (objects[i] != null && objects[i].class == "background-textbox") {
             canvas.remove(objects[i].backgroundBox);
             canvas.remove(objects[i]);
         }
+        if (objects[i] != null && objects[i].class == "textbox-group") {
+            var boxes = objects[i]._objects;
+            for ( var j = 0; j < boxes.length; j ++ ) {
+                canvas.remove(boxes[j].backgroundBox);
+            }
+            canvas.remove(objects[i]);
+        }
     }
+    if (pgJsonObjects == null) return;
     var left = 50, top = 50, count = 0, firstValue = "", obj = "";
     for (var i = start; i <= end; i ++){
         $.each(pgJsonObjects[i], function(key, value){
@@ -470,6 +530,16 @@ function drawPGJSONObjects(start, end){
                 obj = value;
             } else {
                 obj = obj + ", " + value;
+            }
+            if (key == pgJsonGroupKey) {
+                var groupName = value.toLowerCase().replace(" ", "-");
+                var $container = $("#json-object-button-container");
+                if ($container.find(".json-group-btn.json-group-" + groupName).length == 0) {
+                    $("<button></button>", {
+                        class: "normal-btn json-group-btn json-group-" + groupName,
+                        text: value
+                    }).appendTo($container);
+                }
             }
             count ++;
         });
@@ -490,6 +560,33 @@ function drawPGJSONObjects(start, end){
         var $listObj = $("#json-object-id-list");
         $listObj.val($listObj.val() + box.id + "\n");
     }
+}
+
+function addTextboxGroup(array, left, top){
+    var objects = [], box;
+    for (var i = 0; i < array.length; i ++ ) {
+        box = addBackgroundTextBox(250 * i, 0, array[i]);
+        objects[i] = box;
+        canvas.remove(box);
+    }
+    canvas.add(new fabric.Group(objects, {
+        class: "textbox-group",
+        left: left,
+        top: top,
+        originX: "center",
+        originY: "center",
+        hasControls: false,
+        hasRotatingPoint: false,
+        perPixelTargetFind: true
+    }));
+    for (var i = 0; i < objects.length; i ++){
+        box = objects[i];
+        box.backgroundBox.set({
+            left: left + box.left - 10,
+            top: top + box.top - 10
+        });
+    }
+    canvas.renderAll();
 }
 
 function addBringForwardButton(x, y, parent){
@@ -610,4 +707,197 @@ function addTickButton(x, y, parent){
         }, 2000);
     });
 
+}
+
+function textboxTickHandler(object, dBox) {
+    if (object.master.bringButton != null) {
+        canvas.remove(object.master.bringButton);
+    }
+    if (object.master.closeButton != null) {
+        canvas.remove(object.master.closeButton);
+    }
+    var idTag;
+    if (object.master.class == "textbox-group") {
+        var boxes = object.master._objects;
+        for (var j = 0; j < boxes.length; j ++) {
+            idTag = new fabric.IText(boxes[j].id, {
+                left: boxes[j].left + object.left,
+                top: boxes[j].top + object.top,
+                lineHeight: 1,
+                fill: 'white',
+                fontSize: 12,
+                fontFamily: 'SanFransisco',
+                hasRotatingPoint: false,
+                hasControls: false
+            });
+            canvas.add(idTag);
+            if (dBox != null) {
+                idTag.animate({
+                    top: dBox.top + Math.random() * (dBox.height - idTag.height),
+                    left: dBox.left + Math.random() * (dBox.width - idTag.width)
+                }, {
+                    duration: 2000,
+                    onChange: canvas.renderAll.bind(canvas),
+                    easing: fabric.util.ease.easeOutCirc
+                });
+            }
+            canvas.remove(boxes[j].backgroundBox).renderAll();
+        }
+        canvas.remove(object.master, object);
+    } else if (object.master.class == "background-textbox" || object.master.class == "divider-textbox") {
+        idTag = new fabric.IText(object.master.id, {
+            left: object.left,
+            top: object.top,
+            lineHeight: 1,
+            fill: 'white',
+            fontSize: 12,
+            fontFamily: 'SanFransisco',
+            hasRotatingPoint: false,
+            hasControls: false
+        });
+        canvas.add(idTag);
+        if (dBox != null) {
+            idTag.animate({
+                top: dBox.top + Math.random() * (dBox.height - idTag.height),
+                left: dBox.left + Math.random() * (dBox.width - idTag.width)
+            }, {
+                duration: 2000,
+                onChange: canvas.renderAll.bind(canvas),
+                easing: fabric.util.ease.easeOutCirc
+            });
+        }
+        canvas.remove(object.master.backgroundBox, object.master, object).renderAll();
+    }
+
+}
+
+function saveLineAndBox(name){
+    var objects = [], jsonData;
+    canvas.forEachObject(function(obj){
+        if (obj.class == "crosshair-line") {
+            jsonData = obj.toJSON("selectable", "hasControls", "hasRotatingPoint");
+            jsonData.class = obj.class;
+            jsonData.category = obj.category;
+            jsonData.id = obj.id;
+            objects.push(jsonData);
+        } else if (obj.class == "tickbox") {
+            jsonData = obj.toJSON("class");
+            jsonData.topText = obj.topText.text;
+            jsonData.bottomText = obj.bottomText.text;
+            jsonData.leftText = obj.leftText.text;
+            jsonData.rightText = obj.rightText.text;
+            objects.push(jsonData);
+        }
+    });
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "save-line",
+            "objects": JSON.stringify(objects),
+            "fileName": name
+        },
+        success: function(res){
+            $("#save").fadeOut();
+            $("body").css("overflow","auto");
+            alert('Success', res);
+        },
+        complete: function(){
+            $(".loader-container").hide();
+        }
+    });
+}
+
+function loadLineFileNames(){
+    $(".loader-container").show();
+    $("#load-target").val("line");
+    $("label[for='load-file-name']").text("Choose Name");
+    $(".load-extra-option").hide();
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load-line-file-names"
+        },
+        success: function(res){
+            $("body").css("overflow","hidden");
+            var names = $.parseJSON(res);
+            $("#load-file-name").html('');
+            names.forEach(function(name){
+                if (name != '.' && name != '..' && name != '.gitignore') {
+                    var option = document.createElement('option');
+                    $(option).attr('value', name.split('.json')[0]).html(name.split('.json')[0]);
+                    $("#load-file-name").append(option);
+                }
+            });
+            $("#load").fadeIn();
+        },
+        complete: function(){
+            $(".loader-container").hide();
+        }
+    });
+}
+
+function loadLineAndBox(file){
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load-line",
+            "fileName": file
+        },
+        success: function(res){
+            var objects = $.parseJSON(res);
+            var currentObjects = canvas.getObjects();
+            for (var i = currentObjects.length - 1; i >= 0; i --) {
+                if (currentObjects[i] != null && (currentObjects[i].class == "crosshair-line" || currentObjects[i].class == "tickbox" || currentObjects[i].class == "cross-point" || currentObjects[i].class == "boundary-text")) {
+                    canvas.remove(currentObjects[i]);
+                }
+            }
+            fabric.util.enlivenObjects(objects, function(objs) {
+                var origRenderOnAddRemove = canvas.renderOnAddRemove;
+                canvas.renderOnAddRemove = false;
+
+                objs.forEach(function(o) {
+                    canvas.add(o);
+                    if (o.class == "crosshair-line") {
+                        o.set({
+                            selectable: false,
+                            hasRotatingPoint: false,
+                            crossPoints: [],
+                            intersectLines: [],
+                            hoverCursor: "pointer"
+                        });
+                        o.setControlsVisibility({
+                            mt: false,
+                            mb: false,
+                            ml: true,
+                            mr: true,
+                            tr: false,
+                            tl: false,
+                            br: false,
+                            bl: false
+                        });
+                        addCrossPoints(o);
+                    } else if (o.class == "tickbox") {
+                        o.set({
+                            selectable: true,
+                            hasRotatingPoint: false,
+                            cornerSize: 7,
+                            hasBorders: false
+                        });
+                        addBoundary(o.left, o.top, o.left + o.width, o.top + o.height, o, o.topText, o.bottomText, o.leftText, o.rightText);
+                    }
+                });
+
+                canvas.renderOnAddRemove = origRenderOnAddRemove;
+                canvas.renderAll();
+            });
+            $("#load").fadeOut();
+            $("body").css("overflow","auto");
+        },
+        complete: function(){
+            $(".loader-container").fadeOut();
+        }
+    });
 }

@@ -11,7 +11,7 @@ var buttonSize = 24;
 var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
 var fisheyeCanvas = document.getElementById('f-c'),f_ctx = fisheyeCanvas.getContext("2d");
 var bgCanvas;
-var nextAction = '';
+var nextAction = '', actionValue;
 
 var resizable = false;
 var rotatable = true;
@@ -53,11 +53,9 @@ var rings = [], selectedRing = null, positionBeforeRing = null;
 
 var newBezierLine = null, rmBezierLine = null, bLineCircleOpacity = 1;
 
-var tickBoxes = [];
-
 var targetHudLine = null;
 
-var pgJsonObjects = null;
+var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
@@ -87,22 +85,8 @@ function init(){
 
     addHurdStyle();
 
-    addBrowseButton();
-    addButtons();
-    addSearchButton();
-    addHideButton();
-    addUploadButton();
-    addChipButton();
-    addFeedButton();
-    addRingButton();
-    addBLineCircleButton();
-    addTweenButton();
-    addFishEyeButton();
-    addDownloadJSONButton();
-    addUserButton();
-    addCalendarButton();
-    addIntegrationButton();
-    addTimelineButton();
+    addLeftBarButtons();
+    addRightBarButtons();
     //drawElements();
     loadAllCallbacks();
 
