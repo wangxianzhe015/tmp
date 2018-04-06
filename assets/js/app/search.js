@@ -62,7 +62,7 @@ function addSearchBox() {
         if (e.keyCode === 13) {
             var input = $(this).val().trim(), $that = $(this);
             if (input.toUpperCase().indexOf("SQL:") == 0) {
-                sqlSearch($that);
+                sqlSearch($that, input);
             } else {
                 var regexExp = new RegExp(input.toUpperCase(), "g");
                 canvas.forEachObject(function (obj) {
@@ -201,7 +201,7 @@ function regexSearch(parent,txt){
     });
 }
 
-function sqlSearch(obj){
+function sqlSearch(obj, input){
     var host = $("#sql-server").val();
     var port = $("#sql-port").val();
     var db = $("#sql-dbname").val();
@@ -239,6 +239,14 @@ function sqlSearch(obj){
                 $("#json-object-button-div").show();
                 obj.parent().remove();
                 regexSearchCount--;
+
+                for (var i = 0; i < pgJsonObjects.length; i ++) {
+                    $.each(pgJsonObjects[i], function (key, value) {
+                        if (key == pgJsonGroupKey) {
+                            addTextGroupNameButton(value);
+                        }
+                    });
+                }
             }
         },
         complete: function () {
@@ -247,3 +255,4 @@ function sqlSearch(obj){
     });
 
 }
+

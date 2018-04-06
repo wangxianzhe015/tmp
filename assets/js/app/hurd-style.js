@@ -531,16 +531,6 @@ function drawTextboxFromPgJSON(start, end){
             } else {
                 obj = obj + ", " + value;
             }
-            if (key == pgJsonGroupKey) {
-                var groupName = value.toLowerCase().replace(" ", "-");
-                var $container = $("#json-object-button-container");
-                if ($container.find(".json-group-btn.json-group-" + groupName).length == 0) {
-                    $("<button></button>", {
-                        class: "normal-btn json-group-btn json-group-" + groupName,
-                        text: value
-                    }).appendTo($container);
-                }
-            }
             count ++;
         });
         var box = addBackgroundTextBox(left, top, obj, 200, 500);
@@ -563,9 +553,9 @@ function drawTextboxFromPgJSON(start, end){
 }
 
 function addTextboxGroup(array, left, top){
-    var objects = [], box;
+    var objects = [], box, level = 0, perRow = parseInt((canvas.width - left) / 250);
     for (var i = 0; i < array.length; i ++ ) {
-        box = addBackgroundTextBox(250 * i, 0, array[i]);
+        box = addBackgroundTextBox(250 * (i % perRow), level * 250, array[i]);
         objects[i] = box;
         canvas.remove(box);
     }
@@ -587,6 +577,78 @@ function addTextboxGroup(array, left, top){
         });
     }
     canvas.renderAll();
+}
+
+function addTextGroupNameButton(value){
+    var groupName = value.toLowerCase().replace(" ", "-");
+    var $container = $("#json-object-button-container");
+    if ($container.find(".json-group-btn.json-group-" + groupName).length == 0) {
+        $("<button></button>", {
+            class: "normal-btn json-group-btn json-group-" + groupName,
+            text: value
+        }).data({
+            originName: value
+        }).on({
+            mouseover: function(){
+                var $that = $(this);
+                setTimeout(function(){
+                    $that.prop("contentEditable", true).click();
+                }, 1000);
+            },
+            mouseleave: function(){
+                $(this).attr("contentEditable", false);
+            },
+            keyup: function(e){
+                e.preventDefault();
+                if ($("#group-name-change-btn").length > 0) return;
+                $("<button></button>", {
+                    id: "group-name-change-btn",
+                    class: "confirm",
+                    text: "Confirm"
+                }).css({
+                    left: $(this).offset().left,
+                    top: $(this).offset().top - 30,
+                    position: "absolute"
+                }).data({
+                    target: $(this)
+                }).on("click", function(){
+                    var $target = $(this).data("target"), $loader = $(".loader-container");
+                    $loader.fadeIn();
+                    changeTextGroupName($target);
+                    $loader.fadeOut();
+                    $(this).remove();
+                }).appendTo("body");
+            },
+            click: function() {
+                if ($(this).prop("contentEditable")) return;
+                var objects = [], check;
+                for (var i = 0; i < pgJsonObjects.length; i++) {
+                    check = false;
+                    $.each(pgJsonObjects[i], function (key) {
+                        if (key == pgJsonGroupKey) {
+                            check = true;
+                        }
+                    });
+                    if (check) {
+                        objects.push(pgJsonObjects[i]);
+                    }
+                }
+                addTextboxGroup(objects, 50, 0);
+            }
+        }).appendTo($container);
+    }
+
+}
+
+function changeTextGroupName($object) {
+    var originName = $object.data("originName"), changedName = $object.text();
+    for (var i = 0; i < pgJsonObjects.length; i ++) {
+        $.each(pgJsonObjects[i], function(key, value) {
+            if (key == pgJsonGroupKey && value == originName) {
+                pgJsonObjects[i][key] = changedName;
+            }
+        });
+    }
 }
 
 function addBringForwardButton(x, y, parent){
