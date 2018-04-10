@@ -201,6 +201,25 @@ function regexSearch(parent,txt){
     });
 }
 
+function loadSQLSetting(){
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            action: "load-sql-setting"
+        },
+        success: function(res){
+            if (res == "" || res == "fail") return;
+            var array = $.parseJSON(res);
+            $("#sql-server").val(array.host);
+            $("#sql-port").val(array.port);
+            $("#sql-dbname").val(array.db);
+            $("#sql-username").val(array.user);
+            $("#sql-password").val(array.pwd);
+        }
+    });
+}
+
 function sqlSearch(obj, input){
     var host = $("#sql-server").val();
     var port = $("#sql-port").val();

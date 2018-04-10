@@ -92,8 +92,11 @@ switch ($action) {
     case 'load-json-from-sql':
         loadJSONFromPGSQL();
         break;
-    case 'sql-setting':
+    case 'save-sql-setting':
         saveSQLSettings();
+        break;
+    case 'load-sql-setting':
+        loadSQLSettings();
         break;
     case 'save-line':
         saveLineAndBox();
@@ -565,12 +568,14 @@ function loadJSONFromURL(){
 
 function saveSQLSettings(){
     $host = $_POST['host'];
+    $port = $_POST['port'];
     $db = $_POST['db'];
     $user = $_POST['user'];
     $pwd = $_POST['pwd'];
 
     $setting = [
         "host" => $host,
+        "port" => $port,
         "db" => $db,
         "user" => $user,
         "pwd" => $pwd
@@ -585,6 +590,21 @@ function saveSQLSettings(){
         echo "Settings save fail";
     }
 
+}
+
+function loadSQLSettings(){
+    $myFile = fopen("./data/pgsql/setting.json", "r") or die("fail");
+    if ($myFile) {
+        if (filesize("./data/pgsql/setting.json") > 0) {
+            $content = fread($myFile, filesize("./data/pgsql/setting.json"));
+            fclose($myFile);
+        } else {
+            $content = "";
+        }
+        echo $content;
+    } else {
+        echo "fail";
+    }
 }
 
 function loadJSONFromPGSQL(){

@@ -107,7 +107,7 @@ function showSettingTooltip(){
     tooltipObject = null;
     mouseOverElement = true;
     var dialog = $("#settingDialog");
-    var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    var top = window.scrollY + 50;
     var left = window.scrollX + 50;
     dialog.css({
         top: top > 0 ? top : 0,
@@ -159,10 +159,10 @@ function showTagTooltip(){
     }
 
     var dialog = $("#tagDialog");
-    var top = window.scrollY + window.innerHeight - parseInt(dialog.css("height")) - 20;
+    var top = window.scrollY + 50;
     var left = window.scrollX + 50;
     dialog.css({
-        top: top > 0 ? top : 0,
+        top: top,
         left: left
     }).show();
 }
@@ -480,10 +480,10 @@ function showUploadDiv(){
     $('.image-tooltip').hide();
     mouseOverElement = true;
     var obj = $("#uploadDialog");
-    var top = window.scrollY + window.innerHeight - parseInt(obj.css("height")) - 20;
+    var top = window.scrollY + 50;
     var left = window.scrollX + 50;
     obj.css({
-        top: top > 0 ? top : 0,
+        top: top,
         left: left
     }).show();
 }
@@ -586,31 +586,64 @@ function addTextTooltip(left, top){
         class: "default-textarea",
         text: "Some Text"
     }).on("paste", function(e){
+        $(this).addClass("pasting");
         var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
         window.document.execCommand("insertText", false, clipboardData);
-        if (clipboardData == "") return false;
-        var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
-        $.each(rows, function(i, row){
-            elements = row.trim().split("\t");
-            if (i == 0) {
-                $.each(elements, function (j, elem) {
-                    header.push({title: elem})
-                });
-            } else if (elements != "") {
-                dataSet.push(elements);
+        if (clipboardData == "") {
+            var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+            if (items.length > 0) {
+                for (var index = 0; index < items.length; index++) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        var blob = item.getAsFile();
+                        var reader = new FileReader();
+                        reader.onload = function (event) {
+                            var target = $("textarea.pasting").parents(".image-tooltip");
+                            fabric.Image.fromURL(event.target.result, function (oImg) {
+                                oImg.set({
+                                    class: "image-thumbnail",
+                                    left: target.offset().left,
+                                    top: target.offset().top,
+                                    angle: 0,
+                                    scaleX: 32 / oImg.width,
+                                    scaleY: 32 / oImg.height
+                                });
+
+                                canvas.add(oImg);
+                            });
+                        };
+                        reader.readAsDataURL(blob);
+                    }
+                }
+                setTimeout(function(){
+                    var target = $("textarea.pasting").parents(".image-tooltip");
+                    removeTextCell(target);
+                }, 300);
             }
-        });
+        } else {
+            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
+            $.each(rows, function (i, row) {
+                elements = row.trim().split("\t");
+                if (i == 0) {
+                    $.each(elements, function (j, elem) {
+                        header.push({title: elem})
+                    });
+                } else if (elements != "") {
+                    dataSet.push(elements);
+                }
+            });
 
-        var $table = $('<table></table>');
-        $(this).replaceWith($table);
-        $table.DataTable( {
-            bAutoWidth: false,
-            data: dataSet,
-            columns: header,
-            "columnDefs": [ { "defaultContent": "-", "targets": "_all" } ]
-        });
+            var $table = $('<table></table>');
+            $(this).replaceWith($table);
+            $table.DataTable({
+                bAutoWidth: false,
+                data: dataSet,
+                columns: header,
+                "columnDefs": [{"defaultContent": "-", "targets": "_all"}]
+            });
 
-        $table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);
+            $table.find("th").css("max-width", parseInt($table.parents(".ttip").css("width")) / header.length);
+        }
 
     }))).append($("<div></div>", {
         class: "image-tooltip-resize"
@@ -677,6 +710,66 @@ function addTextTooltip(left, top){
     newPoint.master = $tooltip;
 
     return $tooltip;
+}
+
+function removeTextCell($cell){
+    var lines, $elem, i;
+    for (var j = $cell.data("lines").length; j > 0; j --){
+        var line = $cell.data("lines")[j - 1];
+        if (line.rightElement instanceof jQuery){
+            if (line.rightElement.hasClass("image-tooltip")){
+                $elem = line.rightElement;
+            } else {
+                $elem = line.rightElement.parents(".image-tooltip");
+            }
+            if ($elem.attr("id") != $valueTag.val()) {
+                lines = $elem.data("lines");
+                for (i = lines.length; i > 0; i--) {
+                    if (line.id == lines[i - 1].id) {
+                        lines.splice(i - 1, 1);
+                    }
+                }
+                $elem.data("lines", lines);
+            }
+        } else {
+            lines = line.rightElement.lines;
+            for (i = lines.length; i > 0; i --){
+                if (line.id == lines[i - 1].id) {
+                    line.rightElement.lines.splice(i - 1, 1);
+                }
+            }
+        }
+        if (line.leftElement instanceof jQuery) {
+            if (line.leftElement.hasClass("image-tooltip")){
+                $elem = line.leftElement;
+            } else {
+                $elem = line.leftElement.parents(".image-tooltip");
+            }
+            if ($elem.attr("id") != $valueTag.val()) {
+                lines = $elem.data("lines");
+                for (i = lines.length; i > 0; i--) {
+                    if (line.id == lines[i - 1].id) {
+                        lines.splice(i - 1, 1);
+                    }
+                }
+                $elem.data("lines", lines);
+            }
+        } else {
+            lines = line.leftElement.lines;
+            for (i = lines.length; i > 0; i --){
+                if (line.id == lines[i - 1].id) {
+                    line.leftElement.lines.splice(i - 1, 1);
+                }
+            }
+        }
+        canvas.remove(line.leftCircle);
+        canvas.remove(line.rightCircle);
+        canvas.remove(line.control);
+        canvas.remove(line);
+    }
+    canvas.remove($cell.data("newPoint"));
+    $cell.remove();
+    canvas.renderAll();
 }
 
 function showJsonUrlTooltip(){

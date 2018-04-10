@@ -260,63 +260,8 @@ function initHandlers(){
         var $actionTag = $("#confirm-next-action"), $valueTag = $("#confirm-next-value"), action = $actionTag.val();
         $(this).next().click();
         if (action == "remove-text-cell"){
-            var $cell = $("#" + $valueTag.val()), lines, $elem, i;
-            for (var j = $cell.data("lines").length; j > 0; j --){
-                var line = $cell.data("lines")[j - 1];
-                if (line.rightElement instanceof jQuery){
-                    if (line.rightElement.hasClass("image-tooltip")){
-                        $elem = line.rightElement;
-                    } else {
-                        $elem = line.rightElement.parents(".image-tooltip");
-                    }
-                    if ($elem.attr("id") != $valueTag.val()) {
-                        lines = $elem.data("lines");
-                        for (i = lines.length; i > 0; i--) {
-                            if (line.id == lines[i - 1].id) {
-                                lines.splice(i - 1, 1);
-                            }
-                        }
-                        $elem.data("lines", lines);
-                    }
-                } else {
-                    lines = line.rightElement.lines;
-                    for (i = lines.length; i > 0; i --){
-                        if (line.id == lines[i - 1].id) {
-                            line.rightElement.lines.splice(i - 1, 1);
-                        }
-                    }
-                }
-                if (line.leftElement instanceof jQuery) {
-                    if (line.leftElement.hasClass("image-tooltip")){
-                        $elem = line.leftElement;
-                    } else {
-                        $elem = line.leftElement.parents(".image-tooltip");
-                    }
-                    if ($elem.attr("id") != $valueTag.val()) {
-                        lines = $elem.data("lines");
-                        for (i = lines.length; i > 0; i--) {
-                            if (line.id == lines[i - 1].id) {
-                                lines.splice(i - 1, 1);
-                            }
-                        }
-                        $elem.data("lines", lines);
-                    }
-                } else {
-                    lines = line.leftElement.lines;
-                    for (i = lines.length; i > 0; i --){
-                        if (line.id == lines[i - 1].id) {
-                            line.leftElement.lines.splice(i - 1, 1);
-                        }
-                    }
-                }
-                canvas.remove(line.leftCircle);
-                canvas.remove(line.rightCircle);
-                canvas.remove(line.control);
-                canvas.remove(line);
-            }
-            canvas.remove($cell.data("newPoint"));
-            $cell.remove();
-            canvas.renderAll();
+            var $cell = $("#" + $valueTag.val());
+            removeTextCell($cell);
         } else if (action == "remove-tooltip") {
             $("#" + $valueTag.val()).remove();
         }
@@ -593,9 +538,10 @@ function initHandlers(){
 
     $("#pattern-tint-check").on("click", function(){
         if ($(this).prop('checked')){
-            $('.canvas-container').css('background', 'rgba(45, 46, 47, 0.43)');
+            //$('.canvas-container').css('background', 'rgba(45, 46, 47, 0.43)');
+            $('.canvas-container').css('background-image', 'url(assets/images/subtle-carbon.png)');
         } else {
-            $('.canvas-container').css('background', '');
+            $('.canvas-container').css('background-image', '');
         }
     });
 
@@ -1477,8 +1423,8 @@ function initHandlers(){
     });
 
     $("#sql-setting-btn").on("click", function(){
-        return "temporarily disabled";
         var host = $("#sql-server").val();
+        var port = $("#sql-port").val();
         var db = $("#sql-dbname").val();
         var user = $("#sql-username").val();
         var pwd = $("#sql-password").val();
@@ -1492,9 +1438,10 @@ function initHandlers(){
             url: "action.php",
             type: "POST",
             data: {
-                action: "sql-setting",
+                action: "save-sql-setting",
                 host: host,
                 db: db,
+                port: port,
                 user: user,
                 pwd: pwd
             },

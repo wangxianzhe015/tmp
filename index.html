@@ -18,9 +18,7 @@
 <body>
 
 <img id="background-image" src=""/>
-<div class="loader-container">
-    <div class="loader"></div>
-</div>
+<div class="loader-container"></div>
 <!--<img id="background-image" src="http://eskipaper.com/images/simple-dark-background-1.jpg"/>-->
 
 <div class="drawing" id="loading">
@@ -397,24 +395,54 @@
         </div>
         <div id="sql-setting-tab" class="tab-pane">
             <div class="form-group">
-                <label for="sql-server">Server</label>
-                <input type="text" id="sql-server" class="form-control" placeholder="<Type>"/>
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-server">Server</label>
+                    </div>
+                    <div class="column nine">
+                        <input type="text" id="sql-server" class="form-control" placeholder="<Type>"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="sql-port">Port</label>
-                <input type="text" id="sql-port" class="form-control" placeholder="<Type>"/>
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-port">Port</label>
+                    </div>
+                    <div class="column nine">
+                        <input type="text" id="sql-port" class="form-control" placeholder="<Type>"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="sql-dbname">DB name</label>
-                <input type="text" id="sql-dbname" class="form-control" placeholder="<Type>"/>
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-dbname">DB name</label>
+                    </div>
+                    <div class="column nine">
+                        <input type="text" id="sql-dbname" class="form-control" placeholder="<Type>"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="sql-username">User name</label>
-                <input type="text" id="sql-username" class="form-control" placeholder="<Type>"/>
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-username">User name</label>
+                    </div>
+                    <div class="column nine">
+                        <input type="text" id="sql-username" class="form-control" placeholder="<Type>"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label for="sql-password">Password</label>
-                <input type="text" id="sql-password" class="form-control" placeholder="<Type>"/>
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-password">Password</label>
+                    </div>
+                    <div class="column nine">
+                        <input type="password" id="sql-password" class="form-control" placeholder="<Type>"/>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <button class="normal-btn" id="sql-setting-btn">Confirm</button>

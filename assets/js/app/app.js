@@ -92,7 +92,7 @@ function init(){
 
     loadFormations();
     loadPeople();
-
+    loadSQLSetting();
 }
 
 

@@ -71,6 +71,13 @@ canvas.on('mouse:over', function(e) {
             "left": e.target.left + e.target.width,
             "top": e.target.top
         }).show();
+    } else if (e.target != null && e.target.class == "image-thumbnail") {
+        e.target.set({
+            scaleX: 1,
+            scaleY: 1
+        });
+        e.target.setCoords();
+        canvas.renderAll();
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -89,6 +96,12 @@ canvas.on('mouse:out', function(e){
         clearTimeout(targetHudLine.timer);
         targetHudLine.set("selectable", false);
         canvas.deactivateAll();
+    } else if (e.target != null && e.target.class == "image-thumbnail") {
+        e.target.set({
+            scaleX: 32 / e.target.width,
+            scaleY: 32 / e.target.height
+        });
+        e.target.setCoords();
     }
     canvas.renderAll();
 });
@@ -252,7 +265,6 @@ canvas.on('mouse:down',function(e){
             elementDownHandler(object);
         } else if (object.class == "grid") {
             initTargetElement();
-
         } else if (object.class == "dot") {
             dotTooltipHandler(object);
         } else if (object.class == "ring") {
@@ -330,6 +342,10 @@ canvas.on('mouse:down',function(e){
                     canvas.renderAll();
                 }, 2000);
             });
+        } else if (object.class == "cross-point") {
+            object.set({
+                opacity: ((object.opacity * 2 + 1) % 2) / 2
+            })
         } else if (object.class == "background-textbox" || object.class == "divider-textbox") {
             if (object.bringButton == null) addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
             if (object.closeButton == null) addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
@@ -551,7 +567,7 @@ canvas.on('object:moving', function(e){
         canvas.renderAll();
     }
     if (object.class == 'element') {
-        var pos = nearPosition(e.e.offsetX, e.e.offsetY), isInTickbox = false;
+        var pos = nearPosition(e.e.offsetX, e.e.offsetY), isInTickbox = false, tickBoxes = [];
         if (snapToGrid) {
             object.set({
                 left: pos.left,
@@ -566,6 +582,12 @@ canvas.on('object:moving', function(e){
         }
         elementsInfo[object.id].x = object.left;
         elementsInfo[object.id].y = object.top;
+
+        canvas.forEachObject(function(obj) {
+            if (obj.class == "tickbox") {
+                tickBoxes.push(obj);
+            }
+        });
 
         tickBoxes.forEach(function(tickBox){
             if (object.tickButton.checked && !(object.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(object))){
@@ -724,6 +746,9 @@ canvas.on('object:scaling', function(e){
             })
         }
         object.setCoords();
+        if (object.height <= 20 && object.width <= 20) {
+            canvas.remove(object.topText, object.rightText, object.leftText, object.bottomText, object);
+        }
         canvas.renderAll();
     } else if (object.class == "crosshair-line") {
         var unitWidth = new fabric.Text("+ ", {
