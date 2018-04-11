@@ -72,12 +72,14 @@ canvas.on('mouse:over', function(e) {
             "top": e.target.top
         }).show();
     } else if (e.target != null && e.target.class == "image-thumbnail") {
-        e.target.set({
-            scaleX: 1,
-            scaleY: 1
-        });
-        e.target.setCoords();
-        canvas.renderAll();
+        if (!e.target.resized) {
+            e.target.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+            e.target.setCoords();
+            canvas.renderAll();
+        }
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -97,11 +99,13 @@ canvas.on('mouse:out', function(e){
         targetHudLine.set("selectable", false);
         canvas.deactivateAll();
     } else if (e.target != null && e.target.class == "image-thumbnail") {
-        e.target.set({
-            scaleX: 32 / e.target.width,
-            scaleY: 32 / e.target.height
-        });
-        e.target.setCoords();
+        if (!e.target.resized) {
+            e.target.set({
+                scaleX: imageThumbnailSize.width / e.target.width,
+                scaleY: imageThumbnailSize.height / e.target.height
+            });
+            e.target.setCoords();
+        }
     }
     canvas.renderAll();
 });
@@ -260,6 +264,9 @@ canvas.on('mouse:down',function(e){
                 actionValue = object;
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
+            } else if (object.id == 'close-image') {
+                canvas.remove(object.target, object);
+                canvas.renderAll();
             }
         } else if (object.class == 'element') {
             elementDownHandler(object);
@@ -702,6 +709,11 @@ canvas.on('object:moving', function(e){
                 top: object.top
             });
         }
+    } else if (object.class == "image-thumbnail") {
+        object.closeButton.set({
+            left: object.left - buttonSize,
+            top: object.top
+        }).setCoords();
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
@@ -795,6 +807,12 @@ canvas.on('object:scaling', function(e){
         });
         object.set("scaleX", 1);
         canvas.renderAll();
+    } else if (object.class == "image-thumbnail") {
+        object.resized = true;
+        object.closeButton.set({
+            left: object.left - buttonSize,
+            top: object.top
+        }).setCoords();
     }
 });
 

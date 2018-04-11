@@ -572,13 +572,15 @@ function saveSQLSettings(){
     $db = $_POST['db'];
     $user = $_POST['user'];
     $pwd = $_POST['pwd'];
+    $key = $_POST['key'];
 
     $setting = [
         "host" => $host,
         "port" => $port,
         "db" => $db,
         "user" => $user,
-        "pwd" => $pwd
+        "pwd" => $pwd,
+        "key" => $key
     ];
 
     $myFile = fopen("./data/pgsql/setting.json", "wr") or die("Unable to open file!");

@@ -291,7 +291,7 @@
             <a data-tab="#callback-tab">Callback</a>
         </li>
         <li>
-            <a data-tab="#sql-setting-tab">PostgreSQL</a>
+            <a data-tab="#sql-setting-tab">Data Bank</a>
         </li>
     </ul>
     <div class="ttip">
@@ -394,53 +394,63 @@
             <ul class="tags" id="callback-tags"></ul>
         </div>
         <div id="sql-setting-tab" class="tab-pane">
-            <div class="form-group">
+            <div class="form-group no-margin">
                 <div class="row">
                     <div class="column three">
                         <label for="sql-server">Server</label>
                     </div>
                     <div class="column nine">
-                        <input type="text" id="sql-server" class="form-control" placeholder="<Type>"/>
+                        <input type="text" id="sql-server" class="form-control no-margin" placeholder="<Type>"/>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-margin">
                 <div class="row">
                     <div class="column three">
                         <label for="sql-port">Port</label>
                     </div>
                     <div class="column nine">
-                        <input type="text" id="sql-port" class="form-control" placeholder="<Type>"/>
+                        <input type="text" id="sql-port" class="form-control no-margin" placeholder="<Type>"/>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-margin">
                 <div class="row">
                     <div class="column three">
                         <label for="sql-dbname">DB name</label>
                     </div>
                     <div class="column nine">
-                        <input type="text" id="sql-dbname" class="form-control" placeholder="<Type>"/>
+                        <input type="text" id="sql-dbname" class="form-control no-margin" placeholder="<Type>"/>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-margin">
                 <div class="row">
                     <div class="column three">
                         <label for="sql-username">User name</label>
                     </div>
                     <div class="column nine">
-                        <input type="text" id="sql-username" class="form-control" placeholder="<Type>"/>
+                        <input type="text" id="sql-username" class="form-control no-margin" placeholder="<Type>"/>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group no-margin">
                 <div class="row">
                     <div class="column three">
                         <label for="sql-password">Password</label>
                     </div>
                     <div class="column nine">
-                        <input type="password" id="sql-password" class="form-control" placeholder="<Type>"/>
+                        <input type="password" id="sql-password" class="form-control no-margin" placeholder="<Type>"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group no-margin">
+                <div class="row">
+                    <div class="column three">
+                        <label for="sql-secure-key">Secure Access Key</label>
+                    </div>
+                    <div class="column nine">
+                        <textarea class="form-control" id="sql-secure-key" placeholder="<Type>"></textarea>
                     </div>
                 </div>
             </div>
@@ -644,6 +654,7 @@
 <div id="json-object-button-div">
     <div id="json-object-button-container">
         <button id="json-object-next-btn" class="normal-btn" data-current-page="0" data-per-page="50">Next</button>
+        <button id="json-object-close-btn" class="normal-btn">Close All</button>
     </div>
 </div>
 

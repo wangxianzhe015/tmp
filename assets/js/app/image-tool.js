@@ -605,11 +605,46 @@ function addTextTooltip(left, top){
                                     left: target.offset().left,
                                     top: target.offset().top,
                                     angle: 0,
-                                    scaleX: 32 / oImg.width,
-                                    scaleY: 32 / oImg.height
+                                    hasRotatingPoint: false,
+                                    cornerSize: 7,
+                                    resized: false,
+                                    scaleX: imageThumbnailSize.width / oImg.width,
+                                    scaleY: imageThumbnailSize.height / oImg.height
                                 });
 
                                 canvas.add(oImg);
+
+                                fabric.Image.fromURL("./assets/images/icons/remove-24.png", function (tImg) {
+                                    var rect = new fabric.Rect({
+                                        left: 0,
+                                        top: 0,
+                                        width: buttonSize,
+                                        height: buttonSize,
+                                        fill: buttonColor,
+                                        strokeWidth: 2
+                                    });
+                                    // scale image down, and flip it, before adding it onto canvas
+                                    tImg.set({left: 0, top: 0, angle: 0});
+                                    var btn = new fabric.Group([rect, tImg], {
+                                        left: tImg.left - buttonSize,
+                                        top: tImg.top,
+                                        id: 'close-image',
+                                        class: 'button',
+                                        originX: 'center',
+                                        originY: 'center',
+                                        selectable: false,
+                                        draggable: false,
+                                        hasBorders: false,
+                                        hasControls: false,
+                                        hasRotatingPoint: false
+                                    });
+
+                                    oImg.closeButton = btn;
+                                    btn.target = oImg;
+                                    canvas.add(btn);
+                                    canvas.renderAll();
+                                });
+
                             });
                         };
                         reader.readAsDataURL(blob);
@@ -619,6 +654,8 @@ function addTextTooltip(left, top){
                     var target = $("textarea.pasting").parents(".image-tooltip");
                     removeTextCell(target);
                 }, 300);
+            } else {
+                $("textarea.pasting").removeClass("pasting");
             }
         } else {
             var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];

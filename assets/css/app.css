@@ -751,7 +751,7 @@ button .text{
     display:block;
 }
 .tab-menu>li{
-    width: 75px;
+    min-width: 75px;
     z-index: 1;
 }
 .tab-menu>li>a{
@@ -1171,7 +1171,7 @@ button#progress-plus-btn{
     opacity: 0;
 }
 #sql-setting-tab .column:first-child{
-    padding: 21px 0;
+    padding: 11px 0;
 }
 span#ungroup-all{
     color: blue;
@@ -1809,7 +1809,7 @@ textarea.default-textarea{
 
 #json-object-button-div{
     position: absolute;
-    bottom: -100%;
+    top: 0;
     left: 0;
     background-color: transparent;
     width: 200%;

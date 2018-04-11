@@ -1,1 +1,1 @@
-{"host":"47.89.250.44","db":"aligator","user":"postgres","pwd":"root"}
+{"host":"47.89.250.44","port":"3389","db":"aligator","user":"postgres","pwd":"root","key":"abcdefghijklmnopqrstuvwxyz1234567890,.\/<>?~!@#$%^&*()_+|-=\\"}

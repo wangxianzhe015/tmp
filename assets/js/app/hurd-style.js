@@ -507,20 +507,7 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
 }
 
 function drawTextboxFromPgJSON(start, end){
-    var objects = canvas.getObjects();
-    for (var i = objects.length - 1; i >= 0; i --) {
-        if (objects[i] != null && objects[i].class == "background-textbox") {
-            canvas.remove(objects[i].backgroundBox);
-            canvas.remove(objects[i]);
-        }
-        if (objects[i] != null && objects[i].class == "textbox-group") {
-            var boxes = objects[i]._objects;
-            for ( var j = 0; j < boxes.length; j ++ ) {
-                canvas.remove(boxes[j].backgroundBox);
-            }
-            canvas.remove(objects[i]);
-        }
-    }
+    removeAllTextbox();
     if (pgJsonObjects == null) return;
     var left = 50, top = 50, count = 0, firstValue = "", obj = "";
     for (var i = start; i <= end; i ++){
@@ -549,6 +536,23 @@ function drawTextboxFromPgJSON(start, end){
         box.id = firstValue;
         var $listObj = $("#json-object-id-list");
         $listObj.val($listObj.val() + box.id + "\n");
+    }
+}
+
+function removeAllTextbox(){
+    var objects = canvas.getObjects();
+    for (var i = objects.length - 1; i >= 0; i --) {
+        if (objects[i] != null && objects[i].class == "background-textbox") {
+            canvas.remove(objects[i].backgroundBox);
+            canvas.remove(objects[i]);
+        }
+        if (objects[i] != null && objects[i].class == "textbox-group") {
+            var boxes = objects[i]._objects;
+            for ( var j = 0; j < boxes.length; j ++ ) {
+                canvas.remove(boxes[j].backgroundBox);
+            }
+            canvas.remove(objects[i]);
+        }
     }
 }
 

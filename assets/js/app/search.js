@@ -60,6 +60,7 @@ function addSearchBox() {
             $(this).css("width", ($(this).val().length + 1) * 20 + "px");
         }
         if (e.keyCode === 13) {
+            $('.canvas-container').css('background-image', 'url(assets/images/subtle-carbon.png)');
             var input = $(this).val().trim(), $that = $(this);
             if (input.toUpperCase().indexOf("SQL:") == 0) {
                 sqlSearch($that, input);
@@ -216,6 +217,38 @@ function loadSQLSetting(){
             $("#sql-dbname").val(array.db);
             $("#sql-username").val(array.user);
             $("#sql-password").val(array.pwd);
+            $("#sql-secure-key").val(array.key.replace(/./g, "X"));
+        }
+    });
+}
+
+function saveSQLSetting(){
+    var host = $("#sql-server").val();
+    var port = $("#sql-port").val();
+    var db = $("#sql-dbname").val();
+    var user = $("#sql-username").val();
+    var pwd = $("#sql-password").val();
+    var key = $("#sql-secure-key").val();
+
+    if (host == "" || db == "" || user == "") {
+        alert("Error", "Input all values!");
+        return;
+    }
+
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            action: "save-sql-setting",
+            host: host,
+            db: db,
+            port: port,
+            user: user,
+            pwd: pwd,
+            key: key
+        },
+        success: function(res){
+            alert("Success", res);
         }
     });
 }
@@ -228,7 +261,7 @@ function sqlSearch(obj, input){
     var pwd = $("#sql-password").val();
 
     if (host == "" || db == "" || user == "") {
-        alert("Error", "Provide Connection Settings!<br/>You can enter information on \"SQL\" Tab of Setting dialog.");
+        alert("Error", "Provide Connection Settings!<br/>You can enter information on \"Data Bank\" Tab of Setting dialog.");
         return;
     }
 

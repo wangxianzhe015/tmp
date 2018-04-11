@@ -493,7 +493,7 @@ function initHandlers(){
             try {
                 $('#background-image').attr('src', imgURL).show();
                 if ($('#pattern-tint-apply').prop('checked')) {
-                    $('.canvas-container').css('background', 'rgba(45, 46, 47, 0.43)');
+                    $('.canvas-container').css('background-color', 'rgba(45, 46, 47, 0.43)');
                 }
             } catch (e) {
                 console.log(e);
@@ -504,7 +504,7 @@ function initHandlers(){
             //});
         } else {
             $('#background-image').hide();
-            $('.canvas-container').css('background', '');
+            $('.canvas-container').css('background-color', '');
             //canvas.backgroundColor = "rgba(0,0,0,0)";
             //canvas.renderAll();
         }
@@ -518,7 +518,7 @@ function initHandlers(){
             try {
                 $('#background-image').attr('src', imgURL).show();
                 if ($('#pattern-tint-check').prop('checked')) {
-                    $('.canvas-container').css('background', 'rgba(45, 46, 47, 0.43)');
+                    $('.canvas-container').css('background-color', 'rgba(45, 46, 47, 0.43)');
                 }
             } catch (e){
                 console.log(e);
@@ -529,7 +529,7 @@ function initHandlers(){
             //});
         } else {
             $('#background-image').hide();
-            $('.canvas-container').css('background', '');
+            $('.canvas-container').css('background-color', '');
             //canvas.backgroundColor = "rgba(0,0,0,0)";
             //canvas.renderAll();
         }
@@ -538,10 +538,9 @@ function initHandlers(){
 
     $("#pattern-tint-check").on("click", function(){
         if ($(this).prop('checked')){
-            //$('.canvas-container').css('background', 'rgba(45, 46, 47, 0.43)');
-            $('.canvas-container').css('background-image', 'url(assets/images/subtle-carbon.png)');
+            $('.canvas-container').css('background-color', 'rgba(45, 46, 47, 0.43)');
         } else {
-            $('.canvas-container').css('background-image', '');
+            $('.canvas-container').css('background-color', '');
         }
     });
 
@@ -1423,32 +1422,7 @@ function initHandlers(){
     });
 
     $("#sql-setting-btn").on("click", function(){
-        var host = $("#sql-server").val();
-        var port = $("#sql-port").val();
-        var db = $("#sql-dbname").val();
-        var user = $("#sql-username").val();
-        var pwd = $("#sql-password").val();
-
-        if (host == "" || db == "" || user == "") {
-            alert("Error", "Input all values!");
-            return;
-        }
-
-        $.ajax({
-            url: "action.php",
-            type: "POST",
-            data: {
-                action: "save-sql-setting",
-                host: host,
-                db: db,
-                port: port,
-                user: user,
-                pwd: pwd
-            },
-            success: function(res){
-                alert("Success", res);
-            }
-        });
+        saveSQLSetting();
     });
 
     $("#add-people-btn").on("click", function(){
@@ -1726,20 +1700,18 @@ function initHandlers(){
         });
     });
 
-    $("#json-object-button-container").delegate("button", "click", function(e){
+    $("#json-object-next-btn").on("click", function(e){
         var $target = $(this);
-        if ($target.hasClass("json-group-btn")){
-
-        } else {
-            if (pgJsonObjects == null) return;
-            var currentPage = $target.data("current-page") + 1;
-            var perPage = $target.data("per-page");
-            if (pgJsonObjects.length < currentPage * perPage) currentPage = 0;
-            var start = currentPage * perPage;
-            $target.data("current-page", currentPage);
-            drawTextboxFromPgJSON(start, Math.min(start + perPage - 1, pgJsonObjects.length));
-        }
+        if (pgJsonObjects == null) return;
+        var currentPage = $target.data("current-page") + 1;
+        var perPage = $target.data("per-page");
+        if (pgJsonObjects.length < currentPage * perPage) currentPage = 0;
+        var start = currentPage * perPage;
+        $target.data("current-page", currentPage);
+        drawTextboxFromPgJSON(start, Math.min(start + perPage - 1, pgJsonObjects.length));
     });
+
+    $("#json-object-close-btn").on("click", removeAllTextbox);
 
     $(document).keyup(function(e){
         e.preventDefault();

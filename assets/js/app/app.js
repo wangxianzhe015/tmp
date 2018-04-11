@@ -57,6 +57,8 @@ var targetHudLine = null;
 
 var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
+var imageThumbnailSize = {width: 80, height: 80};
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false
