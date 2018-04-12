@@ -8,16 +8,16 @@ function addSearchBox() {
         left: downPoint.x
     }).appendTo('body');
 
+    var buttonDiv = $('<div/>', {
+        class: 'regex-search-buttons'
+    }).appendTo(box);
+
     $('<span></span>', {
         class: 'remove-regex-search',
         text: 'x',
         title: 'Remove RegEx search'
     }).css({
-        position: 'absolute',
-        top: '25px',
-        left: '-10px',
-        cursor: 'pointer',
-        color: 'white'
+        opacity: 0
     }).on("click", function () {
         $(this).parent().remove();
         canvas.forEachObject(function (obj) {
@@ -47,16 +47,30 @@ function addSearchBox() {
         });
         canvas.renderAll();
         regexSearchCount--;
-    }).appendTo(box).hide();
+    }).appendTo(buttonDiv);
+
+    $('<img/>', {
+        class: 'regex-negative-search-btn',
+        src: 'assets/images/icons/random-8.png'
+    }).on("click", function() {
+        var box = $(this).parents(".regex-search-box");
+        box.find(".regex-search-input-negative").css("opacity", 1);
+        box.find("hr").css("opacity", 1);
+    }).appendTo(buttonDiv);
+
+    var inputDiv = $('<div/>', {
+        class: 'regex-search-inputs'
+    }).appendTo(box);
 
     $('<input/>', {
         type: 'text',
         class: 'regex-search-input',
         id: 'regex-search-input-' + regexSearchCount
     }).on('keyup', function (e) {
-        $(this).parent().removeClass('empty');
-        $(this).parent().find(".remove-regex-search").show();
-        if (parseInt($(this).parent().css("left")) + parseInt($(this).css("width")) + 20 < canvas.getWidth()) {
+        var box = $(this).parents(".regex-search-box");
+        box.removeClass('empty');
+        box.find(".remove-regex-search").css("opacity", 1);
+        if (parseInt(box.css("left")) + parseInt($(this).css("width")) + 20 < canvas.getWidth()) {
             $(this).css("width", ($(this).val().length + 1) * 20 + "px");
         }
         if (e.keyCode === 13) {
@@ -83,11 +97,14 @@ function addSearchBox() {
                 });
                 canvas.renderAll();
                 $(this).attr('readonly', true);
-                $(this).parent().find(".suggest-list").remove();
+                box.find(".suggest-list").remove();
             }
         } else {
-            var txt = $(this).val().trim().toUpperCase(), parent = '#' + $(this).parent().attr('id');
-            if (txt.indexOf("SQL:") == 0) return;
+            var txt = $(this).val().trim().toUpperCase(), parent = '#' + box.attr('id');
+            if (txt.indexOf("SQL:") == 0) {
+                box.find(".suggest-list").remove();
+                return;
+            }
             if (regexTimer) {
                 clearTimeout(regexTimer);
             }
@@ -96,13 +113,18 @@ function addSearchBox() {
             }, 300);
             $(this).parent().find(".suggest-list").hide();
         }
-    }).appendTo(box).focus();
+    }).appendTo(inputDiv).focus();
+
+    $('<hr/>').css('opacity', 0).appendTo(inputDiv);
+
+    $('<input/>', {
+        type: 'text',
+        class: 'regex-search-input-negative'
+    }).css('opacity', 0).appendTo(inputDiv);
 
     $('<ul></ul>', {
         'class': 'suggest-list'
     }).appendTo(box);
-
-
 }
 
 function regexSearch(parent,txt){

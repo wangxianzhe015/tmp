@@ -1014,18 +1014,38 @@ button#progress-plus-btn{
     border:none;
     position: absolute;
 }
-.regex-search-box .regex-search-input{
+.regex-search-box .regex-search-buttons{
+    display: inline-grid;
+    position: absolute;
+    left: -10px;
+    top: 25px;
+}
+.regex-search-box .regex-search-buttons > * {
+    cursor: pointer;
+    color: white;
+}
+.regex-search-box .regex-search-inputs > input{
     font-family: SanFrancisco, Helvetica, sans-serif;
     background: none;
     border: none;
-    font-size: 45px;
     color: white;
     min-width: 300px;
+}
+.regex-search-box .regex-search-inputs .regex-search-input{
+    font-size: 45px;
+}
+.regex-search-box .regex-search-inputs hr{
+    margin: 0;
+}
+.regex-search-box .regex-search-inputs .regex-search-input-negative {
+    font-size: 14px;
+    width: 100%;
+    text-decoration: line-through;
 }
 .regex-search-box .suggest-list{
     transform: scaleX(-1);
     min-width: 20em;
-    margin: 25px 0 0 -5px;
+    margin: 0 0 0 -5px;
 }
 .regex-search-box .suggest-list li{
     transform: scaleX(-1);
