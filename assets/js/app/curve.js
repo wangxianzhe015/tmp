@@ -438,7 +438,7 @@ function adjustLine(line){
     canvas.renderAll();
 }
 
-function bPointClickHandler(object) {
+function bPointClickHandler(object, event) {
     rmBezierLine = object.master;
     $("<img/>").attr({
         class: "bezier-line-control-btn",
@@ -494,8 +494,8 @@ function bPointClickHandler(object) {
         }
         $(".bezier-line-control-btn").remove();
     }).css({
-        left: e.e.pageX + 20,
-        top: e.e.pageY,
+        left: event.pageX + 20,
+        top: event.pageY,
         position: "absolute"
     }).appendTo("body");
 
@@ -516,8 +516,8 @@ function bPointClickHandler(object) {
         }
         $(".bezier-line-control-btn").remove();
     }).css({
-        left: e.e.pageX + 54,
-        top: e.e.pageY,
+        left: event.pageX + 54,
+        top: event.pageY,
         position: "absolute"
     }).appendTo("body");
 

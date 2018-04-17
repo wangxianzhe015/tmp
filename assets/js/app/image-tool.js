@@ -645,6 +645,37 @@ function addTextTooltip(left, top){
                                     canvas.renderAll();
                                 });
 
+                                fabric.Image.fromURL("./assets/images/icons/sign-in-24.png", function (tImg) {
+                                    var rect = new fabric.Rect({
+                                        left: 0,
+                                        top: 0,
+                                        width: buttonSize,
+                                        height: buttonSize,
+                                        fill: buttonColor,
+                                        strokeWidth: 2
+                                    });
+                                    // scale image down, and flip it, before adding it onto canvas
+                                    tImg.set({left: 0, top: 0, angle: 0});
+                                    var btn = new fabric.Group([rect, tImg], {
+                                        left: tImg.left - buttonSize,
+                                        top: tImg.top + 1.5 * buttonSize,
+                                        id: 'convert-image',
+                                        class: 'button',
+                                        originX: 'center',
+                                        originY: 'center',
+                                        selectable: false,
+                                        draggable: false,
+                                        hasBorders: false,
+                                        hasControls: false,
+                                        hasRotatingPoint: false
+                                    });
+
+                                    oImg.convertButton = btn;
+                                    btn.target = oImg;
+                                    canvas.add(btn);
+                                    canvas.renderAll();
+                                });
+
                             });
                         };
                         reader.readAsDataURL(blob);

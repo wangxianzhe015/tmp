@@ -1474,7 +1474,10 @@ textarea.default-textarea{
     width: 100%;
     border: none;
 }
-
+.thumbnail-iframe {
+    position: absolute;
+    border: none;
+}
 /* Contact Div */
 #contactDiv, #messageDiv{
     position: fixed;

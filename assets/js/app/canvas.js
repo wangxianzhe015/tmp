@@ -215,7 +215,7 @@ canvas.on('mouse:down',function(e){
     $("#tagger-json-apps").hide();
     $("#tagger-apps").hide();
     selectedRing = null;
-    var object = e.target;
+    var object = e.target, event = e.e;
     if (object != null) {
         if (object.class == 'button') {
             if (object.id == 'add-new-shape') {
@@ -265,7 +265,24 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
-                canvas.remove(object.target, object);
+                canvas.remove(object.target.convertButton, object.target, object);
+                canvas.renderAll();
+            } else if (object.id =='convert-image') {
+                $("<iframe></iframe>", {
+                    src: window.location.href + "/image-marker/",
+                    class: "thumbnail-iframe"
+                }).css({
+                    left: object.target.left,
+                    top: object.target.top,
+                    width: object.target.width * object.target.scaleX,
+                    height: object.target.height * object.target.scaleY
+                }).on({
+                    load: function() {
+                        $(this).contents().find("img").attr("src", object.target._element.currentSrc);
+                    }
+                }).appendTo("body");
+
+                canvas.remove(object.target.closeButton, object.target, object);
                 canvas.renderAll();
             }
         } else if (object.class == 'element') {
@@ -297,11 +314,11 @@ canvas.on('mouse:down',function(e){
                 selectable: false,
                 opacity: 0.5
             });
-            newBezierLine.startElement = e.target.master;
+            newBezierLine.startElement = object.master;
             canvas.add(newBezierLine);
             canvas.renderAll();
         } else if (object.class == "bezier-start-point" || object.class == "bezier-end-point") {
-            bPointClickHandler(object);
+            bPointClickHandler(object, event);
         } else if (object.class == 'element-tick-button') {
             if (object.checked) {
                 object._objects[1].setSrc("assets/images/icons/check-o-gray-16.png");
@@ -573,7 +590,7 @@ canvas.on('object:moving', function(e){
         }
         canvas.renderAll();
     }
-    if (object.class == 'element') {
+    if (object.class == 'element' && (object.category == 'circle' || object.category == 'hexagon')) {
         var pos = nearPosition(e.e.offsetX, e.e.offsetY), isInTickbox = false, tickBoxes = [];
         if (snapToGrid) {
             object.set({
@@ -609,6 +626,15 @@ canvas.on('object:moving', function(e){
             object.tickButton.set({
                 scaleX: 1,
                 scaleY: 1
+            });
+        } else {
+            object.set({
+                scaleX:.5,
+                scaleY:.5
+            });
+            object.tickButton.set({
+                scaleX:.5,
+                scaleY:.5
             });
         }
 
@@ -714,6 +740,10 @@ canvas.on('object:moving', function(e){
             left: object.left - buttonSize,
             top: object.top
         }).setCoords();
+        object.convertButton.set({
+            left: object.left - buttonSize,
+            top: object.top + 1.5 * buttonSize
+        }).setCoords();
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
@@ -812,6 +842,10 @@ canvas.on('object:scaling', function(e){
         object.closeButton.set({
             left: object.left - buttonSize,
             top: object.top
+        }).setCoords();
+        object.convertButton.set({
+            left: object.left - buttonSize,
+            top: object.top + 1.5* buttonSize
         }).setCoords();
     }
 });
