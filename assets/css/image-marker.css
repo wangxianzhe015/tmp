@@ -1,3 +1,12 @@
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
+*{
+    font-family: VagRounded, Helvetica, sans-serif;
+}
+
 body{
     margin: 0;
     width: 100%;
@@ -14,18 +23,33 @@ img#thumbnail-image{
 img.cropped-image{
     position: absolute;
     box-shadow: 0 0 25px rgba(0,0,0,0.4);
-    border: solid 1px black;
+    border: solid 1px gray;
 }
 
 div.image-annotation{
-    position: absolute;
     font-size: 12px;
     min-height: 1em;
     min-width: 1em;
     padding: .5em;
     color: white;
     background-color: rgba(0,0,0,0.4);
+}
+
+div.image-annotation-div{
+    position: absolute;
     z-index: 2;
+}
+div.image-annotation-div.active{
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.3);
+}
+
+.annotation-close-btn{
+    color: white;
+    position: absolute;
+    top: 0;
+    left: -1em;
+    font-size: .7em;
+    cursor: pointer;
 }
 
 .cropper-crop-box{

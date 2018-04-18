@@ -265,12 +265,22 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
-                canvas.remove(object.target.convertButton, object.target, object);
+                if (object.target instanceof jQuery) {
+                    var $iframeBody = object.target.contents().find("body");
+                    $.each();
+                    object.target.remove();
+                    canvas.remove(object);
+                } else {
+                    canvas.remove(object.target.convertButton, object.target, object);
+                }
                 canvas.renderAll();
             } else if (object.id =='convert-image') {
-                $("<iframe></iframe>", {
+                var id = "thumbnail-iframe-" + parseInt(Math.random() * 100000000);
+                var src = object.target._element.currentSrc;
+                var $iframe = $("<iframe></iframe>", {
                     src: window.location.href + "/image-marker/",
-                    class: "thumbnail-iframe"
+                    class: "thumbnail-iframe",
+                    id: id
                 }).css({
                     left: object.target.left,
                     top: object.target.top,
@@ -278,11 +288,12 @@ canvas.on('mouse:down',function(e){
                     height: object.target.height * object.target.scaleY
                 }).on({
                     load: function() {
-                        $(this).contents().find("img").attr("src", object.target._element.currentSrc);
+                        $(this).contents().find("img").attr("src", src);
                     }
                 }).appendTo("body");
 
-                canvas.remove(object.target.closeButton, object.target, object);
+                canvas.remove(object.target.convertButton, object.target);
+                object.target.closeButton.target = $iframe;
                 canvas.renderAll();
             }
         } else if (object.class == 'element') {

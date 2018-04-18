@@ -39,7 +39,19 @@ $(document).ready(function(){
                         top: data.top - 1,
                         width: data.width,
                         height: data.height
-                    }).on("click", imageClickHandler).appendTo("body");
+                    }).on({
+                        click: imageClickHandler,
+                        mouseover: function(){
+                            if ($(this).data("annotation")) {
+                                $(this).data("annotation").addClass("active");
+                            }
+                        },
+                        mouseleave: function(){
+                            if ($(this).data("annotation")) {
+                                $(this).data("annotation").removeClass("active");
+                            }
+                        }
+                    }).appendTo("body");
                     myCropper.clear();
                 }
             });
@@ -55,23 +67,30 @@ $(document).ready(function(){
 
 function imageClickHandler(e){
     if ($(e.target).data("annotation")) return false;
-    var annotationDiv = $("<div></div>", {
-        class: "image-annotation",
-        contentEditable: "true"
+
+    var parentDiv = $("<div></div>", {
+        class: "image-annotation-div"
     }).css({
         left: e.originalEvent.pageX,
         top: e.originalEvent.pageY
-    }).on({
-        //"input": function(){
-        //    this.style.height = "";
-        //    this.style.height = this.scrollHeight + "px";
-        //    var str = $(this).val();
-        //    var cols = $(this).attr("cols");
-        //
-        //    var linecount = str.split("\n").length;
-        //    $(this).rows = linecount + 1;
-        //}
     }).appendTo("body");
+    parentDiv.draggable();
 
-    $(e.target).data("annotation", annotationDiv);
+    $("<div></div>", {
+        class: "image-annotation",
+        contentEditable: "true"
+    }).appendTo(parentDiv);
+
+    $("<span></span>", {
+        class: "annotation-close-btn",
+        text: "X"
+    }).on({
+        click: function() {
+            $(this).parent().data("target").data("annotation", null);
+            $(this).parent().remove();
+        }
+    }).appendTo(parentDiv);
+
+    parentDiv.data("target", $(e.target));
+    $(e.target).data("annotation", parentDiv);
 }
