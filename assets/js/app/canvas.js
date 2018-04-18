@@ -266,10 +266,50 @@ canvas.on('mouse:down',function(e){
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
                 if (object.target instanceof jQuery) {
-                    var $iframeBody = object.target.contents().find("body");
-                    $.each();
-                    object.target.remove();
-                    canvas.remove(object);
+                    var $iframeBody = object.target.contents().find("body"),
+                        images = $iframeBody.find(".cropped-image-div"), $img, imageOffset,
+                        parentOffset = object.target.offset();
+                    for (var i = 0; i < images.length; i ++){
+                        $img = $(images[i]).find(".cropped-image");
+                        imageOffset = $img.offset();
+                        fabric.Image.fromURL($img.attr("src"), function(oImg) {
+                            canvas.add(oImg);
+                            canvas.sendToBack(oImg);
+                        },
+                        {
+                            left: parentOffset.left + imageOffset.left,
+                            top: parentOffset.top + imageOffset.top,
+                            width: $img.innerWidth(),
+                            height: $img.innerHeight(),
+                            hasRotatingPoint: false,
+                            hasBorders: false,
+                            hasControls: false,
+                            selectable: true
+                        });
+
+                        var $annotationDiv = $(images[i]).find(".image-annotation"), text;
+                        if ($annotationDiv.length > 0) {
+                            text = new fabric.IText($annotationDiv.text(), {
+                                left: parentOffset.left + $annotationDiv.offset().left,
+                                top: parentOffset.top + $annotationDiv.offset().top,
+                                fontFamily: 'VagRounded',
+                                fontSize: 12,
+                                backgroundColor: 'rgba(0,0,0,0.4)',
+                                fill: 'white',
+                                hasRotatingPoint: false,
+                                hasBorders: false,
+                                hasControls: false,
+                                selectable: true
+                            });
+
+                            canvas.add(text);
+                            canvas.bringToFront(text);
+                        }
+                    }
+                    setTimeout(function(){
+                        object.target.remove();
+                        canvas.remove(object);
+                    }, 200);
                 } else {
                     canvas.remove(object.target.convertButton, object.target, object);
                 }

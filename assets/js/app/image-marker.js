@@ -31,27 +31,29 @@ $(document).ready(function(){
                 cropend: function(){
                     var data = myCropper.getCropBoxData();
                     var blob = myCropper.getCroppedCanvas().toDataURL();
+                    var $imageDiv = $("<div></div>", {
+                        class: "cropped-image-div"
+                    }).css({
+                        left: data.left - 1,
+                        top: data.top - 1
+                    }).on({
+                        mouseover: function(){
+                            $(this).find(".image-annotation-div").addClass("active");
+                        },
+                        mouseout: function(){
+                            $(this).find(".image-annotation-div").removeClass("active");
+                        }
+                    }).appendTo("body");
+
                     $("<img/>", {
                         class: "cropped-image",
                         src: blob
                     }).css({
-                        left: data.left - 1,
-                        top: data.top - 1,
                         width: data.width,
                         height: data.height
                     }).on({
-                        click: imageClickHandler,
-                        mouseover: function(){
-                            if ($(this).data("annotation")) {
-                                $(this).data("annotation").addClass("active");
-                            }
-                        },
-                        mouseleave: function(){
-                            if ($(this).data("annotation")) {
-                                $(this).data("annotation").removeClass("active");
-                            }
-                        }
-                    }).appendTo("body");
+                        click: imageClickHandler
+                    }).appendTo($imageDiv);
                     myCropper.clear();
                 }
             });
@@ -66,14 +68,15 @@ $(document).ready(function(){
 });
 
 function imageClickHandler(e){
-    if ($(e.target).data("annotation")) return false;
+    var $container = $(e.target).parents(".cropped-image-div");
+    if ($container.find(".image-annotation-div").length > 0) return false;
 
     var parentDiv = $("<div></div>", {
         class: "image-annotation-div"
     }).css({
-        left: e.originalEvent.pageX,
-        top: e.originalEvent.pageY
-    }).appendTo("body");
+        left: e.originalEvent.pageX - $container.offset().left,
+        top: e.originalEvent.pageY - $container.offset().top
+    }).appendTo($container);
     parentDiv.draggable();
 
     $("<div></div>", {
@@ -86,11 +89,7 @@ function imageClickHandler(e){
         text: "X"
     }).on({
         click: function() {
-            $(this).parent().data("target").data("annotation", null);
             $(this).parent().remove();
         }
     }).appendTo(parentDiv);
-
-    parentDiv.data("target", $(e.target));
-    $(e.target).data("annotation", parentDiv);
 }
