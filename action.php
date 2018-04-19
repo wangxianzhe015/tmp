@@ -1,8 +1,6 @@
 <?php
 
 include_once('inc/simplexlsx.class.php');
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
 include_once('inc/phpmailer/Exception.php');
 include_once('inc/phpmailer/PHPMailer.php');
 include_once('inc/phpmailer/SMTP.php');
@@ -107,7 +105,9 @@ switch ($action) {
     case 'load-line-file-names':
         loadLineFileNames();
         break;
-
+    case 'load-eml':
+        getHtmlFromEml();
+        break;
 }
 
 function save(){
@@ -681,4 +681,32 @@ function loadLineAndBox() {
         echo "fail";
     }
 
+}
+
+function getHtmlFromEml() {
+    include_once('inc/eml/MailMimeParser.php');
+
+    $mailParser = new ZBateson\MailMimeParser\MailMimeParser();
+    $mailDataPath = __DIR__ . "/inc/eml/data/";
+    $files = scandir($mailDataPath);
+    $result = [];
+
+    foreach ($files as $file) {
+        if ($file == '.' || $file == '..') continue;
+        $handle = fopen($mailDataPath . $file, 'r');
+        $message = $mailParser->parse($handle);         // returns a \ZBateson\MailMimeParser\Message
+        fclose($handle);
+
+//echo $message->getHeaderValue('from');          // user@example.com
+//echo $message
+//    ->getHeader('from')
+//    ->getPersonName();                          // Person Name
+//echo $message->getHeaderValue('subject');       // The email's subject
+
+//echo $message->getTextContent();
+        array_push($result, ["subject" => $message->getHeaderValue('subject'), "content" => $message->getHtmlContent()]);
+
+    }
+
+    echo json_encode($result);
 }

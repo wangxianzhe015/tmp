@@ -20,6 +20,7 @@ function addRightBarButtons(){
     addDownloadJSONButton();
     addLineSaveButton();
     addLineLoadButton();
+    addEmlButton();
 }
 
 function addBrowseButton(){
@@ -275,6 +276,16 @@ function addLineLoadButton(){
         class: "icon-button"
     }).on("click", function(){
         loadLineFileNames();
+    }).appendTo("#right-sidebar");
+}
+
+function addEmlButton(){
+    $("<img/>", {
+        id: "eml-load-button",
+        src: "./assets/images/icons/envelop-open-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        loadEml();
     }).appendTo("#right-sidebar");
 }
 

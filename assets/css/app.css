@@ -1478,6 +1478,16 @@ textarea.default-textarea{
     position: absolute;
     border: none;
 }
+.eml-data-iframe{
+    background: white;
+    min-width: 600px;
+}
+.eml-canvas-container{
+    background-color: white;
+    position: absolute!important;
+    overflow: auto;
+    height: 400px;
+}
 /* Contact Div */
 #contactDiv, #messageDiv{
     position: fixed;

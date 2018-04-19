@@ -312,7 +312,7 @@ function nearPosition(x, y){
 }
 
 function loadFileNames(){
-    $(".loader-container").fadeIn();
+    showSpinner();
     $("#load-target").val("element");
     $("label[for='save-file-name']").text("Workspace");
     $(".load-extra-option").show();
@@ -335,9 +335,7 @@ function loadFileNames(){
                 }
             });
         },
-        complete: function(){
-            $(".loader-container").fadeOut();
-        }
+        complete: hideSpinner
     });
 }
 
@@ -455,4 +453,12 @@ function hideLoadingDiv(){
     setTimeout(function(){
         $("#pattern-tint-check").click();
     },500);
+}
+
+function showSpinner() {
+    $(".loader-container").fadeIn();
+}
+
+function hideSpinner() {
+    $(".loader-container").fadeOut();
 }
