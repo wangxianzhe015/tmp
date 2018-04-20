@@ -30,14 +30,7 @@ function loadEml() {
                             class: "eml-canvas-container"
                         }).css({
 
-                        }).append($("<div></div>", {
-                            class: "image-tooltip-resize"
-                        }).on({
-                            mousedown: function(){
-                                $(this).parent().draggable("disable");
-                                resizeTooltip = $(this).parent().attr("id");
-                            }
-                        })).draggable().resizable().appendTo("body"));
+                        }).draggable().resizable().appendTo("body"));
                         $("#" + iframes[iframes.length - 1]).remove();
                         iframes.pop();
                     }
