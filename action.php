@@ -619,7 +619,8 @@ function loadJSONFromPGSQL(){
     $dbconn = pg_connect("host=$host port=$port dbname=$db user=$user password=$pwd")
     or die('connection_fail');
 
-    $query = trim($_POST['query']);
+    $queryString = trim($_POST['query']);
+    $query = trim(explode(":", $queryString)[1]);
     if (strpos($query, "limit") < 0){
         if (strpos($query, ";")) {
             $query = substr($query, 0, strpos($query, ";"));
@@ -649,6 +650,26 @@ function loadJSONFromPGSQL(){
 //    }
     pg_free_result($result);
     pg_close($dbconn);
+
+    try {
+        $funcString = trim(explode(":", $queryString)[0]);
+        if ($funcString != "") {
+            $funcName = trim(explode("{", $funcString)[0]);
+            $funcParams = explode(",", substr(trim(explode("{", $funcString)[1]), 0,strlen(trim(explode("{", $funcString)[1])) - 1));
+
+            define("CUSTOM_DIR", "\\inc\\custom\\");
+            include_once(__DIR__ . "/inc/custom/Class" . $funcName . ".php");
+
+            $className = CUSTOM_DIR . "Class" . $funcName;
+            $class = new $className();
+
+            echo $class->process($array, $funcParams);
+            return;
+        }
+    } catch ( Exception $e){
+        echo 'invalid_string';
+        return;
+    }
 
     echo json_encode($array);
 }
@@ -680,14 +701,13 @@ function loadLineAndBox() {
     } else {
         echo "fail";
     }
-
 }
 
 function getHtmlFromEml() {
-    include_once('inc/eml/MailMimeParser.php');
+    include_once(__DIR__ . '/inc/eml/MailMimeParser.php');
 
     $mailParser = new ZBateson\MailMimeParser\MailMimeParser();
-    $mailDataPath = __DIR__ . "/inc/eml/data/";
+    $mailDataPath = __DIR__ . "/data/eml/";
     $files = scandir($mailDataPath);
     $result = [];
 
@@ -705,7 +725,6 @@ function getHtmlFromEml() {
 
 //echo $message->getTextContent();
         array_push($result, ["subject" => $message->getHeaderValue('subject'), "content" => $message->getHtmlContent()]);
-
     }
 
     echo json_encode($result);

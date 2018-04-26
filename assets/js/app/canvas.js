@@ -262,6 +262,14 @@ canvas.on('mouse:down',function(e){
                 showNotification("Select a box!");
                 nextAction = "textbox-tick";
                 actionValue = object;
+            } else if (object.id == 'textbox-convert-button') {
+                if (object.master.mode == "simple") {
+                    object.master.text = object.master.fullText;
+                    object.master.mode = "full";
+                } else {
+                    object.master.text = object.master.simpleText;
+                    object.master.mode = "simple";
+                }
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
@@ -425,6 +433,7 @@ canvas.on('mouse:down',function(e){
             if (object.bringButton == null) addBringForwardButton(object.left + object.width + buttonSize, object.top - buttonSize, object);
             if (object.closeButton == null) addCloseButton(object.left + object.width + buttonSize + 5, object.top + 3, object);
             if (object.tickButton == null) addTickButton(object.left + object.width + buttonSize, object.top + buttonSize, object);
+            //if (object.convertButton == null && object.simpleText != "") addConvertButton(object.left + object.width + buttonSize, object.top + 2 * buttonSize, object);
         } else if (object.class == "tickbox") {
             if (nextAction == "textbox-tick") {
                 textboxTickHandler(actionValue, object);
@@ -559,8 +568,8 @@ canvas.on('before:selection:cleared', function(e){
             e.target.selectable = false;
         }
     } else if (e.target != null && e.target.class == 'boundary-text') {
-        e.target.set("opacity", 0);
-        canvas.renderAll();
+        //e.target.set("opacity", 0);
+        //canvas.renderAll();
     }
 });
 
@@ -890,6 +899,16 @@ canvas.on('object:scaling', function(e){
         canvas.renderAll();
     } else if (object.class == "image-thumbnail") {
         object.resized = true;
+        var scale;
+        if (object.prevScaleX < object.scaleX || object.prevScaleY < object.scaleY){
+            scale = Math.max(object.scaleX, object.scaleY);
+        } else {
+            scale = Math.min(object.scaleX, object.scaleY);
+        }
+        object.set({
+            scaleX: scale,
+            scaleY: scale
+        }).setCoords();
         object.closeButton.set({
             left: object.left - buttonSize,
             top: object.top
@@ -898,6 +917,9 @@ canvas.on('object:scaling', function(e){
             left: object.left - buttonSize,
             top: object.top + 1.5* buttonSize
         }).setCoords();
+        object.prevScaleX = object.scaleX;
+        object.prevScaleY = object.scaleY;
+        canvas.renderAll();
     }
 });
 
@@ -940,6 +962,7 @@ canvas.on('text:changed', function(e){
             object.set("left", object.right - object.width);
             object.setCoords();
         }
+
     }
     //} else if (e.target.class == "background-textbox") {
     //    e.target.backgroundBox.set({

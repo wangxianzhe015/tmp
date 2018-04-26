@@ -79,7 +79,7 @@ function addHurdStyle(){
     addCrosshairLine("horizontal", 550);
 
     canvas.add(rect1, rect2);
-    canvas.add(dashedBox1, dashedBox2);
+    //canvas.add(dashedBox1, dashedBox2);
 
     canvas.renderAll();
 }
@@ -272,12 +272,23 @@ function drawTickBox(x1, y1, x2, y2){
         selectable: true,
         hasRotatingPoint: false,
         cornerSize: 7,
-        hasBorders: false,
+        hasBorders: true,
         class: "tickbox",
         fill: 'transparent',
         strokeWidth: 1,
         stroke: '#EEE',
         strokeDashArray: [1, 2]
+    });
+
+    tickBox.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: false,
+        mr: false,
+        tr: true,
+        tl: true,
+        br: true,
+        bl: true
     });
 
     addBoundary(x1, y1, x2, y2, tickBox);
@@ -299,10 +310,10 @@ function drawTickBox(x1, y1, x2, y2){
  * @param text4 is text of BOTTOM boundary
  */
 function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
-    text1 = text1==undefined?"This is top boundary text. Double-click and edit text.":text1;
-    text2 = text2==undefined?"This is right boundary text. Double-click and edit text.":text2;
-    text3 = text3==undefined?"This is left boundary text. Double-click and edit text.":text3;
-    text4 = text4==undefined?"This is bottom boundary text. Double-click and edit text.":text4;
+    text1 = text1==undefined?"Label":text1;
+    text2 = text2==undefined?"Label":text2;
+    text3 = text3==undefined?"Label":text3;
+    text4 = text4==undefined?"Label":text4;
     var boundaryText1 = new fabric.IText(text1, {
         fontSize: 10,
         left: x1,
@@ -313,7 +324,7 @@ function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
         lockMovementY: true,
         hasControls: false,
         hasRotatingPoint: false,
-        hasBorders: true,
+        hasBorders: false,
         class: 'boundary-text',
         category: 'top',
         opacity: 0,
@@ -335,7 +346,7 @@ function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
         lockMovementY: true,
         hasControls: false,
         hasRotatingPoint: false,
-        hasBorders: true,
+        hasBorders: false,
         class: 'boundary-text',
         category: 'right',
         opacity: 0,
@@ -357,7 +368,7 @@ function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
         lockMovementY: true,
         hasControls: false,
         hasRotatingPoint: false,
-        hasBorders: true,
+        hasBorders: false,
         class: 'boundary-text',
         category: 'left',
         opacity: 0,
@@ -378,7 +389,7 @@ function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
         lockMovementY: true,
         hasControls: false,
         hasRotatingPoint: false,
-        hasBorders: true,
+        hasBorders: false,
         class: 'boundary-text',
         category: 'bottom',
         opacity: 0,
@@ -455,8 +466,9 @@ function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
     return formatted;
 }
 
-function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
-    text = text==undefined?"Edit text":text;
+function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
+    var mode = obj!=undefined?obj['simple']!=undefined?'simple':'full':'anonymous';
+    var text = obj!=undefined?obj['simple']!=undefined?obj['simple']:obj['full']:"Edit text";
     width = width==undefined?200:width;
     height = height==undefined?500:height;
     fontName = fontName==undefined?"VagRounded":fontName;
@@ -468,6 +480,31 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
         fontFamily: fontName,
         fontWeight: 'bold'
     });
+
+    switch (mode){
+        case 'simple':
+            textBox.set({
+                simpleText: obj['simple_text'],
+                fullText: obj['full_text'],
+                mode: mode
+            });
+            break;
+        case 'full':
+            textBox.set({
+                simpleText: 'Not found',
+                fullText: obj['full_text'],
+                mode: mode
+            });
+            break;
+        case 'anonymous':
+            textBox.set({
+                simpleText: '',
+                fullText: 'Edit Text',
+                mode: mode
+            });
+            break;
+    }
+
 
     var formatted = wrapCanvasText(textBox, canvas, width, height, 'left');
 
@@ -509,20 +546,27 @@ function addBackgroundTextBox(x1, y1, text, width, height, fontName, fontSize) {
 function drawTextboxFromPgJSON(start, end){
     removeAllTextbox();
     if (pgJsonObjects == null) return;
-    var left = 50, top = 50, count = 0, firstValue = "", obj = "";
-    for (var i = start; i <= end; i ++){
-        $.each(pgJsonObjects[i], function(key, value){
-            if (count == 0) {
-                firstValue = value;
-                obj = value;
-            } else {
-                obj = obj + ", " + value;
+    var left = 50, top = 50, count = 0, firstValue = "", obj = [], i, j;
+    for (i = start; i <= end; i ++){
+        if (pgJsonObjects[i].hasOwnProperty('text_found') && pgJsonObjects[i]['text_found'] == 1) {
+            obj['simple'] = pgJsonObjects[i]['simple_text'];
+        }
+        for (j in pgJsonObjects[i]) {
+            if (j != 'simple_text') {
+                if (pgJsonObjects[i].hasOwnProperty(j)) {
+                    if (count == 0) {
+                        firstValue = pgJsonObjects[i][j];
+                        obj['full'] = pgJsonObjects[i][j];
+                    } else {
+                        obj['full'] = obj['full'] + ", " + pgJsonObjects[i][j];
+                    }
+                }
+                count++;
             }
-            count ++;
-        });
+        }
         var box = addBackgroundTextBox(left, top, obj, 200, 500);
         count = 0;
-        obj = "";
+        obj = [];
         left += 250;
         if (left > window.innerWidth * 2) {
             left = 50;
@@ -540,6 +584,7 @@ function drawTextboxFromPgJSON(start, end){
 }
 
 function removeAllTextbox(){
+    $('.canvas-container').css('background-image', '');
     var objects = canvas.getObjects();
     for (var i = objects.length - 1; i >= 0; i --) {
         if (objects[i] != null && objects[i].class == "background-textbox") {
@@ -774,6 +819,47 @@ function addTickButton(x, y, parent){
     });
 
 }
+
+function addConvertButton(x, y, parent){
+    fabric.Image.fromURL("assets/images/icons/recycle-24.png", function(oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var convertButton = new fabric.Group([rect, oImg], {
+            left: x,
+            top: y,
+            id: 'textbox-convert-button',
+            class: 'button',
+            isTemporary: true,
+            originX: 'center',
+            originY: 'center',
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.tickButton = convertButton;
+        convertButton.master = parent;
+
+        canvas.add(convertButton);
+        setTimeout(function(){
+            canvas.remove(convertButton);
+            delete convertButton.master.convertButton;
+            canvas.renderAll();
+        }, 2000);
+    });
+
+}
+
 
 function textboxTickHandler(object, dBox) {
     if (object.master.bringButton != null) {

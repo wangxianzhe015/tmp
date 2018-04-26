@@ -29,6 +29,8 @@ function initHandlers(){
                     height: obj.height + 20,
                     strokeDashArray: [obj.width + 20, obj.height + 20]
                 });
+            } else if (obj.class == "boundary-text" && e.originalEvent.keyCode == 13) {
+                canvas.deactivateAll();
             }
         }
 
@@ -1712,6 +1714,20 @@ function initHandlers(){
     });
 
     $("#json-object-close-btn").on("click", removeAllTextbox);
+
+    $("#json-object-toggle-btn").on("click", function(){
+        canvas.forEachObject(function(obj){
+            if (obj.class == "background-textbox") {
+                if (obj.mode == "simple") {
+                    obj.text = obj.fullText;
+                    obj.mode = "full";
+                } else if (obj.mode == "full") {
+                    obj.text = obj.simpleText;
+                    obj.mode = "simple";
+                }
+            }
+        });
+    });
 
     $(document).keyup(function(e){
         e.preventDefault();

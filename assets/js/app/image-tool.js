@@ -608,8 +608,10 @@ function addTextTooltip(left, top){
                                     hasRotatingPoint: false,
                                     cornerSize: 7,
                                     resized: false,
+                                    prevScaleX: imageThumbnailSize.width / oImg.width,
+                                    prevScaleY: imageThumbnailSize.width / oImg.width,
                                     scaleX: imageThumbnailSize.width / oImg.width,
-                                    scaleY: imageThumbnailSize.height / oImg.height
+                                    scaleY: imageThumbnailSize.width / oImg.width
                                 });
 
                                 canvas.add(oImg);
@@ -618,8 +620,8 @@ function addTextTooltip(left, top){
                                     var rect = new fabric.Rect({
                                         left: 0,
                                         top: 0,
-                                        width: buttonSize,
-                                        height: buttonSize,
+                                        width: buttonSize * 0.8,
+                                        height: buttonSize * 0.8,
                                         fill: buttonColor,
                                         strokeWidth: 2
                                     });
@@ -632,6 +634,8 @@ function addTextTooltip(left, top){
                                         class: 'button',
                                         originX: 'center',
                                         originY: 'center',
+                                        scaleX: 0.8,
+                                        scaleY: 0.8,
                                         selectable: false,
                                         draggable: false,
                                         hasBorders: false,
@@ -690,8 +694,9 @@ function addTextTooltip(left, top){
             }
         } else {
             var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
-            $.each(rows, function (i, row) {
-                elements = row.trim().split("\t");
+            for (var i = 0; i < rows.length; i ++) {
+                elements = rows[i].trim().split("\t");
+                if (elements.length < 2) return;
                 if (i == 0) {
                     $.each(elements, function (j, elem) {
                         header.push({title: elem})
@@ -699,7 +704,7 @@ function addTextTooltip(left, top){
                 } else if (elements != "") {
                     dataSet.push(elements);
                 }
-            });
+            }
 
             var $table = $('<table></table>');
             $(this).replaceWith($table);

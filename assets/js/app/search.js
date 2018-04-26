@@ -55,7 +55,7 @@ function addSearchBox() {
     }).on("click", function() {
         var box = $(this).parents(".regex-search-box");
         box.find(".regex-search-input-negative").css("opacity", 1);
-        box.find("hr").css("opacity", 1);
+        box.find("hr").css("opacity", 0.5);
     }).appendTo(buttonDiv);
 
     var inputDiv = $('<div/>', {
@@ -281,6 +281,12 @@ function sqlSearch(obj, input){
     var db = $("#sql-dbname").val();
     var user = $("#sql-username").val();
     var pwd = $("#sql-password").val();
+    var queryString = input.substr(4).trim();
+    if (queryString.split(":").length != 3) {
+        alert("Alert", "Input exact query!\nQuery format is 'sql:[custom function]:query'.");
+        return false;
+    }
+    var custom = queryString.split(":")[0].trim()!="";
 
     if (host == "" || db == "" || user == "") {
         alert("Error", "Provide Connection Settings!<br/>You can enter information on \"Data Bank\" Tab of Setting dialog.");
@@ -293,7 +299,7 @@ function sqlSearch(obj, input){
         type: "POST",
         data: {
             action: "load-json-from-sql",
-            query: input.substr(4).trim(),
+            query: queryString,
             host: host,
             port: port,
             db: db,
@@ -305,6 +311,8 @@ function sqlSearch(obj, input){
                 alert("Alert", "Connection failed.");
             } else if (res == "query_fail") {
                 alert("Alert", "Query failed.");
+            } else if (res == "invalid_string") {
+                alert("Alert", "Query format is wrong.");
             } else {
                 pgJsonObjects = $.parseJSON(res);
                 var $obj = $("#json-object-next-btn");
@@ -322,6 +330,9 @@ function sqlSearch(obj, input){
                     });
                 }
             }
+        },
+        error: function(){
+            alert("Alert", "Unknown error!");
         },
         complete: function () {
             $(".loader-container").fadeOut();
