@@ -9,9 +9,11 @@ class Class0001 {
         $result = [];
         $neighborWords = "";
 
-        foreach ($rows as $row) {
+        for ($k = 0; $k < sizeof($rows); $k ++) {
+            $row = $rows[$k];
             $words = preg_split("/\s+|\t+/", $row['text']);
-            foreach ($words as $i => $w) {
+            for ($i = 0; $i < sizeof($words); $i ++) {
+                $w = $words[$i];
                 if (stripos($pattern, $w) > -1){
                     for ($j = max($i - $count, 0); $j <= min($i + $count, sizeof($words) - 1); $j ++){
                         $neighborWords .= $words[$j] . " ";
@@ -24,8 +26,8 @@ class Class0001 {
             if (!isset($row['text_found'])){
                 $row['text_found'] = 0;
                 array_push($result, $row);
-                $neighborWords = "";
             }
+            $neighborWords = "";
         }
         return json_encode($result);
     }
