@@ -282,7 +282,7 @@ function sqlSearch(obj, input){
     var user = $("#sql-username").val();
     var pwd = $("#sql-password").val();
     var queryString = input.substr(4).trim();
-    if (queryString.split(":").length != 3) {
+    if (queryString.split(":").length != 2) {
         alert("Alert", "Input exact query!\nQuery format is 'sql:[custom function]:query'.");
         return false;
     }
