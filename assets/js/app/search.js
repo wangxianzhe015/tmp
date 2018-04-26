@@ -319,7 +319,7 @@ function sqlSearch(obj, input){
                 $obj.data("current-page", 0);
                 drawTextboxFromPgJSON(0, Math.min($obj.data("per-page") - 1, pgJsonObjects.length - 1));
                 $("#json-object-button-div").show();
-                obj.parent().remove();
+                obj.parents(".regex-search-box").remove();
                 regexSearchCount--;
 
                 for (var i = 0; i < pgJsonObjects.length; i ++) {
