@@ -548,7 +548,7 @@ function drawTextboxFromPgJSON(start, end){
     if (pgJsonObjects == null) return;
     var left = 50, top = 50, count = 0, firstValue = "", obj = [], i, j;
     for (i = start; i <= end; i ++){
-        if (pgJsonObjects[i].hasOwnProperty('text_found') && pgJsonObjects[i]['text_found'] == 1) {
+        if (pgJsonObjects[i] && pgJsonObjects[i].hasOwnProperty('text_found') && pgJsonObjects[i]['text_found'] == 1) {
             obj['simple'] = pgJsonObjects[i]['simple_text'];
         }
         for (j in pgJsonObjects[i]) {
