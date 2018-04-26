@@ -484,15 +484,15 @@ function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
     switch (mode){
         case 'simple':
             textBox.set({
-                simpleText: obj['simple_text'],
-                fullText: obj['full_text'],
+                simpleText: obj['simple'],
+                fullText: obj['full'],
                 mode: mode
             });
             break;
         case 'full':
             textBox.set({
                 simpleText: 'Not found',
-                fullText: obj['full_text'],
+                fullText: obj['full'],
                 mode: mode
             });
             break;
