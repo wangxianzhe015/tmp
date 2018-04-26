@@ -481,31 +481,6 @@ function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
         fontWeight: 'bold'
     });
 
-    switch (mode){
-        case 'simple':
-            textBox.set({
-                simpleText: obj['simple'],
-                fullText: obj['full'],
-                mode: mode
-            });
-            break;
-        case 'full':
-            textBox.set({
-                simpleText: 'Not found',
-                fullText: obj['full'],
-                mode: mode
-            });
-            break;
-        case 'anonymous':
-            textBox.set({
-                simpleText: '',
-                fullText: 'Edit Text',
-                mode: mode
-            });
-            break;
-    }
-
-
     var formatted = wrapCanvasText(textBox, canvas, width, height, 'left');
 
     formatted.set({
@@ -536,6 +511,30 @@ function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
         //stroke: '#EEE',
         opacity:.4
     });
+
+    switch (mode){
+        case 'simple':
+            formatted.set({
+                simpleText: obj['simple'],
+                fullText: obj['full'],
+                mode: mode
+            });
+            break;
+        case 'full':
+            formatted.set({
+                simpleText: 'Not found',
+                fullText: obj['full'],
+                mode: mode
+            });
+            break;
+        case 'anonymous':
+            formatted.set({
+                simpleText: '',
+                fullText: 'Edit Text',
+                mode: mode
+            });
+            break;
+    }
 
     formatted.backgroundBox = backRect;
     canvas.add(backRect, formatted);

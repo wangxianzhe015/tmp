@@ -14,7 +14,7 @@ class Class0001 {
             $words = preg_split("/\s+|\t+/", $row['text']);
             for ($i = 0; $i < sizeof($words); $i ++) {
                 $w = $words[$i];
-                if (stripos($pattern, $w) > -1){
+                if (stripos($w, $pattern) > -1){
                     for ($j = max($i - $count, 0); $j <= min($i + $count, sizeof($words) - 1); $j ++){
                         $neighborWords .= $words[$j] . " ";
                     }
