@@ -14,9 +14,10 @@ class Class0001 {
             foreach ($words as $i => $w) {
                 if (preg_match($pattern, $w)){
                     for ($j = max($i - $count, 0); $j <= min($i + $count, sizeof($words) - 1); $j ++){
-                        $neighborWords .= $words[$j] . " ";
+                        $neighborWords .= $j . " ";
                     }
                     $row['text_found'] = 1;
+                    $row['text_index'] = $i;
                     $row['simple_text'] = trim($neighborWords);
                     $neighborWords = "";
                     array_push($result, $row);

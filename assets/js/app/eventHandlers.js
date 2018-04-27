@@ -1713,19 +1713,27 @@ function initHandlers(){
         drawTextboxFromPgJSON(start, Math.min(start + perPage - 1, pgJsonObjects.length));
     });
 
-    $("#json-object-close-btn").on("click", removeAllTextbox);
+    $("#json-object-close-btn").on("click", function(){
+        $('.canvas-container').css('background-image', '');
+        removeAllTextbox();
+    });
 
     $("#json-object-toggle-btn").on("click", function(){
         var mode = $(this).data("mode");
+        if (mode == "simple") {
+            $(this).data("mode", "full");
+        } else {
+            $(this).data("mode", "simple");
+        }
         canvas.forEachObject(function(obj){
             if (obj.class == "background-textbox") {
                 if (mode == "simple") {
                     obj.text = getWrappedCanvasText(obj.fullText, canvas, 200);
-                    $(this).data("mode", "full");
                 } else if (obj.mode == "full") {
                     obj.text = getWrappedCanvasText(obj.simpleText, canvas, 200);
-                    $(this).data("mode", "simple");
                 }
+                obj.setCoords();
+                canvas.renderAll();
                 obj.backgroundBox.set({
                     width: obj.width + 20,
                     height: obj.height + 20

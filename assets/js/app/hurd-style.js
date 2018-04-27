@@ -565,7 +565,6 @@ function drawTextboxFromPgJSON(start, end){
 }
 
 function removeAllTextbox(){
-    $('.canvas-container').css('background-image', '');
     var objects = canvas.getObjects();
     for (var i = objects.length - 1; i >= 0; i --) {
         if (objects[i] != null && objects[i].class == "background-textbox") {
