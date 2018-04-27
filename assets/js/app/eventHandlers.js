@@ -1716,17 +1716,23 @@ function initHandlers(){
     $("#json-object-close-btn").on("click", removeAllTextbox);
 
     $("#json-object-toggle-btn").on("click", function(){
+        var mode = $(this).data("mode");
         canvas.forEachObject(function(obj){
             if (obj.class == "background-textbox") {
-                if (obj.mode == "simple") {
-                    obj.text = obj.fullText;
-                    obj.mode = "full";
+                if (mode == "simple") {
+                    obj.text = getWrappedCanvasText(obj.fullText, canvas, 200);
+                    $(this).data("mode", "full");
                 } else if (obj.mode == "full") {
-                    obj.text = obj.simpleText;
-                    obj.mode = "simple";
+                    obj.text = getWrappedCanvasText(obj.simpleText, canvas, 200);
+                    $(this).data("mode", "simple");
                 }
+                obj.backgroundBox.set({
+                    width: obj.width + 20,
+                    height: obj.height + 20
+                });
             }
         });
+        canvas.renderAll();
     });
 
     $(document).keyup(function(e){

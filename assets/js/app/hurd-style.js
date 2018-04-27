@@ -467,13 +467,15 @@ function addDividerTextBox(x1, y1, text, width, height, fontName, fontSize){
 }
 
 function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
-    var mode = obj!=undefined?obj['simple']!=undefined?'simple':'full':'anonymous';
-    var text = obj!=undefined?obj['simple']!=undefined?obj['simple']:obj['full']:"Edit text";
+    var text = [];
+    text['simple'] = obj!=undefined?obj['simple']!=undefined?obj['simple']:"Not found":"No words!";
+    text['full'] = obj!=undefined?obj['full']!=undefined?obj['full']:"Edit Text":"Edit text";
+    var mode = $("#json-object-toggle-btn").data("mode");
     width = width==undefined?200:width;
     height = height==undefined?500:height;
     fontName = fontName==undefined?"VagRounded":fontName;
     fontSize = fontSize==undefined?12:fontSize;
-    var textBox = new fabric.IText(text, {
+    var textBox = new fabric.IText(text[mode], {
         fontSize: fontSize,
         lineHeight: 1,
         fill: 'white',
@@ -512,31 +514,11 @@ function addBackgroundTextBox(x1, y1, obj, width, height, fontName, fontSize) {
         opacity:.4
     });
 
-    switch (mode){
-        case 'simple':
-            formatted.set({
-                simpleText: obj['simple'],
-                fullText: obj['full'],
-                mode: mode
-            });
-            break;
-        case 'full':
-            formatted.set({
-                simpleText: 'Not found',
-                fullText: obj['full'],
-                mode: mode
-            });
-            break;
-        case 'anonymous':
-            formatted.set({
-                simpleText: '',
-                fullText: 'Edit Text',
-                mode: mode
-            });
-            break;
-    }
-
-    formatted.backgroundBox = backRect;
+    formatted.set({
+        simpleText: text['simple'],
+        fullText: text['full'],
+        backgroundBox: backRect
+    });
     canvas.add(backRect, formatted);
 
     return formatted;
