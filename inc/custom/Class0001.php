@@ -5,7 +5,7 @@ namespace inc\custom;
 class Class0001 {
     public function process($rows, $params){
         $pattern = $params[0];
-        $count = $params[1];
+        $count = (int)trim($params[1]);
         $result = [];
         $neighborWords = "";
 
@@ -14,10 +14,9 @@ class Class0001 {
             foreach ($words as $i => $w) {
                 if (preg_match($pattern, $w)){
                     for ($j = max($i - $count, 0); $j <= min($i + $count, sizeof($words) - 1); $j ++){
-                        $neighborWords .= $j . " ";
+                        $neighborWords .= $words[$j] . " ";
                     }
                     $row['text_found'] = 1;
-                    $row['text_index'] = $i;
                     $row['simple_text'] = trim($neighborWords);
                     $neighborWords = "";
                     array_push($result, $row);
