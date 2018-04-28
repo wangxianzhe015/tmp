@@ -1702,6 +1702,17 @@ function initHandlers(){
         });
     });
 
+    $("#json-object-prev-btn").on("click", function(e){
+        var $target = $(this);
+        if (pgJsonObjects == null) return;
+        var currentPage = $target.data("current-page") - 1;
+        var perPage = $target.data("per-page");
+        if (currentPage < 0) currentPage = Math.cell(pgJsonObjects.length / perPage);
+        var start = currentPage * perPage;
+        $target.data("current-page", currentPage);
+        drawTextboxFromPgJSON(start, Math.min(start + perPage - 1, pgJsonObjects.length));
+    });
+
     $("#json-object-next-btn").on("click", function(e){
         var $target = $(this);
         if (pgJsonObjects == null) return;
@@ -1714,6 +1725,7 @@ function initHandlers(){
     });
 
     $("#json-object-close-btn").on("click", function(){
+        $('#json-object-button-div').hide();
         $('.canvas-container').css('background-image', '');
         removeAllTextbox();
     });

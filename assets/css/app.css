@@ -1849,6 +1849,10 @@ textarea.default-textarea{
     display: none;
 }
 
+#json-object-button-div img{
+    width: 32px;
+}
+
 #json-object-button-container{
     margin: 0 auto;
     background-color: rgba(0,0,0,0.7);
