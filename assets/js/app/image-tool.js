@@ -701,7 +701,7 @@ function addTextTooltip(left, top, defaultText){
                 if (elements.length < 2) {
                     rows = clipboardData.split("\r\n\r\n");
                     if (rows.length > 1) {
-                        var boxes = [], skip = 0;
+                        var boxes = [], skip = 0, line;
                         for (var j = 0; j < rows.length; j ++) {
                             if (rows[j].trim() == "") {
                                 skip ++;
@@ -710,10 +710,14 @@ function addTextTooltip(left, top, defaultText){
                             }
                         }
                         for (j = 1; j < boxes.length; j ++) {
-                            addBezierLine(boxes[j - 1], boxes[j]);
+                            line = addBezierLine(boxes[j - 1], boxes[j]);
+                            line.set({
+                                strokeDashArray: [1, 0]
+                            })
                         }
                     }
                     $(this).val(clipboardData);
+                    canvas.renderAll();
                     return;
                 }
                 if (i == 0) {

@@ -207,7 +207,7 @@ function addBezierLine(leftElement, rightElement){
         rightElement.lines.push(bLine);
     }
 
-    adjustLine(bLine);
+    return adjustLine(bLine);
 }
 
 function adjustLine(line){
@@ -441,6 +441,8 @@ function adjustLine(line){
     }
 
     canvas.renderAll();
+
+    return line;
 }
 
 function bPointClickHandler(object, event) {
