@@ -96,6 +96,9 @@ function addBezierLine(leftElement, rightElement){
         //if (leftElement[0].tagName != "TD") return false;
         //leftElement = leftElement.parents("tr");
         //leftElement.data("text-cell", leftElement.parents(".image-tooltip").attr("id"));
+        if (!leftElement.hasClass("image-tooltip")) {
+            leftElement = leftElement.parents(".image-tooltip");
+        }
         leftElement.data("text-cell", leftElement.attr("id"));
         startX = leftElement.offset().left;
         startY = leftElement.offset().top;
@@ -111,11 +114,13 @@ function addBezierLine(leftElement, rightElement){
             rightElement = rightElement.parents("tr");
             rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
         } else {
-            rightElement = rightElement.parents(".image-tooltip");
-            rightElement.data("text-cell", rightElement.parents(".image-tooltip").attr("id"));
+            if (!rightElement.hasClass("image-tooltip")) {
+                rightElement = rightElement.parents(".image-tooltip");
+            }
+            rightElement.data("text-cell", rightElement.attr("id"));
         }
-        endX = rightElement.offset().left;
-        endY = rightElement.offset().top;
+        endX = rightElement.offset().left + rightElement.innerWidth();
+        endY = rightElement.offset().top + rightElement.innerHeight();
     } else {
         endX = rightElement.left;
         endY = rightElement.top;

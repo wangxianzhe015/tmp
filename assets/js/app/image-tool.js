@@ -488,7 +488,7 @@ function showUploadDiv(){
     }).show();
 }
 
-function addTextTooltip(left, top){
+function addTextTooltip(left, top, defaultText){
     var $tooltip = $("<div></div>", {
         class: "image-tooltip second text",
         id: "text-box-" + parseInt(Math.random() * 10000000000)
@@ -584,8 +584,10 @@ function addTextTooltip(left, top){
         class: "white"
     })).append($("<textarea></textarea>",{
         class: "default-textarea",
-        text: "Some Text"
+        text: defaultText==undefined?"Some Text":defaultText
     }).on("paste", function(e){
+        e.stopPropagation();
+        e.preventDefault();
         $(this).addClass("pasting");
         var clipboardData = (e.originalEvent || e).clipboardData.getData("text/plain");
         window.document.execCommand("insertText", false, clipboardData);
@@ -696,7 +698,24 @@ function addTextTooltip(left, top){
             var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
-                if (elements.length < 2) return;
+                if (elements.length < 2) {
+                    rows = clipboardData.split("\r\n\r\n");
+                    if (rows.length > 1) {
+                        var boxes = [], skip = 0;
+                        for (var j = 0; j < rows.length; j ++) {
+                            if (rows[j].trim() == "") {
+                                skip ++;
+                            } else {
+                                boxes.push(addSubTextTooltip(left + 300, top + 220 * (j - skip), rows[j].trim(), $(this).parents(".image-tooltip").attr("id")));
+                            }
+                        }
+                        for (j = 1; j < boxes.length; j ++) {
+                            addBezierLine(boxes[j - 1], boxes[j]);
+                        }
+                    }
+                    $(this).val(clipboardData);
+                    return;
+                }
                 if (i == 0) {
                     $.each(elements, function (j, elem) {
                         header.push({title: elem})
@@ -781,6 +800,50 @@ function addTextTooltip(left, top){
     newPoint.bringForward();
     $tooltip.data("newPoint", newPoint);
     newPoint.master = $tooltip;
+
+    return $tooltip;
+}
+
+function addSubTextTooltip(left, top, defaultText, parent){
+    var $tooltip = $("<div></div>", {
+        class: "image-tooltip second text expanded",
+        id: "sub-text-box-" + parseInt(Math.random() * 10000000000)
+    }).data({
+        lines: [],
+        "group": parent,
+        hidden: false
+    }).on({
+        drag: function(){
+            $.each($(this).data("lines"), function(i, line){
+                adjustLine(line);
+            });
+        }
+    }).css({
+        left: left,
+        top: top
+    }).append($("<div></div>", {
+        class: "ttip"
+    }).append($("<textarea></textarea>",{
+        class: "default-textarea",
+        text: defaultText==undefined?"Some Text":defaultText
+    }))).append($("<div></div>", {
+        class: "text-cell-buttons"
+    }).append("<img>", {
+        src: "assets/images/icons/recycle-24.png"
+    }).on({
+        click: function(){
+            var $parent = $(this).parents(".image-tooltip");
+            $parent.toggleClass("expanded");
+            var clk = setInterval(function(){
+                $parent.data("lines").forEach(function (line) {
+                    adjustLine(line);
+                });
+            },100);
+            setTimeout(function(){
+                clearInterval(clk);
+            }, 1000);
+        }
+    })).appendTo("body").show().draggable();
 
     return $tooltip;
 }
