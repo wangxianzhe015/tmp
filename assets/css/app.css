@@ -535,11 +535,16 @@ button .text{
     min-width: 450px;
 }
 .image-tooltip.text.expanded[id*='sub-text-box-']{
-    height: 200px;
-    min-height: 200px;
+    min-height: 0;
+    width: 400px;
+    min-width: 400px;
+    transition: none;
 }
 .image-tooltip.text.expanded[id*='sub-text-box-'] textarea.default-textarea{
     min-height: 0;
+    height: calc(100% - 22px);
+    resize: none;
+    overflow-y: auto;
 }
 .image-tooltip.text .ttip textarea{
     /*opacity: 0;*/
@@ -576,6 +581,12 @@ button .text{
     position: absolute;
     right: -30px;
     top: 5px;
+}
+.image-tooltip.text .text-cell-buttons.inside{
+    position: absolute;
+    top: 5px;
+    right: 0;
+    z-index: 10;
 }
 .image-tooltip.text .text-cell-buttons img{
     cursor: pointer;
@@ -1237,7 +1248,7 @@ textarea.default-textarea{
     line-height: 1.5em;
     border: none;
     background: transparent;
-    overflow: hidden;
+    overflow: auto;
 }
 #trash-panel,#move-panel{
     display:none;

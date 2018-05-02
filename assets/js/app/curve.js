@@ -101,7 +101,7 @@ function addBezierLine(leftElement, rightElement){
         }
         leftElement.data("text-cell", leftElement.attr("id"));
         startX = leftElement.offset().left;
-        startY = leftElement.offset().top;
+        startY = leftElement.offset().top + leftElement.innerHeight();
     } else {
         startX = leftElement.left;
         startY = leftElement.top;
@@ -120,7 +120,7 @@ function addBezierLine(leftElement, rightElement){
             rightElement.data("text-cell", rightElement.attr("id"));
         }
         endX = rightElement.offset().left + rightElement.innerWidth();
-        endY = rightElement.offset().top + rightElement.innerHeight();
+        endY = rightElement.offset().top;
     } else {
         endX = rightElement.left;
         endY = rightElement.top;

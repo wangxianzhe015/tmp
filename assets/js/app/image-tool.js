@@ -695,18 +695,22 @@ function addTextTooltip(left, top, defaultText){
                 $("textarea.pasting").removeClass("pasting");
             }
         } else {
-            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
+            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = top, eLeft = left + 450;
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
                 if (elements.length < 2) {
                     rows = clipboardData.split("\r\n\r\n");
                     if (rows.length > 1) {
-                        var boxes = [], skip = 0, line;
+                        var boxes = [], line;
                         for (var j = 0; j < rows.length; j ++) {
-                            if (rows[j].trim() == "") {
-                                skip ++;
-                            } else {
-                                boxes.push(addSubTextTooltip(left + 300, top + 220 * (j - skip), rows[j].trim(), $(this).parents(".image-tooltip").attr("id")));
+                            if (rows[j].trim() != "") {
+                                if (eTop >= canvas.height){
+                                    eTop = top;
+                                    eLeft += 450;
+                                }
+                                box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
+                                boxes.push(box);
+                                eTop += parseInt(box.css("height")) + 10;
                             }
                         }
                         for (j = 1; j < boxes.length; j ++) {
@@ -831,13 +835,20 @@ function addSubTextTooltip(left, top, defaultText, parent){
         class: "default-textarea",
         text: defaultText==undefined?"Some Text":defaultText
     }))).append($("<div></div>", {
-        class: "text-cell-buttons"
-    }).append("<img>", {
+        class: "text-cell-buttons inside"
+    }).append($("<img/>", {
         src: "assets/images/icons/recycle-24.png"
     }).on({
         click: function(){
             var $parent = $(this).parents(".image-tooltip");
-            $parent.toggleClass("expanded");
+            if ($parent.hasClass("expanded")){
+                $parent.removeClass("expanded");
+                $parent.data("height", $parent.css("height"));
+                $parent.css("height", "");
+            } else {
+                $parent.addClass("expanded");
+                $parent.css("height", $parent.data("height"));
+            }
             var clk = setInterval(function(){
                 $parent.data("lines").forEach(function (line) {
                     adjustLine(line);
@@ -847,7 +858,12 @@ function addSubTextTooltip(left, top, defaultText, parent){
                 clearInterval(clk);
             }, 1000);
         }
-    })).appendTo("body").show().draggable();
+    }))).appendTo("body").show().draggable();
+
+    var $textarea = $tooltip.find("textarea");
+    $textarea.css("height", "5px");
+    $tooltip.css("height", $textarea.prop("scrollHeight") + 22 + "px");
+    $textarea.css("height", $textarea.prop("scrollHeight") + "px");
 
     return $tooltip;
 }
