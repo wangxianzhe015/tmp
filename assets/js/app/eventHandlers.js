@@ -268,6 +268,8 @@ function initHandlers(){
             $("#" + $valueTag.val()).remove();
         } else if (action == "remove-text-cell-group"){
             removeTextCellGroup($("#" + $valueTag.val()));
+        } else if (action == "remove-text-cell-in-group"){
+            removeTextCellInGroup($("#" + $valueTag.val()));
         }
         $actionTag.val("");
         $valueTag.val("");

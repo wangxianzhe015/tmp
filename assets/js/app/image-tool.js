@@ -946,7 +946,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
     })).append($("<img/>", {
         src: "./assets/images/icons/remove-24.png"
     }).on("click", function(){
-        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell", $(this).parents(".image-tooltip").attr("id"));
+        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell-in-group", $(this).parents(".image-tooltip").attr("id"));
     }))).appendTo(groupBox).show().draggable();
 
     var $textarea = $tooltip.find("textarea");
@@ -1014,6 +1014,38 @@ function removeTextCell($cell){
     }
     canvas.remove($cell.data("newPoint"));
     $cell.remove();
+    canvas.renderAll();
+}
+
+function removeTextCellInGroup($cell){
+    var leftElem, rightElem;
+    var lines = $cell.data("lines"), lines2, j;
+    for (var i = 0; i < lines.length; i ++){
+        if (lines[i].leftElement.attr("id") == $cell.attr("id")) {
+            rightElem = lines[i].rightElement;
+            lines2 = rightElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            rightElem.data("lines", lines2);
+        } else if (lines[i].rightElement.attr("id") == $cell.attr("id")){
+            leftElem = lines[i].leftElement;
+            lines2 = leftElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            leftElem.data("lines", lines2);
+        }
+        canvas.remove(lines[i].leftCircle, lines[i].rightCircle, lines[i]);
+    }
+    $cell.remove();
+    addBezierLine(leftElem, rightElem).set({
+        strokeDashArray: [1]
+    });
     canvas.renderAll();
 }
 
