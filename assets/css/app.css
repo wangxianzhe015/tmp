@@ -592,6 +592,12 @@ button .text{
     cursor: pointer;
     width: 16px;
     height: 16px;
+    margin: 5px;
+    display: block;
+}
+.image-tooltip.text .text-cell-buttons.inside img{
+    width: 8px;
+    height: 8px;
 }
 .image-tooltip.text.expanded .text-cell-buttons{
     display: block;
@@ -1878,4 +1884,29 @@ textarea.default-textarea{
     padding: 5px 10px;
     width: fit-content;
     text-align: center;
+}
+
+.text-cell-group{
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    margin: 0 auto;
+    overflow: scroll;
+    border: solid 1px;
+    background: rgba(0,0,0,0.2);
+    pointer-events: none;
+}
+.text-cell-group * {
+    pointer-events: auto;
+}
+.text-cell-group .text-cell-buttons{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+.text-cell-group .text-cell-buttons img{
+    width: 16px;
+    cursor: pointer;
+    display: block;
+    margin: 5px 0;
 }

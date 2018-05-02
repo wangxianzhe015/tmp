@@ -266,6 +266,8 @@ function initHandlers(){
             removeTextCell($cell);
         } else if (action == "remove-tooltip") {
             $("#" + $valueTag.val()).remove();
+        } else if (action == "remove-text-cell-group"){
+            removeTextCellGroup($("#" + $valueTag.val()));
         }
         $actionTag.val("");
         $valueTag.val("");

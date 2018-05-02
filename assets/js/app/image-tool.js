@@ -695,7 +695,7 @@ function addTextTooltip(left, top, defaultText){
                 $("textarea.pasting").removeClass("pasting");
             }
         } else {
-            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = top, eLeft = left + 450;
+            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = top, eLeft = left + 500;
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
                 if (elements.length < 2) {
@@ -704,10 +704,6 @@ function addTextTooltip(left, top, defaultText){
                         var boxes = [], line;
                         for (var j = 0; j < rows.length; j ++) {
                             if (rows[j].trim() != "") {
-                                if (eTop >= canvas.height){
-                                    eTop = top;
-                                    eLeft += 450;
-                                }
                                 box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
                                 boxes.push(box);
                                 eTop += parseInt(box.css("height")) + 20;
@@ -813,6 +809,95 @@ function addTextTooltip(left, top, defaultText){
 }
 
 function addSubTextTooltip(left, top, defaultText, parent){
+    var groupDivs = $(".text-cell-group"), groupBox;
+    for (var i = 0; i < groupDivs.length; i ++){
+        if ($(groupDivs[i]).data("group") == parent){
+            groupBox = $(groupDivs[i]);
+            break;
+        }
+    }
+    if (groupBox == undefined){
+        groupBox = $("<div></div>", {
+            class: "text-cell-group",
+            id: "text-cell-group-" + parseInt(Math.random() * 100000000)
+        }).css({
+            left: left,
+            top: top
+        }).on({
+            scroll: function(){
+                var $groupDiv;
+                $.each($(this).find(".image-tooltip"), function(i, tooltip){
+                    $.each($(tooltip).data("lines"), function(i, line){
+                        $groupDiv = line.leftElement.parents(".text-cell-group");
+                        adjustLine(line);
+                        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
+                            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
+                            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
+                            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
+                            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
+                            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
+                            line.set("opacity", 0);
+                            line.leftCircle.set("opacity", 0);
+                            line.rightCircle.set("opacity", 0);
+                        } else {
+                            line.set("opacity", 1);
+                            line.leftCircle.set("opacity", 1);
+                            line.rightCircle.set("opacity", 1);
+                            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
+                            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                        }
+                    });
+                });
+                canvas.renderAll();
+            },
+            drag: function(e){
+                var $groupDiv;
+                if ($(e.originalEvent.target).hasClass("text-cell-group")) {
+                    $.each($(this).find(".image-tooltip"), function (i, tooltip) {
+                        $.each($(tooltip).data("lines"), function (i, line) {
+                            $groupDiv = line.leftElement.parents(".text-cell-group");
+                            adjustLine(line);
+                            if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
+                                line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                                line.leftCircle.top < parseInt($groupDiv.css("top")) ||
+                                line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
+                                line.rightCircle.left < parseInt($groupDiv.css("left")) ||
+                                line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                                line.rightCircle.top < parseInt($groupDiv.css("top")) ||
+                                line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
+                                line.set("opacity", 0);
+                                line.leftCircle.set("opacity", 0);
+                                line.rightCircle.set("opacity", 0);
+                            } else {
+                                line.set("opacity", 1);
+                                line.leftCircle.set("opacity", 1);
+                                line.rightCircle.set("opacity", 1);
+                                line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
+                                line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                            }
+                        });
+                    });
+                    canvas.renderAll();
+                }
+            }
+        }).data({
+            "group": parent
+        }).append($("<div></div>", {
+            class: "text-cell-buttons"
+        }).append($("<img/>", {
+            src: "./assets/images/icons/remove-24.png"
+        }).on("click", function(){
+            showConfirmBox("Are you sure to remove this text cell group?", "remove-text-cell-group", $(this).parents(".text-cell-group").attr("id"));
+        })).append($("<img/>", {
+            src: "./assets/images/icons/move-24.png"
+        }))).appendTo("body").draggable();
+
+        if (canvas.height - top < 400){
+            groupBox.css("height", canvas.height - top);
+        }
+    }
     var $tooltip = $("<div></div>", {
         class: "image-tooltip second text expanded",
         id: "sub-text-box-" + parseInt(Math.random() * 10000000000)
@@ -827,8 +912,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
             });
         }
     }).css({
-        left: left,
-        top: top
+        left: 50,
+        top: top - parseInt(groupBox.css("top"))
     }).append($("<div></div>", {
         class: "ttip"
     }).append($("<textarea></textarea>",{
@@ -858,7 +943,11 @@ function addSubTextTooltip(left, top, defaultText, parent){
                 clearInterval(clk);
             }, 1000);
         }
-    }))).appendTo("body").show().draggable();
+    })).append($("<img/>", {
+        src: "./assets/images/icons/remove-24.png"
+    }).on("click", function(){
+        showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell", $(this).parents(".image-tooltip").attr("id"));
+    }))).appendTo(groupBox).show().draggable();
 
     var $textarea = $tooltip.find("textarea");
     $textarea.css("height", "5px");
@@ -878,7 +967,7 @@ function removeTextCell($cell){
             } else {
                 $elem = line.rightElement.parents(".image-tooltip");
             }
-            if ($elem.attr("id") != $valueTag.val()) {
+            if ($elem.attr("id") != $cell.attr("id").substr(1)) {
                 lines = $elem.data("lines");
                 for (i = lines.length; i > 0; i--) {
                     if (line.id == lines[i - 1].id) {
@@ -901,7 +990,7 @@ function removeTextCell($cell){
             } else {
                 $elem = line.leftElement.parents(".image-tooltip");
             }
-            if ($elem.attr("id") != $valueTag.val()) {
+            if ($elem.attr("id") != $cell.attr("id").substr(1)) {
                 lines = $elem.data("lines");
                 for (i = lines.length; i > 0; i--) {
                     if (line.id == lines[i - 1].id) {
@@ -925,6 +1014,16 @@ function removeTextCell($cell){
     }
     canvas.remove($cell.data("newPoint"));
     $cell.remove();
+    canvas.renderAll();
+}
+
+function removeTextCellGroup($div){
+    $.each($div.find(".image-tooltip"), function(i, tooltip){
+        $.each($(tooltip).data("lines"), function(i, line){
+            canvas.remove(line.leftCircle, line.rightCircle, line);
+        });
+    });
+    $div.remove();
     canvas.renderAll();
 }
 
