@@ -78,6 +78,7 @@ function makeCurvePoint(x, y, line) {
         originY: 'center',
         fill: '#fff',
         opacity: 0,
+        selectable: false,
         stroke: '#f00'
     });
 
@@ -446,87 +447,125 @@ function adjustLine(line){
 }
 
 function bPointClickHandler(object, event) {
-    rmBezierLine = object.master;
-    $("<img/>").attr({
-        class: "bezier-line-control-btn",
-        src: "./assets/images/icons/cancel-24.png"
-    }).on("click", function () {
-        var lines = [], $textCell;
-        if (rmBezierLine != null) {
-            if (rmBezierLine.leftElement instanceof jQuery) {
-                if (rmBezierLine.leftElement.hasClass("image-tooltip")) {
-                    $textCell = rmBezierLine.leftElement;
-                } else {
-                    $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
-                }
-                lines = $textCell.data("lines");
-                lines.forEach(function (line, i) {
-                    if (line.id == rmBezierLine.id) {
-                        lines.splice(i, 1);
+    if (object.master.leftElement instanceof jQuery && object.master.leftElement.attr("id").indexOf("sub-text") > -1){
+        $("<img/>").attr({
+            class: "bezier-line-control-btn",
+            src: "./assets/images/icons/object-group-24.png"
+        }).on("click", function () {
+            var leftElem = object.master.leftElement, leftText = leftElem.find("textarea"),
+                rightElem = object.master.rightElement, rightText = rightElem.find("textarea");
+            leftText.val(leftText.val() + "\r\n\r\n" + rightText.val());
+            leftText.css("height", leftText.prop("scrollHeight"));
+            leftElem.css("height", parseInt(leftText.css("height")) + 22);
+            var lines = rightElem.data("lines"), lines2;
+            for (var i = 0; i < lines.length; i ++){
+                if (lines[i].leftElement == rightElem) {
+                    lines[i].leftElement = leftElem;
+                    leftElem.data("lines", $.extend(leftElem.data("lines"), [lines[i]]));
+                    adjustLine(lines[i]);
+                } else if (lines[i].rightElement == rightElem){
+                    lines2 = leftElem.data("lines");
+                    for (var j = 0; j < lines2.length; j ++){
+                        if (lines2[j].id == lines[i].id) {
+                            lines2.splice(j, 1);
+                        }
                     }
-                });
-                $textCell.data("lines", lines);
-            } else {
-                rmBezierLine.leftElement.lines.forEach(function (line, i) {
-                    if (line.id == rmBezierLine.id) {
-                        rmBezierLine.leftElement.lines.splice(i, 1);
-                    }
-                });
-            }
-            if (rmBezierLine.rightElement instanceof jQuery) {
-                if (rmBezierLine.rightElement.hasClass("image-tooltip")) {
-                    $textCell = rmBezierLine.rightElement;
-                } else {
-                    $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
-                }
-                lines = $textCell.data("lines");
-                lines.forEach(function (line, i) {
-                    if (line.id == rmBezierLine.id) {
-                        lines.splice(i, 1);
-                    }
-                });
-                $textCell.data("lines", lines);
-            } else {
-                rmBezierLine.rightElement.lines.forEach(function (line, i) {
-                    if (line.id == rmBezierLine.id) {
-                        rmBezierLine.rightElement.lines.splice(i, 1);
-                    }
-                });
-            }
-            canvas.remove(rmBezierLine.leftCircle);
-            canvas.remove(rmBezierLine.rightCircle);
-            canvas.remove(rmBezierLine);
-            rmBezierLine = null;
-            canvas.renderAll();
-        }
-        $(".bezier-line-control-btn").remove();
-    }).css({
-        left: event.pageX + 20,
-        top: event.pageY,
-        position: "absolute"
-    }).appendTo("body");
+                    leftElem.data("lines", lines2);
 
-    $("<img/>").attr({
-        class: "bezier-line-control-btn",
-        src: "./assets/images/icons/line-type-24.png"
-    }).on("click", function () {
-        if (rmBezierLine != null) {
-            if (rmBezierLine.type == "dashed") {
-                rmBezierLine.strokeDashArray = [1, 0];
-                rmBezierLine.type = "solid";
-            } else {
-                rmBezierLine.strokeDashArray = [5, 5];
-                rmBezierLine.type = "dashed";
+                    canvas.remove(lines[i].leftCircle, lines[i].rightCircle, lines[i]);
+                }
             }
-            rmBezierLine = null;
-            canvas.renderAll();
-        }
-        $(".bezier-line-control-btn").remove();
-    }).css({
-        left: event.pageX + 54,
-        top: event.pageY,
-        position: "absolute"
-    }).appendTo("body");
+            rightElem.remove();
+            $(".bezier-line-control-btn").remove();
+        }).css({
+            left: event.pageX + 20,
+            top: event.pageY,
+            position: "absolute",
+            "z-index": 10
+        }).appendTo("body");
+    } else {
+        rmBezierLine = object.master;
+        $("<img/>").attr({
+            class: "bezier-line-control-btn",
+            src: "./assets/images/icons/cancel-24.png"
+        }).on("click", function () {
+            var lines = [], $textCell;
+            if (rmBezierLine != null) {
+                if (rmBezierLine.leftElement instanceof jQuery) {
+                    if (rmBezierLine.leftElement.hasClass("image-tooltip")) {
+                        $textCell = rmBezierLine.leftElement;
+                    } else {
+                        $textCell = rmBezierLine.leftElement.parents(".image-tooltip");
+                    }
+                    lines = $textCell.data("lines");
+                    lines.forEach(function (line, i) {
+                        if (line.id == rmBezierLine.id) {
+                            lines.splice(i, 1);
+                        }
+                    });
+                    $textCell.data("lines", lines);
+                } else {
+                    rmBezierLine.leftElement.lines.forEach(function (line, i) {
+                        if (line.id == rmBezierLine.id) {
+                            rmBezierLine.leftElement.lines.splice(i, 1);
+                        }
+                    });
+                }
+                if (rmBezierLine.rightElement instanceof jQuery) {
+                    if (rmBezierLine.rightElement.hasClass("image-tooltip")) {
+                        $textCell = rmBezierLine.rightElement;
+                    } else {
+                        $textCell = rmBezierLine.rightElement.parents(".image-tooltip");
+                    }
+                    lines = $textCell.data("lines");
+                    lines.forEach(function (line, i) {
+                        if (line.id == rmBezierLine.id) {
+                            lines.splice(i, 1);
+                        }
+                    });
+                    $textCell.data("lines", lines);
+                } else {
+                    rmBezierLine.rightElement.lines.forEach(function (line, i) {
+                        if (line.id == rmBezierLine.id) {
+                            rmBezierLine.rightElement.lines.splice(i, 1);
+                        }
+                    });
+                }
+                canvas.remove(rmBezierLine.leftCircle);
+                canvas.remove(rmBezierLine.rightCircle);
+                canvas.remove(rmBezierLine);
+                rmBezierLine = null;
+                canvas.renderAll();
+            }
+            $(".bezier-line-control-btn").remove();
+        }).css({
+            left: event.pageX + 20,
+            top: event.pageY,
+            position: "absolute"
+        }).appendTo("body");
+
+        $("<img/>").attr({
+            class: "bezier-line-control-btn",
+            src: "./assets/images/icons/line-type-24.png"
+        }).on("click", function () {
+            if (rmBezierLine != null) {
+                if (rmBezierLine.type == "dashed") {
+                    rmBezierLine.strokeDashArray = [1, 0];
+                    rmBezierLine.type = "solid";
+                } else {
+                    rmBezierLine.strokeDashArray = [5, 5];
+                    rmBezierLine.type = "dashed";
+                }
+                rmBezierLine = null;
+                canvas.renderAll();
+            }
+            $(".bezier-line-control-btn").remove();
+        }).css({
+            left: event.pageX + 54,
+            top: event.pageY,
+            position: "absolute"
+        }).appendTo("body");
+    }
 
     setTimeout(function () {
         $(".bezier-line-control-btn").remove();

@@ -710,7 +710,7 @@ function addTextTooltip(left, top, defaultText){
                                 }
                                 box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
                                 boxes.push(box);
-                                eTop += parseInt(box.css("height")) + 10;
+                                eTop += parseInt(box.css("height")) + 20;
                             }
                         }
                         for (j = 1; j < boxes.length; j ++) {
