@@ -854,7 +854,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
             },
             drag: function(e){
                 var $groupDiv;
-                if ($(e.originalEvent.target).hasClass("text-cell-group")) {
+                if ($(e.originalEvent.target).prop("nodeName") == "IMG") {
                     $.each($(this).find(".image-tooltip"), function (i, tooltip) {
                         $.each($(tooltip).data("lines"), function (i, line) {
                             $groupDiv = line.leftElement.parents(".text-cell-group");

@@ -6,7 +6,7 @@ var mouseDown = false;
 var myCropper;
 
 $(document).ready(function(){
-    $(window).on({
+    $("body").on({
         "mousedown": function() {
             if (myCropper) return;
             var imgTag = document.getElementById("thumbnail-image");

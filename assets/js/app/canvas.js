@@ -336,7 +336,11 @@ canvas.on('mouse:down',function(e){
                     height: object.target.height * object.target.scaleY
                 }).on({
                     load: function() {
+                        var $that = $(this);
                         $(this).contents().find("img").attr("src", src);
+                        setTimeout(function(){
+                            $that[0].contentWindow.$("body").trigger("mousedown");
+                        }, 500);
                     }
                 }).appendTo("body");
 
