@@ -1895,7 +1895,7 @@ textarea.default-textarea{
     /*width: 500px;*/
     /*height: 400px;*/
     /*margin: 0 auto;*/
-    /*overflow: scroll;*/
+    overflow: scroll;
     /*border: solid 1px;*/
     background: rgba(0,0,0,0.2);
     /*pointer-events: none;*/

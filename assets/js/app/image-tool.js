@@ -825,32 +825,32 @@ function addSubTextTooltip(left, top, defaultText, parent){
             height: canvas.height
         }).on({
             scroll: function(){
-                //var $groupDiv;
-                //$.each($(this).find(".image-tooltip"), function(i, tooltip){
-                //    $.each($(tooltip).data("lines"), function(i, line){
-                //        $groupDiv = line.leftElement.parents(".text-cell-group");
-                //        adjustLine(line);
-                //        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
-                //            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                //            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
-                //            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
-                //            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
-                //            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                //            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
-                //            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
-                //            line.set("opacity", 0);
-                //            line.leftCircle.set("opacity", 0);
-                //            line.rightCircle.set("opacity", 0);
-                //        } else {
-                //            line.set("opacity", 1);
-                //            line.leftCircle.set("opacity", 1);
-                //            line.rightCircle.set("opacity", 1);
-                //            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
-                //            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
-                //        }
-                //    });
-                //});
-                //canvas.renderAll();
+                var $groupDiv;
+                $.each($(this).find(".image-tooltip"), function(i, tooltip){
+                    $.each($(tooltip).data("lines"), function(i, line){
+                        $groupDiv = line.leftElement.parents(".text-cell-group");
+                        adjustLine(line);
+                        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
+                            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
+                            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
+                            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
+                            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
+                            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
+                            line.set("opacity", 0);
+                            line.leftCircle.set("opacity", 0);
+                            line.rightCircle.set("opacity", 0);
+                        } else {
+                            line.set("opacity", 1);
+                            line.leftCircle.set("opacity", 1);
+                            line.rightCircle.set("opacity", 1);
+                            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
+                            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                        }
+                    });
+                });
+                canvas.renderAll();
             },
             drag: function(e){
                 //var $groupDiv;
