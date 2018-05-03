@@ -821,66 +821,66 @@ function addSubTextTooltip(left, top, defaultText, parent){
             class: "text-cell-group",
             id: "text-cell-group-" + parseInt(Math.random() * 100000000)
         }).css({
-            left: left,
-            top: top
+            width: canvas.width,
+            height: canvas.height
         }).on({
             scroll: function(){
-                var $groupDiv;
-                $.each($(this).find(".image-tooltip"), function(i, tooltip){
-                    $.each($(tooltip).data("lines"), function(i, line){
-                        $groupDiv = line.leftElement.parents(".text-cell-group");
-                        adjustLine(line);
-                        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
-                            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
-                            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
-                            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
-                            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
-                            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
-                            line.set("opacity", 0);
-                            line.leftCircle.set("opacity", 0);
-                            line.rightCircle.set("opacity", 0);
-                        } else {
-                            line.set("opacity", 1);
-                            line.leftCircle.set("opacity", 1);
-                            line.rightCircle.set("opacity", 1);
-                            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
-                            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
-                        }
-                    });
-                });
-                canvas.renderAll();
+                //var $groupDiv;
+                //$.each($(this).find(".image-tooltip"), function(i, tooltip){
+                //    $.each($(tooltip).data("lines"), function(i, line){
+                //        $groupDiv = line.leftElement.parents(".text-cell-group");
+                //        adjustLine(line);
+                //        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
+                //            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                //            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
+                //            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
+                //            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
+                //            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                //            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
+                //            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
+                //            line.set("opacity", 0);
+                //            line.leftCircle.set("opacity", 0);
+                //            line.rightCircle.set("opacity", 0);
+                //        } else {
+                //            line.set("opacity", 1);
+                //            line.leftCircle.set("opacity", 1);
+                //            line.rightCircle.set("opacity", 1);
+                //            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
+                //            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                //        }
+                //    });
+                //});
+                //canvas.renderAll();
             },
             drag: function(e){
-                var $groupDiv;
-                if ($(e.originalEvent.target).prop("nodeName") == "IMG") {
-                    $.each($(this).find(".image-tooltip"), function (i, tooltip) {
-                        $.each($(tooltip).data("lines"), function (i, line) {
-                            $groupDiv = line.leftElement.parents(".text-cell-group");
-                            adjustLine(line);
-                            if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
-                                line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                                line.leftCircle.top < parseInt($groupDiv.css("top")) ||
-                                line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
-                                line.rightCircle.left < parseInt($groupDiv.css("left")) ||
-                                line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                                line.rightCircle.top < parseInt($groupDiv.css("top")) ||
-                                line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
-                                line.set("opacity", 0);
-                                line.leftCircle.set("opacity", 0);
-                                line.rightCircle.set("opacity", 0);
-                            } else {
-                                line.set("opacity", 1);
-                                line.leftCircle.set("opacity", 1);
-                                line.rightCircle.set("opacity", 1);
-                                line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
-                                line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
-                            }
-                        });
-                    });
-                    canvas.renderAll();
-                }
+                //var $groupDiv;
+                //if ($(e.originalEvent.target).prop("nodeName") == "IMG") {
+                //    $.each($(this).find(".image-tooltip"), function (i, tooltip) {
+                //        $.each($(tooltip).data("lines"), function (i, line) {
+                //            $groupDiv = line.leftElement.parents(".text-cell-group");
+                //            adjustLine(line);
+                //            if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
+                //                line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                //                line.leftCircle.top < parseInt($groupDiv.css("top")) ||
+                //                line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
+                //                line.rightCircle.left < parseInt($groupDiv.css("left")) ||
+                //                line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
+                //                line.rightCircle.top < parseInt($groupDiv.css("top")) ||
+                //                line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
+                //                line.set("opacity", 0);
+                //                line.leftCircle.set("opacity", 0);
+                //                line.rightCircle.set("opacity", 0);
+                //            } else {
+                //                line.set("opacity", 1);
+                //                line.leftCircle.set("opacity", 1);
+                //                line.rightCircle.set("opacity", 1);
+                //                line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
+                //                line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                //            }
+                //        });
+                //    });
+                //    canvas.renderAll();
+                //}
             }
         }).data({
             "group": parent
@@ -890,9 +890,11 @@ function addSubTextTooltip(left, top, defaultText, parent){
             src: "./assets/images/icons/remove-24.png"
         }).on("click", function(){
             showConfirmBox("Are you sure to remove this text cell group?", "remove-text-cell-group", $(this).parents(".text-cell-group").attr("id"));
-        })).append($("<img/>", {
-            src: "./assets/images/icons/move-24.png"
-        }))).appendTo("body").draggable();
+        }))
+        //    .append($("<img/>", {
+        //    src: "./assets/images/icons/move-24.png"
+        //}))
+        ).appendTo("body");
 
         if (canvas.height - top < 400){
             groupBox.css("height", canvas.height - top);
@@ -912,8 +914,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
             });
         }
     }).css({
-        left: 50,
-        top: top - parseInt(groupBox.css("top"))
+        left: left,
+        top: top
     }).append($("<div></div>", {
         class: "ttip"
     }).append($("<textarea></textarea>",{
@@ -922,7 +924,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
     }))).append($("<div></div>", {
         class: "text-cell-buttons inside"
     }).append($("<img/>", {
-        src: "assets/images/icons/recycle-24.png"
+        src: "assets/images/icons/recycle-24.png",
+        title: "Toggle"
     }).on({
         click: function(){
             var $parent = $(this).parents(".image-tooltip");
@@ -944,10 +947,25 @@ function addSubTextTooltip(left, top, defaultText, parent){
             }, 1000);
         }
     })).append($("<img/>", {
-        src: "./assets/images/icons/remove-24.png"
+        src: "./assets/images/icons/remove-24.png",
+        title: "Remove"
     }).on("click", function(){
         showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell-in-group", $(this).parents(".image-tooltip").attr("id"));
-    }))).appendTo(groupBox).show().draggable();
+    })).append($("<img/>", {
+        src: "./assets/images/icons/caret-up-24.png",
+        title: "Merge up"
+    }).on({
+        click: function(){
+            mergeUpTextCell($(this).parents(".image-tooltip"));
+        }
+    }).hide()).append($("<img/>", {
+        src: "./assets/images/icons/caret-down-24.png",
+        title: "Merge down"
+    }).on({
+        click: function(){
+            mergeDownTextCell($(this).parents(".image-tooltip"));
+        }
+    }).hide())).appendTo(groupBox).show().draggable();
 
     var $textarea = $tooltip.find("textarea");
     $textarea.css("height", "5px");
@@ -1014,6 +1032,82 @@ function removeTextCell($cell){
     }
     canvas.remove($cell.data("newPoint"));
     $cell.remove();
+    canvas.renderAll();
+}
+
+function mergeUpTextCell($cell){
+    if ($cell.data("lines").length == 1 && $cell.data("lines")[0].leftElement.attr("id") == $cell.attr("id")){
+        return false;
+    }
+    var leftElem, rightElem;
+    var lines = $cell.data("lines"), lines2, j;
+    for (var i = 0; i < lines.length; i ++){
+        if (lines[i].leftElement.attr("id") == $cell.attr("id")) {
+            rightElem = lines[i].rightElement;
+            lines2 = rightElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            rightElem.data("lines", lines2);
+        } else if (lines[i].rightElement.attr("id") == $cell.attr("id")){
+            leftElem = lines[i].leftElement;
+            lines2 = leftElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            leftElem.data("lines", lines2);
+        }
+        canvas.remove(lines[i].leftCircle, lines[i].rightCircle, lines[i]);
+    }
+    leftElem.find("textarea").val(leftElem.find("textarea").val() + "\r\n\r\n" + $cell.find("textarea").val());
+    leftElem.find("textarea").css("height", "5px");
+    leftElem.find("textarea").css("height", leftElem.find("textarea").prop("scrollHeight"));
+    $cell.remove();
+    addBezierLine(leftElem, rightElem).set({
+        strokeDashArray: [1]
+    });
+    canvas.renderAll();
+}
+
+function mergeDownTextCell($cell){
+    if ($cell.data("lines").length == 1 && $cell.data("lines")[0].rightElement.attr("id") == $cell.attr("id")){
+        return false;
+    }
+    var leftElem, rightElem;
+    var lines = $cell.data("lines"), lines2, j;
+    for (var i = 0; i < lines.length; i ++){
+        if (lines[i].leftElement.attr("id") == $cell.attr("id")) {
+            rightElem = lines[i].rightElement;
+            lines2 = rightElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            rightElem.data("lines", lines2);
+        } else if (lines[i].rightElement.attr("id") == $cell.attr("id")){
+            leftElem = lines[i].leftElement;
+            lines2 = leftElem.data("lines");
+            for (j = 0; j < lines2.length; j ++){
+                if (lines2[j].id == lines[i].id) {
+                    lines2.splice(j, 1);
+                }
+            }
+            leftElem.data("lines", lines2);
+        }
+        canvas.remove(lines[i].leftCircle, lines[i].rightCircle, lines[i]);
+    }
+    rightElem.find("textarea").val($cell.find("textarea").val() + "\r\n\r\n" + rightElem.find("textarea").val());
+    rightElem.find("textarea").css("height", "5px");
+    rightElem.find("textarea").css("height", rightElem.find("textarea").prop("scrollHeight"));
+    $cell.remove();
+    addBezierLine(leftElem, rightElem).set({
+        strokeDashArray: [1]
+    });
     canvas.renderAll();
 }
 

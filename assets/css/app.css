@@ -1888,21 +1888,25 @@ textarea.default-textarea{
 
 .text-cell-group{
     position: absolute;
-    width: 500px;
-    height: 400px;
-    margin: 0 auto;
-    overflow: scroll;
-    border: solid 1px;
+    left: 0;
+    top: 0;
+    /*width: 200%;*/
+    /*height: 200%;*/
+    /*width: 500px;*/
+    /*height: 400px;*/
+    /*margin: 0 auto;*/
+    /*overflow: scroll;*/
+    /*border: solid 1px;*/
     background: rgba(0,0,0,0.2);
-    pointer-events: none;
+    /*pointer-events: none;*/
 }
 .text-cell-group * {
     pointer-events: auto;
 }
 .text-cell-group .text-cell-buttons{
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 50px;
+    right: 50px;
 }
 .text-cell-group .text-cell-buttons img{
     width: 16px;
