@@ -630,8 +630,8 @@ function addTextTooltip(left, top, defaultText){
                                     // scale image down, and flip it, before adding it onto canvas
                                     tImg.set({left: 0, top: 0, angle: 0});
                                     var btn = new fabric.Group([rect, tImg], {
-                                        left: tImg.left - buttonSize,
-                                        top: tImg.top,
+                                        left: oImg.left - buttonSize,
+                                        top: oImg.top,
                                         id: 'close-image',
                                         class: 'button',
                                         originX: 'center',
@@ -663,8 +663,8 @@ function addTextTooltip(left, top, defaultText){
                                     // scale image down, and flip it, before adding it onto canvas
                                     tImg.set({left: 0, top: 0, angle: 0});
                                     var btn = new fabric.Group([rect, tImg], {
-                                        left: tImg.left - buttonSize,
-                                        top: tImg.top + 1.5 * buttonSize,
+                                        left: oImg.left - buttonSize,
+                                        top: oImg.top + 1.5 * buttonSize,
                                         id: 'convert-image',
                                         class: 'button',
                                         originX: 'center',
