@@ -219,7 +219,7 @@ function removeImageTools(param){
         $('#ttip-exit').click();
     }
     //$('#imageDialog').hide();
-    $('.image-tooltip').hide();
+    $('.image-tooltip:not(.text)').hide();
     $('.image-tooltip.text').show().removeClass("hover");
     $('#ui-datepicker-div').hide();
     $(".search-tooltip-object").removeClass("search-tooltip-object");
@@ -701,6 +701,9 @@ function addTextTooltip(left, top, defaultText){
                 if (elements.length < 2) {
                     rows = clipboardData.split("\r\n\r\n");
                     if (rows.length > 1) {
+                        $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true);
+                        $("body").css("overflow", "hidden");
+
                         var boxes = [], line;
                         for (var j = 0; j < rows.length; j ++) {
                             if (rows[j].trim() != "") {
@@ -820,34 +823,27 @@ function addSubTextTooltip(left, top, defaultText, parent){
         groupBox = $("<div></div>", {
             class: "text-cell-group",
             id: "text-cell-group-" + parseInt(Math.random() * 100000000)
-        }).css({
-            width: canvas.width,
-            height: canvas.height
         }).on({
-            scroll: function(){
-                var $groupDiv;
+            scroll: function(e){
+                var offsetX = $(this).prop("scrollLeft"), offsetY = $(this).prop("scrollTop"), left, top;
                 $.each($(this).find(".image-tooltip"), function(i, tooltip){
                     $.each($(tooltip).data("lines"), function(i, line){
-                        $groupDiv = line.leftElement.parents(".text-cell-group");
-                        adjustLine(line);
-                        if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
-                            line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                            line.leftCircle.top < parseInt($groupDiv.css("top")) ||
-                            line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
-                            line.rightCircle.left < parseInt($groupDiv.css("left")) ||
-                            line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                            line.rightCircle.top < parseInt($groupDiv.css("top")) ||
-                            line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
-                            line.set("opacity", 0);
-                            line.leftCircle.set("opacity", 0);
-                            line.rightCircle.set("opacity", 0);
-                        } else {
-                            line.set("opacity", 1);
-                            line.leftCircle.set("opacity", 1);
-                            line.rightCircle.set("opacity", 1);
-                            line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
-                            line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
+                        if (line.control.oLeft == undefined || line.control.oTop == undefined){
+                            line.control.set({
+                                oLeft: line.control.left,
+                                oTop: line.control.top
+                            })
                         }
+                        left = line.control.oLeft - offsetX;
+                        top = line.control.oTop - offsetY;
+                        line.control.set({
+                            left: left,
+                            top: top
+                        });
+                        line.path[1][1] = left;
+                        line.path[1][2] = top;
+
+                        adjustLine(line);
                     });
                 });
                 canvas.renderAll();
@@ -914,7 +910,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
             });
         }
     }).css({
-        left: left,
+        left: window.innerWidth / 2 - 200,
         top: top
     }).append($("<div></div>", {
         class: "ttip"
@@ -958,14 +954,14 @@ function addSubTextTooltip(left, top, defaultText, parent){
         click: function(){
             mergeUpTextCell($(this).parents(".image-tooltip"));
         }
-    }).hide()).append($("<img/>", {
+    })).append($("<img/>", {
         src: "./assets/images/icons/caret-down-24.png",
         title: "Merge down"
     }).on({
         click: function(){
             mergeDownTextCell($(this).parents(".image-tooltip"));
         }
-    }).hide())).appendTo(groupBox).show().draggable();
+    }))).appendTo(groupBox).show().draggable();
 
     var $textarea = $tooltip.find("textarea");
     $textarea.css("height", "5px");
@@ -1065,6 +1061,7 @@ function mergeUpTextCell($cell){
     }
     leftElem.find("textarea").val(leftElem.find("textarea").val() + "\r\n\r\n" + $cell.find("textarea").val());
     leftElem.find("textarea").css("height", "5px");
+    leftElem.css("height", leftElem.find("textarea").prop("scrollHeight") + 22);
     leftElem.find("textarea").css("height", leftElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
     addBezierLine(leftElem, rightElem).set({
@@ -1103,6 +1100,10 @@ function mergeDownTextCell($cell){
     }
     rightElem.find("textarea").val($cell.find("textarea").val() + "\r\n\r\n" + rightElem.find("textarea").val());
     rightElem.find("textarea").css("height", "5px");
+    rightElem.css({
+        height: rightElem.find("textarea").prop("scrollHeight") + 22,
+        top: $cell.css("top")
+    });
     rightElem.find("textarea").css("height", rightElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
     addBezierLine(leftElem, rightElem).set({
@@ -1150,6 +1151,7 @@ function removeTextCellGroup($div){
         });
     });
     $div.remove();
+    $("body").css("overflow", "");
     canvas.renderAll();
 }
 

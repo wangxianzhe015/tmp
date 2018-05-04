@@ -37,7 +37,7 @@ function initHandlers(){
     });
 
     $(document).on("mousemove", function(e){
-        if ($(e.originalEvent.target).find("iframe").length > 0){
+        if ($(e.originalEvent.target).find("iframe").length > 0 || $(".text-cell-group").length > 0){
             return;
         }
         if (e.clientX < 50){
