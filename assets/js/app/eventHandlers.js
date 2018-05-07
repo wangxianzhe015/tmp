@@ -31,6 +31,13 @@ function initHandlers(){
                 });
             } else if (obj.class == "boundary-text" && e.originalEvent.keyCode == 13) {
                 canvas.deactivateAll();
+            } else if (obj.class == "cropped-image" && e.originalEvent.keyCode == 46) {
+                canvas.forEachObject(function(object){
+                    if (object.class == "cropped-image-annotation" && object.target == obj.id){
+                        canvas.remove(object);
+                    }
+                });
+                canvas.remove(obj).renderAll();
             }
         }
 

@@ -1983,6 +1983,8 @@
             if (this.cropping) {
                 this.cropping = false;
                 toggleClass(this.dragBox, CLASS_MODAL, this.cropped && this.options.modal);
+            } else {
+                return;
             }
 
             dispatchEvent(this.element, EVENT_CROP_END, {

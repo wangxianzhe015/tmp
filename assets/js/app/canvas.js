@@ -20,6 +20,7 @@ canvas.on('mouse:over', function(e) {
         }
 
         var coords = getObjPosition(e.target);
+
         // This is because of rotating point hovering prevent
         if (e.target.status != "highlighted") {
             if (coords.right > e.e.offsetX && coords.left < e.e.offsetX && coords.top < e.e.offsetY && coords.bottom > e.e.offsetY) {
@@ -72,14 +73,14 @@ canvas.on('mouse:over', function(e) {
             "top": e.target.top
         }).show();
     } else if (e.target != null && e.target.class == "image-thumbnail") {
-        if (!e.target.resized) {
-            e.target.set({
-                scaleX: 1,
-                scaleY: 1
-            });
-            e.target.setCoords();
-            canvas.renderAll();
-        }
+        //if (!e.target.resized) {
+        //    e.target.set({
+        //        scaleX: 1,
+        //        scaleY: 1
+        //    });
+        //    e.target.setCoords();
+        //    canvas.renderAll();
+        //}
     } else {
         setTimeout(removeImageTools,500);
         removeDotTooltip();
@@ -99,13 +100,13 @@ canvas.on('mouse:out', function(e){
         targetHudLine.set("selectable", false);
         canvas.deactivateAll();
     } else if (e.target != null && e.target.class == "image-thumbnail") {
-        if (!e.target.resized) {
-            e.target.set({
-                scaleX: imageThumbnailSize.width / e.target.width,
-                scaleY: imageThumbnailSize.height / e.target.height
-            });
-            e.target.setCoords();
-        }
+        //if (!e.target.resized) {
+        //    e.target.set({
+        //        scaleX: imageThumbnailSize.width / e.target.width,
+        //        scaleY: imageThumbnailSize.height / e.target.height
+        //    });
+        //    e.target.setCoords();
+        //}
     }
     canvas.renderAll();
 });
@@ -276,10 +277,14 @@ canvas.on('mouse:down',function(e){
                 if (object.target instanceof jQuery) {
                     var $iframeBody = object.target.contents().find("body"),
                         images = $iframeBody.find(".cropped-image-div"), $img, imageOffset,
-                        parentOffset = object.target.offset();
+                        parentOffset = object.target.offset(),
+                        id;
                     for (var i = 0; i < images.length; i ++){
                         $img = $(images[i]).find(".cropped-image");
                         imageOffset = $img.offset();
+
+                        id = "cropped-image-" + parseInt(Math.random() * 1000000000000);
+
                         fabric.Image.fromURL($img.attr("src"), function(oImg) {
                             canvas.add(oImg);
                             canvas.sendToBack(oImg);
@@ -289,6 +294,8 @@ canvas.on('mouse:down',function(e){
                             top: parentOffset.top + imageOffset.top,
                             width: $img.innerWidth(),
                             height: $img.innerHeight(),
+                            class: "cropped-image",
+                            id: id,
                             hasRotatingPoint: false,
                             hasBorders: false,
                             hasControls: false,
@@ -300,6 +307,8 @@ canvas.on('mouse:down',function(e){
                             text = new fabric.IText($annotationDiv.text(), {
                                 left: parentOffset.left + $annotationDiv.offset().left,
                                 top: parentOffset.top + $annotationDiv.offset().top,
+                                class: "cropped-image-annotation",
+                                target: id,
                                 fontFamily: 'VagRounded',
                                 fontSize: 12,
                                 backgroundColor: 'rgba(0,0,0,0.4)',
@@ -902,7 +911,7 @@ canvas.on('object:scaling', function(e){
         object.set("scaleX", 1);
         canvas.renderAll();
     } else if (object.class == "image-thumbnail") {
-        object.resized = true;
+        //object.resized = true;
         var scale;
         if (object.prevScaleX < object.scaleX || object.prevScaleY < object.scaleY){
             scale = Math.max(object.scaleX, object.scaleY);

@@ -609,11 +609,13 @@ function addTextTooltip(left, top, defaultText){
                                     angle: 0,
                                     hasRotatingPoint: false,
                                     cornerSize: 7,
-                                    resized: false,
-                                    prevScaleX: imageThumbnailSize.width / oImg.width,
-                                    prevScaleY: imageThumbnailSize.width / oImg.width,
-                                    scaleX: imageThumbnailSize.width / oImg.width,
-                                    scaleY: imageThumbnailSize.width / oImg.width
+                                    prevScaleX: 1,
+                                    prevScaleY: 1
+                                    //resized: false,
+                                    //prevScaleX: imageThumbnailSize.width / oImg.width,
+                                    //prevScaleY: imageThumbnailSize.width / oImg.width,
+                                    //scaleX: imageThumbnailSize.width / oImg.width,
+                                    //scaleY: imageThumbnailSize.width / oImg.width
                                 });
 
                                 canvas.add(oImg);
@@ -826,27 +828,57 @@ function addSubTextTooltip(left, top, defaultText, parent){
         }).on({
             scroll: function(e){
                 var offsetX = $(this).prop("scrollLeft"), offsetY = $(this).prop("scrollTop"), left, top;
-                $.each($(this).find(".image-tooltip"), function(i, tooltip){
-                    $.each($(tooltip).data("lines"), function(i, line){
-                        if (line.control.oLeft == undefined || line.control.oTop == undefined){
-                            line.control.set({
-                                oLeft: line.control.left,
-                                oTop: line.control.top
-                            })
-                        }
-                        left = line.control.oLeft - offsetX;
-                        top = line.control.oTop - offsetY;
-                        line.control.set({
-                            left: left,
-                            top: top
+                if (offsetY == 0){
+                    $.each($(this).find(".image-tooltip"), function(i, toolTip){
+                        $.each($(toolTip).data("lines"), function(i, line){
+                            line.leftCircle.set({
+                                opacity: 1
+                            });
+                            line.rightCircle.set({
+                                opacity: 1
+                            });
+                            line.set({
+                                opacity: 1
+                            });
                         });
-                        line.path[1][1] = left;
-                        line.path[1][2] = top;
-
-                        adjustLine(line);
                     });
-                });
+                } else {
+                    $.each($(this).find(".image-tooltip"), function(i, toolTip){
+                        $.each($(toolTip).data("lines"), function(i, line){
+                            line.leftCircle.set({
+                                opacity: 0
+                            });
+                            line.rightCircle.set({
+                                opacity: 0
+                            });
+                            line.set({
+                                opacity: 0
+                            });
+                        });
+                    });
+                }
                 canvas.renderAll();
+                //$.each($(this).find(".image-tooltip"), function(i, tooltip){
+                //    $.each($(tooltip).data("lines"), function(i, line){
+                //        if (line.control.oLeft == undefined || line.control.oTop == undefined){
+                //            line.control.set({
+                //                oLeft: line.control.left,
+                //                oTop: line.control.top
+                //            })
+                //        }
+                //        left = line.control.oLeft - offsetX;
+                //        top = line.control.oTop - offsetY;
+                //        line.control.set({
+                //            left: left,
+                //            top: top
+                //        });
+                //        line.path[1][1] = left;
+                //        line.path[1][2] = top;
+                //
+                //        adjustLine(line);
+                //    });
+                //});
+                //canvas.renderAll();
             },
             drag: function(e){
                 //var $groupDiv;
@@ -904,11 +936,11 @@ function addSubTextTooltip(left, top, defaultText, parent){
         "group": parent,
         hidden: false
     }).on({
-        drag: function(){
-            $.each($(this).data("lines"), function(i, line){
-                adjustLine(line);
-            });
-        }
+        //drag: function(){
+        //    $.each($(this).data("lines"), function(i, line){
+        //        adjustLine(line);
+        //    });
+        //}
     }).css({
         left: window.innerWidth / 2 - 200,
         top: top
