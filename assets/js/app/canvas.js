@@ -687,11 +687,11 @@ canvas.on('object:moving', function(e){
         });
 
         tickBoxes.forEach(function(tickBox){
-            if (object.tickButton.checked && !(object.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(object))){
+            if (object.tickButton.checked && (object.intersectsWithObject(tickBox) || tickBox.intersectsWithObject(object))){
                 isInTickbox = true;
             }
         });
-        if (isInTickbox){
+        if (!isInTickbox){
             object.set({
                 scaleX: 1,
                 scaleY: 1

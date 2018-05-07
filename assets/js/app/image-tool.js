@@ -624,8 +624,8 @@ function addTextTooltip(left, top, defaultText){
                                     var rect = new fabric.Rect({
                                         left: 0,
                                         top: 0,
-                                        width: buttonSize * 0.8,
-                                        height: buttonSize * 0.8,
+                                        width: buttonSize,
+                                        height: buttonSize,
                                         fill: buttonColor,
                                         strokeWidth: 2
                                     });
@@ -638,8 +638,8 @@ function addTextTooltip(left, top, defaultText){
                                         class: 'button',
                                         originX: 'center',
                                         originY: 'center',
-                                        scaleX: 0.8,
-                                        scaleY: 0.8,
+                                        scaleX: 2 / 3,
+                                        scaleY: 2 / 3,
                                         selectable: false,
                                         draggable: false,
                                         hasBorders: false,
@@ -671,6 +671,8 @@ function addTextTooltip(left, top, defaultText){
                                         class: 'button',
                                         originX: 'center',
                                         originY: 'center',
+                                        scaleX: 2 / 3,
+                                        scaleY: 2 / 3,
                                         selectable: false,
                                         draggable: false,
                                         hasBorders: false,

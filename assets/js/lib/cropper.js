@@ -1918,10 +1918,6 @@
             this.action = action;
             this.cropping = false;
 
-            if (action === ACTION_CROP) {
-                this.cropping = true;
-                addClass(this.dragBox, CLASS_MODAL);
-            }
         },
         cropMove: function cropMove(e) {
             var action = this.action;
@@ -1949,6 +1945,11 @@
                 });
             } else {
                 assign(pointers[e.pointerId || 0], getPointer(e, true));
+            }
+
+            if (action === ACTION_CROP) {
+                this.cropping = true;
+                addClass(this.dragBox, CLASS_MODAL);
             }
 
             this.change(e);
