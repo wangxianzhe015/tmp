@@ -1501,6 +1501,7 @@ textarea.default-textarea{
 .thumbnail-iframe {
     position: absolute;
     border: none;
+    z-index: 10;
 }
 .eml-data-iframe{
     background: white;
@@ -1913,4 +1914,14 @@ textarea.default-textarea{
     cursor: pointer;
     display: block;
     margin: 5px 0;
+}
+
+.cropped-image-annotation{
+    font-size: 12px;
+    font-family: VagRounded, Helvetica, sans-serif;
+    background-color: rgba(0,0,0,0.4);
+    color: white;
+    padding: 5px;
+    display: inline;
+    position: absolute;
 }

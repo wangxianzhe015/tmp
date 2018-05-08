@@ -662,6 +662,41 @@ function addAddButtons(left, top) {
 
 }
 
+function addCropButton(left, top, parent){
+    fabric.Image.fromURL("./assets/images/icons/crop-24.png", function (oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var btn = new fabric.Group([rect, oImg], {
+            left: left,
+            top: top,
+            id: 'crop-image',
+            class: 'button',
+            originX: 'center',
+            originY: 'center',
+            scaleX: 2 / 3,
+            scaleY: 2 / 3,
+            selectable: false,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.cropButton = btn;
+        btn.target = parent;
+        canvas.add(btn);
+        canvas.renderAll();
+    });
+}
+
 function showChildButtons(){
     $("#left-sidebar").find(".child").show();
 }

@@ -274,88 +274,166 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
-                if (object.target instanceof jQuery) {
-                    var $iframeBody = object.target.contents().find("body"),
-                        images = $iframeBody.find(".cropped-image-div"), $img, imageOffset,
-                        parentOffset = object.target.offset(),
-                        id;
-                    for (var i = 0; i < images.length; i ++){
-                        $img = $(images[i]).find(".cropped-image");
-                        imageOffset = $img.offset();
-
-                        id = "cropped-image-" + parseInt(Math.random() * 1000000000000);
-
-                        fabric.Image.fromURL($img.attr("src"), function(oImg) {
-                            canvas.add(oImg);
-                            canvas.sendToBack(oImg);
-                        },
-                        {
-                            left: parentOffset.left + imageOffset.left,
-                            top: parentOffset.top + imageOffset.top,
-                            width: $img.innerWidth(),
-                            height: $img.innerHeight(),
-                            class: "cropped-image",
-                            id: id,
-                            hasRotatingPoint: false,
-                            hasBorders: false,
-                            hasControls: false,
-                            selectable: true
-                        });
-
-                        var $annotationDiv = $(images[i]).find(".image-annotation"), text;
-                        if ($annotationDiv.length > 0) {
-                            text = new fabric.IText($annotationDiv.text(), {
-                                left: parentOffset.left + $annotationDiv.offset().left,
-                                top: parentOffset.top + $annotationDiv.offset().top,
-                                class: "cropped-image-annotation",
-                                target: id,
-                                fontFamily: 'VagRounded',
-                                fontSize: 12,
-                                backgroundColor: 'rgba(0,0,0,0.4)',
-                                fill: 'white',
-                                hasRotatingPoint: false,
-                                hasBorders: false,
-                                hasControls: false,
-                                selectable: true
-                            });
-
-                            canvas.add(text);
-                            canvas.bringToFront(text);
-                        }
-                    }
-                    setTimeout(function(){
-                        object.target.remove();
-                        canvas.remove(object);
-                    }, 200);
-                } else {
-                    canvas.remove(object.target.convertButton, object.target, object);
+                canvas.remove(object.target.convertButton, object.target.cropButton, object.target, object);
+                if (object.target.iframe instanceof jQuery) {
+                    object.target.iframe.remove();
                 }
                 canvas.renderAll();
-            } else if (object.id =='convert-image') {
-                var id = "thumbnail-iframe-" + parseInt(Math.random() * 100000000);
-                var src = object.target._element.currentSrc;
-                var $iframe = $("<iframe></iframe>", {
-                    src: window.location.href + "/image-marker/",
-                    class: "thumbnail-iframe",
-                    id: id
-                }).css({
-                    left: object.target.left,
-                    top: object.target.top,
-                    width: object.target.width * object.target.scaleX,
-                    height: object.target.height * object.target.scaleY
-                }).on({
-                    load: function() {
-                        var $that = $(this);
-                        $(this).contents().find("img").attr("src", src);
-                        setTimeout(function(){
-                            $that[0].contentWindow.$("body").trigger("mousedown");
-                        }, 500);
-                    }
-                }).appendTo("body");
+            } else if (object.id == 'crop-image') {
+                var $iframeBody = object.target.iframe.contents().find("body"),
+                    images = $iframeBody.find(".cropped-image-div"), $img, imageOffset,
+                    parentOffset = object.target.iframe.offset(),
+                    id, $annotationDiv, $newAnnotation;
+                for (var i = 0; i < images.length; i++) {
+                    $img = $(images[i]).find(".cropped-image");
+                    imageOffset = $img.offset();
 
-                canvas.remove(object.target.convertButton, object.target);
-                object.target.closeButton.target = $iframe;
+                    id = "cropped-image-" + parseInt(Math.random() * 1000000000000);
+
+                    $annotationDiv = $(images[i]).find(".image-annotation");
+                    if ($annotationDiv.length > 0) {
+                        if ($annotationDiv.text().trim() != "") {
+                            $newAnnotation = $("<div></div>", {
+                                class: "cropped-image-annotation",
+                                text: $annotationDiv.text()
+                            }).data({
+                                target: id
+                            }).css({
+                                left: parentOffset.left + $annotationDiv.offset().left,
+                                top: parentOffset.top + $annotationDiv.offset().top
+                            }).draggable().appendTo("body");
+                        } else {
+                            $newAnnotation = undefined;
+                        }
+                    }
+
+                    fabric.Image.fromURL($img.attr("src"), function (oImg) {
+                        canvas.add(oImg);
+                        oImg.setShadow({
+                            color: '#000',
+                            blur: 25,
+                            offsetX: 0,
+                            offsetY: 0,
+                            opacity: 0.4
+                        });
+
+                        fabric.Image.fromURL("./assets/images/icons/remove-24.png", function (tImg) {
+                            tImg.set({
+                                left: oImg.left - buttonSize,
+                                top: oImg.top,
+                                id: 'close-cropped-image',
+                                class: 'button',
+                                scaleX: 2 / 3,
+                                scaleY: 2 / 3,
+                                selectable: false,
+                                draggable: false,
+                                hasBorders: false,
+                                hasControls: false,
+                                hasRotatingPoint: false
+                            });
+
+                            oImg.closeButton = tImg;
+                            tImg.target = oImg;
+                            canvas.add(tImg);
+                            canvas.renderAll();
+                        });
+
+
+                        fabric.Image.fromURL("./assets/images/icons/external-24.png", function (tImg) {
+                            tImg.set({
+                                left: oImg.left - buttonSize,
+                                top: oImg.top + buttonSize,
+                                id: 'open-original-image',
+                                class: 'button',
+                                scaleX: 2 / 3,
+                                scaleY: 2 / 3,
+                                selectable: false,
+                                draggable: false,
+                                hasBorders: false,
+                                hasControls: false,
+                                hasRotatingPoint: false
+                            });
+
+                            oImg.originalButton = tImg;
+                            tImg.target = object.target;
+                            canvas.add(tImg);
+                            canvas.renderAll();
+                        });
+
+                    },
+                    {
+                        left: parentOffset.left + imageOffset.left,
+                        top: parentOffset.top + imageOffset.top,
+                        width: $img.innerWidth(),
+                        height: $img.innerHeight(),
+                        class: "cropped-image",
+                        id: id,
+                        annotation: $newAnnotation,
+                        strokeWidth: 1,
+                        stroke: 'gray',
+                        hasRotatingPoint: false,
+                        hasBorders: false,
+                        hasControls: false,
+                        selectable: true
+                    });
+                }
+                object.target.iframe.hide();
+                object.target.closeButton.set({
+                    visible: false
+                });
+                object.set({
+                    visible: false
+                });
+            } else if (object.id == 'close-cropped-image') {
+                object.target.annotation.remove();
+                canvas.remove(object.target.originalButton, object.target, object);
                 canvas.renderAll();
+            } else if (object.id == 'open-original-image') {
+                object.target.closeButton.set({
+                    visible: true
+                });
+                object.target.cropButton.set({
+                    visible: true
+                });
+                object.target.iframe.contents().find(".cropped-image-div").remove();
+                object.target.iframe.show();
+            } else if (object.id =='convert-image') {
+                if (object.target.iframe instanceof jQuery){
+                    object.target.iframe.show();
+                } else {
+                    var id = "thumbnail-iframe-" + parseInt(Math.random() * 100000000);
+                    var src = object.target._element.currentSrc;
+                    var $iframe = $("<iframe></iframe>", {
+                        src: window.location.href + "/image-marker/",
+                        class: "thumbnail-iframe",
+                        id: id
+                    }).css({
+                        left: object.target.left,
+                        top: object.target.top,
+                        width: object.target.width * object.target.scaleX,
+                        height: object.target.height * object.target.scaleY
+                    }).on({
+                        load: function () {
+                            var $that = $(this);
+                            $(this).contents().find("img").attr("src", src);
+                            setTimeout(function () {
+                                $that[0].contentWindow.$("body").trigger("mousedown");
+                            }, 500);
+                        }
+                    }).appendTo("body");
+
+                    object.set({
+                        visible: false
+                    });
+                    object.target.set({
+                        visible: false
+                    });
+
+                    addCropButton(object.left, object.top, object.target);
+
+                    object.target.iframe = $iframe;
+                    canvas.renderAll();
+                }
             }
         } else if (object.class == 'element') {
             elementDownHandler(object);
@@ -817,6 +895,27 @@ canvas.on('object:moving', function(e){
             left: object.left - buttonSize,
             top: object.top + 1.5 * buttonSize
         }).setCoords();
+        if (object.cropButton) {
+            object.cropButton.set({
+                left: object.left - buttonSize,
+                top: object.top + 1.5 * buttonSize
+            }).setCoords();
+        }
+    } else if (object.class == "cropped-image") {
+        object.closeButton.set({
+            left: object.left -buttonSize,
+            top: object.top
+        }).setCoords();
+        object.originalButton.set({
+            left: object.left -buttonSize,
+            top: object.top + buttonSize
+        }).setCoords();
+        if (object.annotation) {
+            object.annotation.css({
+                left: parseInt(object.annotation.css("left")) + e.e.movementX,
+                top: parseInt(object.annotation.css("top")) + e.e.movementY
+            });
+        }
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);
