@@ -32,6 +32,16 @@
 		<div class="section"></div>
 	</div>
 
+    <div class="buttons">
+        <img src="../assets/images/icons/recycle-24.png" id="rotate-calendar"/>
+        <img src="../assets/images/icons/hide-40.png" id="disable-tooltip"/>
+        <img src="../assets/images/icons/plus-40.png" id="plus-section"/>
+    </div>
+
+    <div id="alert">
+        <div class="alert-content"></div>
+    </div>
+
     <div class="tagger-tooltip" id="message-tooltip">
         <ul class="tab-menu">
             <li class="active">
@@ -177,9 +187,74 @@
     <script type="text/javascript" src="../assets/js/app/text-wrap.js"></script>
 
     <script type="text/javascript">
+        var tooltipStatus = true;
+        var action = "";
 
 		$( '#accordion' ).cndceAccordion(  );
         $(document).ready(function(){
+            $("#disable-tooltip").on("click", function(){
+                tooltipStatus = !tooltipStatus;
+            });
+
+            $("#rotate-calendar").on("click", function(){
+                var $content = $(".cndce-accordion");
+                $content.toggleClass("vertical");
+                if ($content.hasClass("vertical")){
+                    $content.find(".ui-resizable-e").addClass("ui-resizable-n").removeClass("ui-resizable-e");
+                    $content.find(".ui-resizable-w").addClass("ui-resizable-s").removeClass("ui-resizable-w");
+                    $.each($content.find(".section"), function(i, section){
+                        $(section).data({
+                            width: $(section).css("width")
+                        }).css({
+                            width: "",
+                            height: $(section).data("height")
+                        });
+                    });
+                } else {
+                    $content.find(".ui-resizable-n").addClass("ui-resizable-e").removeClass("ui-resizable-n");
+                    $content.find(".ui-resizable-s").addClass("ui-resizable-w").removeClass("ui-resizable-s");
+                    $.each($content.find(".section"), function(i, section){
+                        $(section).data({
+                            height: $(section).css("height")
+                        }).css({
+                            height: "",
+                            width: $(section).data("width")
+                        });
+                    });
+                }
+            });
+
+            $("#plus-section").on("click", function(){
+                action = "add-section";
+                alert("Please point where to put new section.");
+            });
+
+            $(".section").on("click", function(e){
+                if (action == "add-section"){
+                    $(this).removeClass("active");
+                    var $accordion = $("#accordion");
+                    var $section = $(this).clone(true, true);
+
+                    $section.insertAfter($(this));
+                    $section.find(".ui-resizable-handle").remove();
+
+                    var isVertical = $accordion.hasClass( 'vertical' );
+                    var handles;
+
+                    // Vertical orientation
+                    if( isVertical ){
+                        handles = 'n, s';
+                    }else{
+                        handles = 'e, w';
+                    }
+
+                    $section.resizable( {
+                        handles: handles
+                    } );
+                    action = "";
+                }
+            });
+
             boundary(".section");
             boundary(".section");
         });

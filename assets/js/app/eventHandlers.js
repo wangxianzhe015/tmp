@@ -1084,18 +1084,6 @@ function initHandlers(){
         }
     });
 
-    $("#rotate-calendar").on("click", function(){
-        var $content = $("#calendar-iframe").find("iframe").contents();
-        $content.find(".cndce-accordion").toggleClass("vertical");
-        if ($content.find(".cndce-accordion").hasClass("vertical")){
-            $content.find(".ui-resizable-e").addClass("ui-resizable-n").removeClass("ui-resizable-e");
-            $content.find(".ui-resizable-w").addClass("ui-resizable-s").removeClass("ui-resizable-w");
-        } else {
-            $content.find(".ui-resizable-n").addClass("ui-resizable-e").removeClass("ui-resizable-n");
-            $content.find(".ui-resizable-s").addClass("ui-resizable-w").removeClass("ui-resizable-s");
-        }
-    });
-
     $("#tagger-file-upload-button").on("click", function () {
         $("#tagger-file-upload").click();
     });

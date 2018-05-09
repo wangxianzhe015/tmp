@@ -697,6 +697,41 @@ function addCropButton(left, top, parent){
     });
 }
 
+function addMoveButton(left, top, parent){
+    fabric.Image.fromURL("./assets/images/icons/move-24.png", function (oImg) {
+        var rect = new fabric.Rect({
+            left: 0,
+            top: 0,
+            width: buttonSize,
+            height: buttonSize,
+            fill: buttonColor,
+            strokeWidth: 2
+        });
+        // scale image down, and flip it, before adding it onto canvas
+        oImg.set({left: 0, top: 0, angle: 0});
+        var btn = new fabric.Group([rect, oImg], {
+            left: left,
+            top: top,
+            id: 'move-image',
+            class: 'button',
+            originX: 'center',
+            originY: 'center',
+            scaleX: 2 / 3,
+            scaleY: 2 / 3,
+            selectable: true,
+            draggable: false,
+            hasBorders: false,
+            hasControls: false,
+            hasRotatingPoint: false
+        });
+
+        parent.moveButton = btn;
+        btn.target = parent;
+        canvas.add(btn);
+        canvas.renderAll();
+    });
+}
+
 function showChildButtons(){
     $("#left-sidebar").find(".child").show();
 }

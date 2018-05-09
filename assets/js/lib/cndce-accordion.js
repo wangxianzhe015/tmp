@@ -28,7 +28,7 @@ jQuery.fn.extend( {
 		$( '.section', accordion ).each( function(  ){
 			var $wrapper = $( '<div class="cndce-sortable"></div>' );
 
-			$( this ).children(  ).appendTo( $wrapper );
+			$( this ).children().appendTo( $wrapper );
 			$( this ).append( $wrapper );
 
 			$( this ).resizable( {
@@ -36,7 +36,7 @@ jQuery.fn.extend( {
 				maxWidth: params.maxSegmentWidth,
 				stop: function( e, ui ){
 
-					if( !isVertical ){
+					if( !$(".cndce-accordion").hasClass("vertical") ){
 						var accordionWidth = $( accordion ).outerWidth(  );
 
 						$( '.section', accordion ).each( function(  ){

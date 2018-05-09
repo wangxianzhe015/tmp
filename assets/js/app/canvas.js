@@ -274,7 +274,7 @@ canvas.on('mouse:down',function(e){
             } else if (object.id == 'change-hud-line') {
                 changeCrosshairLine(object);
             } else if (object.id == 'close-image') {
-                canvas.remove(object.target.convertButton, object.target.cropButton, object.target, object);
+                canvas.remove(object.target.convertButton, object.target.cropButton, object.target.moveButton, object.target, object);
                 if (object.target.iframe instanceof jQuery) {
                     object.target.iframe.remove();
                 }
@@ -381,11 +381,16 @@ canvas.on('mouse:down',function(e){
                 object.target.closeButton.set({
                     visible: false
                 });
+                object.target.moveButton.set({
+                    visible: false
+                });
                 object.set({
                     visible: false
                 });
             } else if (object.id == 'close-cropped-image') {
-                object.target.annotation.remove();
+                if (object.target.annotation) {
+                    object.target.annotation.remove();
+                }
                 canvas.remove(object.target.originalButton, object.target, object);
                 canvas.renderAll();
             } else if (object.id == 'open-original-image') {
@@ -393,6 +398,9 @@ canvas.on('mouse:down',function(e){
                     visible: true
                 });
                 object.target.cropButton.set({
+                    visible: true
+                });
+                object.target.moveButton.set({
                     visible: true
                 });
                 object.target.iframe.contents().find(".cropped-image-div").remove();
@@ -430,6 +438,7 @@ canvas.on('mouse:down',function(e){
                     });
 
                     addCropButton(object.left, object.top, object.target);
+                    addMoveButton(object.left, object.top + 1.5 * buttonSize, object.target);
 
                     object.target.iframe = $iframe;
                     canvas.renderAll();
@@ -901,6 +910,12 @@ canvas.on('object:moving', function(e){
                 top: object.top + 1.5 * buttonSize
             }).setCoords();
         }
+        if (object.moveButton) {
+            object.moveButton.set({
+                left: object.left - buttonSize,
+                top: object.top + 3 * buttonSize
+            }).setCoords();
+        }
     } else if (object.class == "cropped-image") {
         object.closeButton.set({
             left: object.left -buttonSize,
@@ -916,6 +931,23 @@ canvas.on('object:moving', function(e){
                 top: parseInt(object.annotation.css("top")) + e.e.movementY
             });
         }
+    } else if (object.class == "button" && object.id == "move-image") {
+        object.target.set({
+            left: object.left + buttonSize,
+            top: object.top - 3 * buttonSize
+        }).setCoords();
+        object.target.closeButton.set({
+            left: object.left,
+            top: object.top - 3 * buttonSize
+        }).setCoords();
+        object.target.cropButton.set({
+            left: object.left,
+            top: object.top - 1.5 * buttonSize
+        }).setCoords();
+        object.target.iframe.css({
+            left: object.left + buttonSize,
+            top: object.top - 3 * buttonSize
+        });
     }
     if (e.e.offsetY > window.scrollY + window.innerHeight){
         window.scrollTo(window.scrollX, window.scrollY + Math.sqrt(3) * radius / 2);

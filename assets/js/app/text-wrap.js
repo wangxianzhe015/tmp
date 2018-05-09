@@ -274,6 +274,7 @@ function makeTooltipText(text){
 }
 
 function showTooltip($obj, event){
+    if (!tooltipStatus) return;
     $("#message-tooltip").hide();
     var $tooltipObj = $("#image-tooltip"), left = event.clientX, top = event.clientY;
     if (left + $tooltipObj.innerWidth() > window.innerWidth){
@@ -364,4 +365,14 @@ function updateWrapperWords(){
         },
         success: function(r){console.log(r)}
     });
+}
+
+function alert(msg){
+    var box = $("#alert");
+    box.find(".alert-content").html(msg);
+    box.show();
+    setTimeout(function(){
+        $("#alert").hide();
+        action = "";
+    }, 3000);
 }
