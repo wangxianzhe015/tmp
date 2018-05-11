@@ -42,6 +42,22 @@
         <div class="alert-content"></div>
     </div>
 
+    <div id="new-word-dialog" class="dialog">
+        <div class="dialog-container">
+            <div class="dialog-header">Input word</div>
+            <div class="dialog-body">
+                <div class="form-group">
+                    <label for="new-word-input">Word: </label>
+                    <input type="text" class="form-control" id="new-word-input" placeholder="Input word..."/>
+                </div>
+            </div>
+            <div class="dialog-footer">
+                <button class="confirm" id="add-new-word-btn">OK</button>
+                <button class="dialog-close" data-dismiss="#new-word-dialog">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <div class="tagger-tooltip" id="message-tooltip">
         <ul class="tab-menu">
             <li class="active">
@@ -192,6 +208,50 @@
 
 		$( '#accordion' ).cndceAccordion(  );
         $(document).ready(function(){
+            $(".dialog-close").on("click", function(){
+                $($(this).attr("data-dismiss")).fadeOut();
+            });
+
+            $("#add-new-word-btn").on("click", function(){
+                var newWord = $("#new-word-input"), target = $(".active-party"), tagName = target.prop("tagName");
+                if (newWord.val().trim() == ""){
+                    newWord.focus();
+                    return;
+                }
+                var newTag = $("<" + tagName + "></" + tagName + ">", {
+                    text: newWord.val().trim()
+                }).data({
+                    date: "",
+                    importance: "",
+                    description: ""
+                }).on({
+                    mouseover: function(e){
+                        enableHide = false;
+                        $(".active-party").removeClass("active-party");
+                        $(this).addClass("active-party");
+                        showTooltip($(this), e.originalEvent);
+                    },
+                    mouseleave: function(){
+                        enableHide = true;
+                        setTimeout(hideTooltip, 500);
+                    }
+                }).insertAfter(target);
+
+                if (tagName == "DIV"){
+                    newTag.css({
+                        width: parseInt(newWord.val().trim().length / target.parent().text().length * 100) + "%",
+                        "min-width": newWord.val().trim().length * 0.4 + "em"
+                    }).attr("class", "tagger-word " + "word-" + parseInt(Math.random() * 100000));
+                } else if (tagName == "P") {
+                    newTag.attr("class", "wrapper-body-word " + "word-" + parseInt(Math.random() * 100000));
+                }
+
+                newWord.val("");
+                $("#new-word-dialog").fadeOut();
+
+                setTimeout(updateWrapperWords, 1000);
+            });
+
             $("#disable-tooltip").on("click", function(){
                 tooltipStatus = !tooltipStatus;
             });

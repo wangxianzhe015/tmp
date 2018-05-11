@@ -295,13 +295,40 @@ canvas.on('mouse:down',function(e){
                         if ($annotationDiv.text().trim() != "") {
                             $newAnnotation = $("<div></div>", {
                                 class: "cropped-image-annotation",
-                                text: $annotationDiv.text()
+                                text: $annotationDiv.text(),
+                                contentEditable: "true"
                             }).data({
                                 target: id
                             }).css({
                                 left: parentOffset.left + $annotationDiv.offset().left,
                                 top: parentOffset.top + $annotationDiv.offset().top
-                            }).draggable().appendTo("body");
+                            }).draggable().on({
+                                mousedown: function(e){
+                                    if (e.originalEvent.which == 3) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        return;
+                                    }
+                                    $(this).draggable("destroy");
+                                    $(this).attr('contenteditable','false');
+                                },
+                                mouseup: function(){
+                                    $(this).draggable();
+                                    $(this).attr('contenteditable','true');
+                                }
+                            })
+                            //    .draggable().click(function(){
+                            //    if ( $(this).is('.ui-draggable-dragging') ) {
+                            //        return;
+                            //    }
+                            //    $(this).draggable( "option", "disabled", true );
+                            //    $(this).attr('contenteditable','true');
+                            //})
+                            //    .blur(function(){
+                            //        $(this).draggable( 'option', 'disabled', false);
+                            //        $(this).attr('contenteditable','false');
+                            //    })
+                                .appendTo("body");
                         } else {
                             $newAnnotation = undefined;
                         }

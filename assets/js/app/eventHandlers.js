@@ -120,7 +120,8 @@ function initHandlers(){
     });
 
     $(document).contextmenu({
-        delegate: ".upper-canvas",
+        delegate: "body",
+        //delegate: ".upper-canvas",
         menu: [
             {title: "Move", cmd: "move", uiIcon: "ui-icon-arrow-4"},
             {title: "----"},
