@@ -231,23 +231,43 @@
 
             $("#accordion").on("click", ".section", function(e){
                 if (action == "add-section"){
-                    $(this).removeClass("active");
                     var $accordion = $("#accordion");
                     var hasResized = false;
 
                     var isVertical = $accordion.hasClass( 'vertical' );
                     var handles;
 
+                    $(this).removeClass("active");
+
+                    $.each($accordion.find(".section"), function(i, sec){
+                        if (isVertical){
+                            $(sec).css({
+                                height: $(sec).innerHeight() * 100 / $accordion.innerHeight() + "%"
+                            });
+                        } else {
+                            $(sec).css({
+                                width: $(sec).innerWidth() * 100 / $accordion.innerWidth() + "%"
+                            });
+                        }
+                    });
+
                     // Vertical orientation
                     if( isVertical ){
                         handles = 'n, s';
-                    }else{
+                        $(this).css({
+                            height: (e.originalEvent.pageY - $(this).offset().top) * 90 / $accordion.innerHeight() + "%"
+                        });
+                    } else {
                         handles = 'e, w';
+                        $(this).css({
+                            width: (e.originalEvent.pageX - $(this).offset().left) * 90 / $accordion.innerWidth() + "%"
+                        });
                     }
 
                     var $section = $("<div></div>", {
                         class: "section"
-                    }).append( '<div class="pattern"></div>' ).append( '<div class="close-btn"></div>' ).on({
+                    }).css(isVertical?"height":"width", isVertical?( $(this).offset().top + $(this).innerHeight() - e.originalEvent.pageY) * 90 / $accordion.innerHeight() + "%":( $(this).offset().left + $(this).innerWidth() - e.originalEvent.pageX ) * 90 / $accordion.innerWidth() + "%")
+                      .append( '<div class="pattern"></div>' ).append( '<div class="close-btn"></div>' ).on({
                         click: function(){
                             if( !hasResized ){
                                 if( $( this ).hasClass( 'active' ) ){
