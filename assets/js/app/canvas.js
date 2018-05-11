@@ -294,29 +294,16 @@ canvas.on('mouse:down',function(e){
                     if ($annotationDiv.length > 0) {
                         if ($annotationDiv.text().trim() != "") {
                             $newAnnotation = $("<div></div>", {
-                                class: "cropped-image-annotation",
-                                text: $annotationDiv.text(),
-                                contentEditable: "true"
+                                class: "cropped-image-annotation"
                             }).data({
                                 target: id
                             }).css({
                                 left: parentOffset.left + $annotationDiv.offset().left,
                                 top: parentOffset.top + $annotationDiv.offset().top
-                            }).draggable().on({
-                                mousedown: function(e){
-                                    if (e.originalEvent.which == 3) {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        return;
-                                    }
-                                    $(this).draggable("destroy");
-                                    $(this).attr('contenteditable','false');
-                                },
-                                mouseup: function(){
-                                    $(this).draggable();
-                                    $(this).attr('contenteditable','true');
-                                }
-                            })
+                            }).append($("<div></div>", {
+                                text: $annotationDiv.text(),
+                                contentEditable: "true"
+                            })).draggable()
                             //    .draggable().click(function(){
                             //    if ( $(this).is('.ui-draggable-dragging') ) {
                             //        return;
