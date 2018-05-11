@@ -21,7 +21,6 @@ jQuery.fn.extend( {
 			handles = 'e, w';
 		}
 
-
 		$( accordion ).addClass( 'cndce-accordion' );
 
 		// Add jQuery UI Sortable Wrapper

@@ -229,14 +229,11 @@
                 alert("Please point where to put new section.");
             });
 
-            $(".section").on("click", function(e){
+            $("#accordion").on("click", ".section", function(e){
                 if (action == "add-section"){
                     $(this).removeClass("active");
                     var $accordion = $("#accordion");
-                    var $section = $(this).clone(true, true);
-
-                    $section.insertAfter($(this));
-                    $section.find(".ui-resizable-handle").remove();
+                    var hasResized = false;
 
                     var isVertical = $accordion.hasClass( 'vertical' );
                     var handles;
@@ -248,9 +245,127 @@
                         handles = 'e, w';
                     }
 
+                    var $section = $("<div></div>", {
+                        class: "section"
+                    }).append( '<div class="pattern"></div>' ).append( '<div class="close-btn"></div>' ).on({
+                        click: function(){
+                            if( !hasResized ){
+                                if( $( this ).hasClass( 'active' ) ){
+                                    $( this ).removeClass( 'active' );
+                                }else{
+                                    $( '.section.active', accordion ).removeClass( 'active' );
+                                    $( this ).addClass( 'active' );
+                                }
+                            }
+
+                            var that = this, height;
+                            setTimeout(function(){
+                                $(that).find(".boundary").each(function(i, el){
+                                    if ($(el).attr("class").indexOf("left") > -1 || $(el).attr("class").indexOf("right") > -1) {
+                                        height = $(el).parent().innerHeight() - 3 * parseInt($(el).css("font-size")) - 20;
+                                        $(el).css("width", height);
+                                    }
+                                });
+
+                                $(that).find(".tagger-word").each(function(i, el){
+                                    $(el).css({
+                                        width: parseInt($(el).text().length / $(el).parent().text().length * 100) + "%",
+                                        "min-width": $(el).text().length * 0.55 + "em"
+                                    });
+                                });
+                            }, 500);
+                        }
+                    }).insertAfter($(this));
+
                     $section.resizable( {
-                        handles: handles
+                        handles: handles,
+                        stop: function( e, ui ){
+
+                            var $accordion = $("#accordion");
+                            if( !$(".cndce-accordion").hasClass("vertical") ){
+                                var accordionWidth = $accordion.outerWidth(  );
+
+                                $( '.section', $accordion ).each( function(  ){
+                                    $( this ).css( 'width', ( ( $( this ).outerWidth(  ) / accordionWidth ) * 90 ) + '%' );
+
+                                    $( this ).removeClass( 'ui-resizable-resizing' );
+
+
+                                } )
+                            }else{
+                                var accordionHeight = $accordion.outerHeight(  );
+
+                                $( '.section', $accordion ).each( function(  ){
+                                    $( this ).css( 'height', ( ( $( this ).outerHeight(  ) / accordionHeight ) * 90 ) + '%' );
+
+                                    $( this ).removeClass( 'ui-resizable-resizing' );
+
+
+                                } )
+                            }
+
+
+                        },
+                        start: function( e, ui ){
+
+                        },
+                        resize: function( e, ui ){
+                            var $accordion = $("#accordion");
+
+                            var $sections = $( '.section', $accordion );
+
+                            var i = $sections.index( ui.element );
+                            var j = i;
+
+                            if( ui.element.data( 'ui-resizable' ).axis == 'e' ){
+                                j++;
+                            }else if( ui.element.data( 'ui-resizable' ).axis == 'w' ){
+                                j--;
+                            }else if( ui.element.data( 'ui-resizable' ).axis == 'n' ){
+                                j--;
+                            }else if( ui.element.data( 'ui-resizable' ).axis == 's' ){
+                                j++;
+                            }
+
+                            if( j >= 0 && j < $sections.length ){
+                                var $adjacent = $( $sections[j] );
+
+                                if( !isVertical ){
+                                    var delta = ui.size.width - ui.originalSize.width;
+
+                                    $adjacent.outerWidth( $adjacent.outerWidth(  ) - ( delta * 0.05 ) );
+                                }else{
+                                    var delta = ui.size.height - ui.originalSize.height;
+
+                                    $adjacent.outerHeight( $adjacent.outerHeight(  ) - ( delta * 0.05 ) );
+                                }
+
+
+                                $adjacent.addClass( 'ui-resizable-resizing' );
+                            }
+
+                            var height;
+                            $(this).find(".boundary").each(function(i, el){
+                                if ($(el).attr("class").indexOf("left") > -1 || $(el).attr("class").indexOf("right") > -1) {
+                                    height = $(el).parent().innerHeight() - 3 * parseInt($(el).css("font-size")) - 20;
+                                    $(el).css("width", height);
+                                }
+                            });
+
+                            $(this).find(".tagger-word").each(function(i, el){
+                                $(el).css({
+                                    width: parseInt($(el).text().length / $(el).parent().text().length * 100) + "%",
+                                    "min-width": $(el).text().length * 0.55 + "em"
+                                })
+                            });
+
+                            // console.log( ui );
+                        }
+
                     } );
+
+                    boundary($section);
+
                     action = "";
                 }
             });
