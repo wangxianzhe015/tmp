@@ -699,14 +699,16 @@ function addTextTooltip(left, top, defaultText){
                 $("textarea.pasting").removeClass("pasting");
             }
         } else {
-            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = top, eLeft = left + 500;
+            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = 100, eLeft = left + 500;
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
                 if (elements.length < 2) {
                     rows = clipboardData.split("\r\n\r\n");
                     if (rows.length > 1) {
-                        $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true);
-                        $("body").css("overflow", "hidden");
+                        $("body").css({
+                            overflow: "hidden"
+                        });
+                        window.scrollTo(0, 0);
 
                         var boxes = [], line;
                         for (var j = 0; j < rows.length; j ++) {
@@ -723,6 +725,15 @@ function addTextTooltip(left, top, defaultText){
                             })
                         }
                     }
+
+                    $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true).css({
+                        left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                        top: 20
+                    }).data("newPoint").set({
+                        left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                        top: 20
+                    }).setCoords();
+
                     $(this).val(clipboardData);
                     canvas.renderAll();
                     return;
@@ -817,12 +828,20 @@ function addTextTooltip(left, top, defaultText){
 
 function addSubTextTooltip(left, top, defaultText, parent){
     var groupDivs = $(".text-cell-group"), groupBox;
-    for (var i = 0; i < groupDivs.length; i ++){
-        if ($(groupDivs[i]).data("group") == parent){
-            groupBox = $(groupDivs[i]);
-            break;
+    //for (var i = 0; i < groupDivs.length; i ++){
+    //    if ($(groupDivs[i]).data("group") == parent){
+    //        groupBox = $(groupDivs[i]);
+    //        break;
+    //    }
+    //}
+    if (groupDivs.length > 0){
+        groupBox = $(groupDivs[0]);
+        if (groupBox.data("groups").indexOf(parent) < 0) {
+            groupBox.data("group-count", 1 + groupBox.data("group-count"));
+            groupBox.data("groups", groupBox.data("groups").concat(parent));
         }
     }
+
     if (groupBox == undefined){
         groupBox = $("<div></div>", {
             class: "text-cell-group",
@@ -830,6 +849,26 @@ function addSubTextTooltip(left, top, defaultText, parent){
         }).on({
             scroll: function(e){
                 var offsetX = $(this).prop("scrollLeft"), offsetY = $(this).prop("scrollTop"), left, top;
+                $.each($(this).find(".image-tooltip"), function(i, tooltip){
+                    $.each($(tooltip).data("lines"), function(i, line){
+                        if (line.control.oLeft == undefined || line.control.oTop == undefined){
+                            line.control.set({
+                                oLeft: line.control.left,
+                                oTop: line.control.top
+                            })
+                        }
+                        left = line.control.oLeft - offsetX;
+                        top = line.control.oTop - offsetY;
+                        line.control.set({
+                            left: left,
+                            top: top
+                        });
+                        line.path[1][1] = left;
+                        line.path[1][2] = top;
+
+                    });
+                });
+
                 if (offsetY == 0){
                     $.each($(this).find(".image-tooltip"), function(i, toolTip){
                         $.each($(toolTip).data("lines"), function(i, line){
@@ -842,11 +881,14 @@ function addSubTextTooltip(left, top, defaultText, parent){
                             line.set({
                                 opacity: 1
                             });
+                            adjustLine(line);
                         });
                     });
                 } else {
-                    $.each($(this).find(".image-tooltip"), function(i, toolTip){
-                        $.each($(toolTip).data("lines"), function(i, line){
+                    //$.each($(this).find(".image-tooltip"), function(i, toolTip){
+                    //    $.each($(toolTip).data("lines"), function(i, line){
+                    canvas.forEachObject(function(line){
+                        if (line.class == "line") {
                             line.leftCircle.set({
                                 opacity: 0
                             });
@@ -856,31 +898,11 @@ function addSubTextTooltip(left, top, defaultText, parent){
                             line.set({
                                 opacity: 0
                             });
-                        });
+                        }
                     });
+                    //});
                 }
                 canvas.renderAll();
-                //$.each($(this).find(".image-tooltip"), function(i, tooltip){
-                //    $.each($(tooltip).data("lines"), function(i, line){
-                //        if (line.control.oLeft == undefined || line.control.oTop == undefined){
-                //            line.control.set({
-                //                oLeft: line.control.left,
-                //                oTop: line.control.top
-                //            })
-                //        }
-                //        left = line.control.oLeft - offsetX;
-                //        top = line.control.oTop - offsetY;
-                //        line.control.set({
-                //            left: left,
-                //            top: top
-                //        });
-                //        line.path[1][1] = left;
-                //        line.path[1][2] = top;
-                //
-                //        adjustLine(line);
-                //    });
-                //});
-                //canvas.renderAll();
             },
             drag: function(e){
                 //var $groupDiv;
@@ -913,13 +935,18 @@ function addSubTextTooltip(left, top, defaultText, parent){
                 //}
             }
         }).data({
-            "group": parent
+            "group-count": 1,
+            "groups": [parent]
         }).append($("<div></div>", {
             class: "text-cell-buttons"
         }).append($("<img/>", {
             src: "./assets/images/icons/remove-24.png"
         }).on("click", function(){
             showConfirmBox("Are you sure to remove this text cell group?", "remove-text-cell-group", $(this).parents(".text-cell-group").attr("id"));
+        })).append($("<img/>", {
+            src: "./assets/images/icons/plus-40.png"
+        }).on("click", function(){
+            addTextTooltip(groupBox.data("group-count") * 420 + 30, 20);
         }))
         //    .append($("<img/>", {
         //    src: "./assets/images/icons/move-24.png"
@@ -938,13 +965,16 @@ function addSubTextTooltip(left, top, defaultText, parent){
         "group": parent,
         hidden: false
     }).on({
-        //drag: function(){
-        //    $.each($(this).data("lines"), function(i, line){
-        //        adjustLine(line);
-        //    });
-        //}
+        drag: function(){
+            var offsetY = $(this).parents(".text-cell-group").prop("scrollTop");
+            if (offsetY == 0) {
+                $.each($(this).data("lines"), function (i, line) {
+                    adjustLine(line);
+                });
+            }
+        }
     }).css({
-        left: window.innerWidth / 2 - 200,
+        left: (groupBox.data("group-count") - 1) * 420 + 30,
         top: top
     }).append($("<div></div>", {
         class: "ttip"

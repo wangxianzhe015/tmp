@@ -319,6 +319,8 @@ canvas.on('mouse:down',function(e){
                         } else {
                             $newAnnotation = undefined;
                         }
+                    } else {
+                        $newAnnotation = undefined;
                     }
 
                     fabric.Image.fromURL($img.attr("src"), function (oImg) {
