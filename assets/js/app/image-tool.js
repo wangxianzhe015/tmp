@@ -699,47 +699,15 @@ function addTextTooltip(left, top, defaultText){
                 $("textarea.pasting").removeClass("pasting");
             }
         } else {
-            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = 100, eLeft = left + 500;
+            var rows = clipboardData.split("\n"), elements, header = [], dataSet = [];
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
                 if (i == 0) {
                     $.each(elements, function (j, elem) {
-                        header.push({title: elem})
+                        header.push({title: elem});
                     });
                     if (elements.length < 2) {
-                        rows = clipboardData.split("\r\n\r\n");
-                        if (rows.length > 1) {
-                            $("body").css({
-                                overflow: "hidden"
-                            });
-                            window.scrollTo(0, 0);
-
-                            var boxes = [], line;
-                            for (var j = 0; j < rows.length; j ++) {
-                                if (rows[j].trim() != "") {
-                                    box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
-                                    boxes.push(box);
-                                    eTop += parseInt(box.css("height")) + 20;
-                                }
-                            }
-                            for (j = 1; j < boxes.length; j ++) {
-                                line = addBezierLine(boxes[j - 1], boxes[j]);
-                                line.set({
-                                    strokeDashArray: [1, 0]
-                                })
-                            }
-                        }
-
-                        $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true).css({
-                            left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
-                            top: 20
-                        }).data("newPoint").set({
-                            left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
-                            top: 20
-                        }).setCoords();
-
                         $(this).val(clipboardData);
-                        canvas.renderAll();
                         return;
                     }
                 } else if (elements != "") {
@@ -769,9 +737,15 @@ function addTextTooltip(left, top, defaultText){
     })).append($("<div></div>", {
         class: "text-cell-buttons"
     }).append($("<img/>", {
-        src: "./assets/images/icons/remove-24.png"
+        src: "./assets/images/icons/remove-24.png",
+        title: "Remove cell"
     }).on("click", function(){
         showConfirmBox("Are you sure to remove this text cell?", "remove-text-cell", $(this).parents(".image-tooltip").attr("id"));
+    })).append($("<img/>", {
+        src: "./assets/images/icons/random-24.png",
+        title: "Split text"
+    }).on("click", function(){
+        splitText($(this).parents(".image-tooltip"));
     }))).draggable().css({
         left: left,
         top: top,
@@ -843,65 +817,44 @@ function addSubTextTooltip(left, top, defaultText, parent){
     }
 
     if (groupBox == undefined){
+        $("body").css("overflow", "hidden");
         groupBox = $("<div></div>", {
             class: "text-cell-group",
             id: "text-cell-group-" + parseInt(Math.random() * 100000000)
         }).on({
             scroll: function(e){
-                var offsetX = $(this).prop("scrollLeft"), offsetY = $(this).prop("scrollTop"), left, top;
-                $.each($(this).find(".image-tooltip"), function(i, tooltip){
-                    $.each($(tooltip).data("lines"), function(i, line){
-                        if (line.control.oLeft == undefined || line.control.oTop == undefined){
-                            line.control.set({
-                                oLeft: line.control.left,
-                                oTop: line.control.top
-                            })
-                        }
-                        left = line.control.oLeft - offsetX;
-                        top = line.control.oTop - offsetY;
-                        line.control.set({
-                            left: left,
-                            top: top
-                        });
-                        line.path[1][1] = left;
-                        line.path[1][2] = top;
+                var $tooltips = $(this).find(".image-tooltip"), lines, line, left1, top1, left2, top2;
+                for (var i = 0; i < $tooltips.length; i ++){
+                    lines = $($tooltips[i]).data("lines");
+                    for (var j = 0; j < lines.length; j ++){
+                        line = lines[j];
+                        left1 = line.leftElement.offset().left + line.leftElement.outerWidth() / 2;
+                        top1 = line.leftElement.offset().top + line.leftElement.innerHeight();
+                        left2 = line.rightElement.offset().left + line.rightElement.outerWidth() / 2;
+                        top2 = line.rightElement.offset().top;
+                        line.path[0][1] = left1;
+                        line.path[0][2] = top1;
+                        line.path[1][1] = (left1 + left2) / 2;
+                        line.path[1][2] = (top1 + top2) / 2;
+                        line.path[1][3] = left2;
+                        line.path[1][4] = top2;
 
-                    });
-                });
-
-                if (offsetY == 0){
-                    $.each($(this).find(".image-tooltip"), function(i, toolTip){
-                        $.each($(toolTip).data("lines"), function(i, line){
-                            line.leftCircle.set({
-                                opacity: 1
-                            });
-                            line.rightCircle.set({
-                                opacity: 1
-                            });
+                        if ((line.path[0][1] > 0 && line.path[0][1] < window.innerWidth &&
+                            line.path[0][2] > 0 && line.path[0][2] < window.innerHeight) ||
+                            (line.path[1][3] > 0 && line.path[1][3] < window.innerWidth &&
+                            line.path[1][4] > 0 && line.path[1][4] < window.innerHeight)) {
                             line.set({
                                 opacity: 1
                             });
-                            adjustLine(line);
-                        });
-                    });
-                } else {
-                    //$.each($(this).find(".image-tooltip"), function(i, toolTip){
-                    //    $.each($(toolTip).data("lines"), function(i, line){
-                    canvas.forEachObject(function(line){
-                        if (line.class == "line") {
-                            line.leftCircle.set({
-                                opacity: 0
-                            });
-                            line.rightCircle.set({
-                                opacity: 0
-                            });
+                        } else {
                             line.set({
                                 opacity: 0
                             });
                         }
-                    });
-                    //});
+
+                    }
                 }
+
                 canvas.renderAll();
             },
             drag: function(e){
@@ -966,15 +919,23 @@ function addSubTextTooltip(left, top, defaultText, parent){
         hidden: false
     }).on({
         drag: function(){
-            var offsetY = $(this).parents(".text-cell-group").prop("scrollTop");
-            if (offsetY == 0) {
-                $.each($(this).data("lines"), function (i, line) {
-                    adjustLine(line);
-                });
-            }
+            var left1, top1, left2, top2;
+            $.each($(this).data("lines"), function (i, line) {
+                left1 = line.leftElement.offset().left + line.leftElement.outerWidth() / 2;
+                top1 = line.leftElement.offset().top + line.leftElement.innerHeight();
+                left2 = line.rightElement.offset().left + line.rightElement.outerWidth() / 2;
+                top2 = line.rightElement.offset().top;
+                line.path[0][1] = left1;
+                line.path[0][2] = top1;
+                line.path[1][1] = (left1 + left2) / 2;
+                line.path[1][2] = (top1 + top2) / 2;
+                line.path[1][3] = left2;
+                line.path[1][4] = top2;
+            });
+            canvas.renderAll();
         }
     }).css({
-        left: (groupBox.data("group-count") - 1) * 420 + 30,
+        left: left==0?(groupBox.data("group-count") - 1) * 420 + 30:left,
         top: top
     }).append($("<div></div>", {
         class: "ttip"
@@ -1024,6 +985,50 @@ function addSubTextTooltip(left, top, defaultText, parent){
     }).on({
         click: function(){
             mergeDownTextCell($(this).parents(".image-tooltip"));
+        }
+    })).append($("<img/>", {
+        src: "./assets/images/icons/external-24.png",
+        title: "Extract selection"
+    }).on("click", function(){
+        var parent = $(this).parents(".image-tooltip"), obj = parent.find("textarea")[0], text = $(obj).val().substr(obj.selectionStart, obj.selectionEnd - obj.selectionStart), box, groupBoxes, lines, offsetY;
+        if (text != ""){
+            $(obj).val($(obj).val().substr(0,obj.selectionStart - 1) + $(obj).val().substr(obj.selectionEnd));
+            box = addSubTextTooltip(parent.offset().left, parent.offset().top + parent.innerHeight() + 20, text, parent.data("group"));
+            offsetY = box.innerHeight() + 20;
+            lines = parent.data("lines");
+            for (var i = 0; i < lines.length; i ++){
+                if (lines[i].leftElement.attr("id") == parent.attr("id")){
+                    lines[i].rightElement = box;
+                    box.data("lines", [lines[i]]);
+                    lines[i].path[1][1] = (lines[i].path[0][1] + box.offset().left + box.outerWidth() / 2) / 2;
+                    lines[i].path[1][2] = (lines[i].path[0][2] + box.offset().top) / 2;
+                    lines[i].path[1][3] = box.offset().left + box.outerWidth() / 2;
+                    lines[i].path[1][4] = box.offset().top;
+                }
+            }
+            parent.next().data("lines", [parent.next().data("lines")[0]]);
+            var newLine = addBezierLine(box, parent.next());
+            newLine.set({
+                strokeDashArray: [1, 0]
+            });
+            newLine.leftCircle.set({
+                opacity: 0
+            });
+            newLine.rightCircle.set({
+                opacity: 0
+            });
+            groupBoxes = parent.nextAll();
+            for (i = 0; i < groupBoxes.length; i ++){
+                if (parent.data("group") == $(groupBoxes[i]).data("group") && $(groupBoxes[i]).attr("id") != box.attr("id")){
+                    $(groupBoxes[i]).css({
+                        top: $(groupBoxes[i]).offset().top + box.innerHeight() + 20
+                    });
+                    $(groupBoxes[i]).data("lines")[0].path[0][2] += offsetY;
+                    $(groupBoxes[i]).data("lines")[0].path[1][2] += offsetY;
+                    $(groupBoxes[i]).data("lines")[0].path[1][4] += offsetY;
+                }
+            }
+            canvas.renderAll();
         }
     }))).appendTo(groupBox).show().draggable();
 
@@ -1224,4 +1229,49 @@ function showJsonUrlTooltip(){
     mouseOverElement = true;
 
     $("#json-url-tooltip").show();
+}
+
+function splitText($el){
+    var splitter = getOS()=="Windows"?"\n\n":"\r\n\r\n";
+    var text = $el.find("textarea").val(), rows = text.split(splitter), elements = rows[0].trim().split("\t"), box, eTop = 100;
+
+    if (elements.length < 2) {
+        if (rows.length > 1) {
+            $("body").css({
+                overflow: "hidden"
+            });
+            window.scrollTo(0, 0);
+
+            var boxes = [], line;
+            for (var j = 0; j < rows.length; j ++) {
+                if (rows[j].trim() != "") {
+                    box = addSubTextTooltip(0, eTop, rows[j].trim(), $el.attr("id"));
+                    boxes.push(box);
+                    eTop += parseInt(box.css("height")) + 20;
+                }
+            }
+            for (j = 1; j < boxes.length; j ++) {
+                line = addBezierLine(boxes[j - 1], boxes[j]);
+                line.set({
+                    strokeDashArray: [1, 0]
+                });
+                line.leftCircle.set({
+                    opacity: 0
+                });
+                line.rightCircle.set({
+                    opacity: 0
+                });
+            }
+
+            $el.removeClass("expanded").attr("data-hidden", true).css({
+                left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                top: 20
+            }).data("newPoint").set({
+                left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                top: 20
+            }).setCoords();
+
+            canvas.renderAll();
+        }
+    }
 }
