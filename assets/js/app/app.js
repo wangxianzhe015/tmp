@@ -8,7 +8,6 @@ var rectColor = "rgba(21,45,65,.8)";
 var borderColor = "rgba(13,13,13,0)";
 var buttonColor = 'rgba(255,255,255,0)';
 var buttonSize = 24;
-var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
 var fisheyeCanvas = document.getElementById('f-c'),f_ctx = fisheyeCanvas.getContext("2d");
 var bgCanvas;
 var nextAction = '', actionValue;
@@ -57,7 +56,7 @@ var targetHudLine = null;
 
 var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
-var imageThumbnailSize = {width: 100, height: 100};
+var dropFrameClock = 0;
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({

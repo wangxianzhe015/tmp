@@ -1,4 +1,5 @@
 //canvas.selection = false;
+var canvas = new fabric.CanvasEx('c'),ctx = canvas.getContext("2d");
 
 canvas.fireEventForObjectInsideGroup = true;
 canvas.selectionColor = 'rgba(0,0,0,0)';
@@ -562,6 +563,12 @@ canvas.on('mouse:down',function(e){
             }
         }
     } else {
+        if (dropFrameClock == 0){
+            dropFrameClock = setTimeout(function(){
+                showDropFrame(downPoint.x, downPoint.y);
+            }, 2000);
+        }
+
         initTargetElement();
         if (groupTargetClock > 0){
             clearInterval(groupTargetClock);
@@ -593,6 +600,11 @@ canvas.on('mouse:down',function(e){
 
 canvas.on('mouse:up',function(e){
     mouseDown = false;
+    targetElement = null;
+    if (dropFrameClock > 0) {
+        clearTimeout(dropFrameClock);
+        dropFrameClock = 0;
+    }
 
     if (newBezierLine != null){
         if (e.target != null){
@@ -828,6 +840,25 @@ canvas.on('object:moving', function(e){
             adjustLine(line);
         });
         canvas.discardActiveObject();
+
+        var dropFrame = $("#drag-drop-frame"), dropWin = dropFrame[0].contentWindow;
+        // get the drop position
+        var dropFrameOffset = dropFrame.offset();
+        // If it is in the drop zone, notify the drop frame
+        if (dropFrameOffset.top < e.e.pageY && dropFrameOffset.top + dropFrame.height() > e.e.pageY &&
+            dropFrameOffset.left < e.e.pageX && dropFrameOffset.left  + dropFrame.width() > e.e.pageX) {
+            targetElement = object;
+            dropWin.postMessage({action: 'object:drag', itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX - dropFrameOffset.left, itemY: e.e.pageY - dropFrameOffset.top}, '*');
+            object.setVisible(false);
+            object.newPoint.setVisible(false);
+            object.tickButton.setVisible(false);
+            //canvas.remove(object, object.newPoint, object.tickButton);
+        } else {
+            object.setVisible(true);
+            object.newPoint.setVisible(true);
+            object.tickButton.setVisible(true);
+            dropWin.postMessage({action: 'object:drag:cancel'}, '*');
+        }
 
         canvas.renderAll();
     } else if (object.class == 'group' || object == canvas.getActiveGroup()){
@@ -1256,6 +1287,7 @@ function editElement(){
     //});
 
 }
+
 //function holdElement(){
 //    holdTime ++;
 //    if (holdTime > 200){

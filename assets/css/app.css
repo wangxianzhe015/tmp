@@ -1451,7 +1451,7 @@ textarea.default-textarea{
     height: 100%;
     border: none;
 }
-#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe{
+#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe, #drop-frame-div .close-iframe{
     background-color: black;
     padding: 10px;
     color: white;
@@ -1888,7 +1888,7 @@ textarea.default-textarea{
 }
 
 .text-cell-group{
-    position: fixed;
+    position: absolute;
     left: 0;
     top: 0;
     width: 100%;
@@ -1924,4 +1924,17 @@ textarea.default-textarea{
     padding: 5px;
     display: table;
     position: absolute;
+}
+
+#drop-frame-div{
+    width: 600px;
+    height: 400px;
+    position: absolute;
+    display: none;
+}
+#drag-drop-frame{
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
 }

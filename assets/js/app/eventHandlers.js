@@ -1,4 +1,6 @@
 function initHandlers(){
+    window.addEventListener("message", objectDropHandler, false);
+
     $(window).on("scroll", function(){
         /**
          * Parallax Scrollig
@@ -1078,6 +1080,10 @@ function initHandlers(){
             hideTimelineFrame();
             return;
         }
+        if ($(this).parents("#drop-frame-div").length > 0){
+            hideDropFrame();
+            return;
+        }
         $(this).parents(".image-tooltip").hide();
         $(this).parents(".third-image-tooltip").hide();
         if ($(this).parents("#tagger-iframe").length > 0){
@@ -1991,3 +1997,13 @@ $(function () {
 
 });
 
+function objectDropHandler(message){
+    switch (message.data.action){
+        case "object:drop":
+            if (targetElement){
+                canvas.remove(targetElement, targetElement.newPoint, targetElement.tickButton);
+                canvas.renderAll();
+            }
+            break;
+    }
+}

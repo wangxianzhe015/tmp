@@ -784,7 +784,7 @@ function showCalendarFrame(){
         }
     });
     canvas.renderAll();
-    $("#calendar-iframe").show().find("iframe").attr("src", "calendar");
+    $("#calendar-iframe").show().find("iframe").attr("src", window.location.href + "/calendar/");
 }
 
 function hideCalendarFrame(){
@@ -804,21 +804,21 @@ function hideCalendarFrame(){
 function showIntegrationFrame(){
     removeImageTools(true);
     $(".sidebar").hide();
-    $("#integration-iframe").show();
+    $("#integration-iframe").show().find("iframe").attr("src", window.location.href + "/aa/");
 }
 
 function hideIntegrationFrame(){
     $(".sidebar").show();
-    $("#integration-iframe").hide();
+    $("#integration-iframe").hide().find("iframe").attr("src", "");
 }
 
 function showTimelineFrame(){
     removeImageTools(true);
     $(".sidebar").hide();
-    $("#timeline-iframe").show();
+    $("#timeline-iframe").show().find("iframe").attr("src", window.location.href + "/timeline/");
 }
 
 function hideTimelineFrame(){
     $(".sidebar").show();
-    $("#timeline-iframe").hide();
+    $("#timeline-iframe").hide().find("iframe").attr("src", "");
 }

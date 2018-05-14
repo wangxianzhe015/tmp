@@ -702,46 +702,46 @@ function addTextTooltip(left, top, defaultText){
             var rows = clipboardData.split("\n"), elements, header = [], dataSet = [], box, eTop = 100, eLeft = left + 500;
             for (var i = 0; i < rows.length; i ++) {
                 elements = rows[i].trim().split("\t");
-                if (elements.length < 2) {
-                    rows = clipboardData.split("\r\n\r\n");
-                    if (rows.length > 1) {
-                        $("body").css({
-                            overflow: "hidden"
-                        });
-                        window.scrollTo(0, 0);
-
-                        var boxes = [], line;
-                        for (var j = 0; j < rows.length; j ++) {
-                            if (rows[j].trim() != "") {
-                                box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
-                                boxes.push(box);
-                                eTop += parseInt(box.css("height")) + 20;
-                            }
-                        }
-                        for (j = 1; j < boxes.length; j ++) {
-                            line = addBezierLine(boxes[j - 1], boxes[j]);
-                            line.set({
-                                strokeDashArray: [1, 0]
-                            })
-                        }
-                    }
-
-                    $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true).css({
-                        left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
-                        top: 20
-                    }).data("newPoint").set({
-                        left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
-                        top: 20
-                    }).setCoords();
-
-                    $(this).val(clipboardData);
-                    canvas.renderAll();
-                    return;
-                }
                 if (i == 0) {
                     $.each(elements, function (j, elem) {
                         header.push({title: elem})
                     });
+                    if (elements.length < 2) {
+                        rows = clipboardData.split("\r\n\r\n");
+                        if (rows.length > 1) {
+                            $("body").css({
+                                overflow: "hidden"
+                            });
+                            window.scrollTo(0, 0);
+
+                            var boxes = [], line;
+                            for (var j = 0; j < rows.length; j ++) {
+                                if (rows[j].trim() != "") {
+                                    box = addSubTextTooltip(eLeft, eTop, rows[j].trim(), $(this).parents(".image-tooltip").attr("id"));
+                                    boxes.push(box);
+                                    eTop += parseInt(box.css("height")) + 20;
+                                }
+                            }
+                            for (j = 1; j < boxes.length; j ++) {
+                                line = addBezierLine(boxes[j - 1], boxes[j]);
+                                line.set({
+                                    strokeDashArray: [1, 0]
+                                })
+                            }
+                        }
+
+                        $(this).parents(".image-tooltip").removeClass("expanded").attr("data-hidden", true).css({
+                            left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                            top: 20
+                        }).data("newPoint").set({
+                            left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                            top: 20
+                        }).setCoords();
+
+                        $(this).val(clipboardData);
+                        canvas.renderAll();
+                        return;
+                    }
                 } else if (elements != "") {
                     dataSet.push(elements);
                 }
