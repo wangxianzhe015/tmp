@@ -1,5 +1,6 @@
 var dndCanvas = new fabric.CanvasEx("drop-canvas");
 var dropObj = null;
+var targetObj = null;
 var radius = 50;
 var border = 2;
 var effectDepth = 2;
@@ -25,7 +26,7 @@ $(document).ready(function(){
     $(document).on({
         mouseup: function(){
             if (dropObj){
-                parent.postMessage({action: "object:drop"}, '*');
+                parent.postMessage({action: "object:drop", direction: "up"}, '*');
                 dropObj = null;
             }
         }
@@ -43,10 +44,35 @@ dndCanvas.on("object:moving", function(e){
             left: object.left + object.scaleX * radius,
             top: object.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         }).setCoords();
+        if (e.e.pageX < 0 || e.e.pageX > window.innerWidth || e.e.pageY < 0 || e.e.pageY > window.innerHeight) {
+            parent.postMessage({action: "object:drag", direction: "up", itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX, itemY: e.e.pageY}, '*');
+            object.set({
+                opacity: 0
+            });
+            object.newPoint.set({
+                opacity: 0
+            });
+            object.tickButton.set({
+                opacity: 0
+            });
+            targetObj = object;
+        } else {
+            parent.postMessage({action: "object:drag:cancel", direction: "up"}, '*');
+            object.set({
+                opacity: 1
+            });
+            object.newPoint.set({
+                opacity: 1
+            });
+            object.tickButton.set({
+                opacity: 1
+            });
+        }
     }
 });
 
 function dragDropHandler(message){
+    if (message.data.direction != "down") return;
     switch (message.data.action){
         case "object:drag":
             if (dropObj == null || dropObj.id != message.data.itemID) {
@@ -74,6 +100,13 @@ function dragDropHandler(message){
                 dndCanvas.remove(dropObj.newPoint, dropObj.tickButton);
             }
             break;
+        case "object:drop":
+            if (targetObj){
+                canvas.remove(targetObj);
+                canvas.remove(targetObj.newPoint, targetObj.tickButton);
+                targetObj = null;
+            }
+            break;
     }
 }
 
@@ -81,7 +114,7 @@ function addNewElement(id, objClass, objText){
     if (objClass == "circle"){
         var circle1 = new fabric.Circle({radius: Math.sqrt(3) * (radius - border / 2) / 2, fill: elementColor, opacity:.5});
 
-        var text1 = new fabric.Text('Anant Jadhav ANANT dfds sdss sd dfd dfds sdss sd dfd ANANT dfds sdss dfdffsd ', {
+        var text1 = new fabric.Text(objText, {
             fontSize: 12,
             textAlign: "center",
             left: Math.sqrt(3) * radius / 2,

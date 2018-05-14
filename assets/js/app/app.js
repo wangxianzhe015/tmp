@@ -11,6 +11,7 @@ var buttonSize = 24;
 var fisheyeCanvas = document.getElementById('f-c'),f_ctx = fisheyeCanvas.getContext("2d");
 var bgCanvas;
 var nextAction = '', actionValue;
+var cursorPosition = {x:0,y:0};
 
 var resizable = false;
 var rotatable = true;
@@ -57,6 +58,7 @@ var targetHudLine = null;
 var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
 var dropFrameClock = 0;
+var interactionMode = false;
 
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({

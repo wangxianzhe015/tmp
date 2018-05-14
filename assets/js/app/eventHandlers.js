@@ -46,6 +46,9 @@ function initHandlers(){
     });
 
     $(document).on("mousemove", function(e){
+        cursorPosition.x = e.originalEvent.pageX;
+        cursorPosition.y = e.originalEvent.pageY;
+
         if (resizeTooltip != ""){
             e.preventDefault();
             var $obj = $("#" + resizeTooltip);
@@ -2002,8 +2005,40 @@ function objectDropHandler(message){
         case "object:drop":
             if (targetElement){
                 canvas.remove(targetElement, targetElement.newPoint, targetElement.tickButton);
+                targetElement = null;
+                interactionMode = false;
                 canvas.renderAll();
             }
             break;
+        case "object:drag":
+            if (!interactionMode) {
+                interactionMode = true;
+                if (message.data.itemClass == "circle") {
+                    targetElement = addNewCircle(message.data.itemText, "", 0, cursorPosition.x, cursorPosition.y, "");
+                } else if (message.data.itemClass == "hexagon") {
+                    targetElement = addNewHexagon(message.data.itemText, "", 0, cursorPosition.x, cursorPosition.y, "");
+                }
+            } else {
+                targetElement.set({
+                    left: $("#drag-drop-frame").offset().left + message.data.itemX,
+                    top: $("#drag-drop-frame").offset().top + message.data.itemY
+                }).setCoords();
+                targetElement.newPoint.set({
+                    left: targetElement.left,
+                    top: targetElement.top - targetElement.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+                }).setCoords();
+                targetElement.tickButton.set({
+                    left: targetElement.left + targetElement.scaleX * radius,
+                    top: targetElement.top - targetElement.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+                }).setCoords();
+                canvas.renderAll();
+            }
+            break;
+        case "object:drag:cancel":
+            if (interactionMode && targetElement != null){
+                interactionMode = false;
+                canvas.remove(targetElement, targetElement.newPoint, targetElement.tickButton);
+                canvas.renderAll();
+            }
     }
 }

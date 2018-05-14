@@ -606,6 +606,19 @@ canvas.on('mouse:up',function(e){
         dropFrameClock = 0;
     }
 
+    if (interactionMode){
+        var dropFrame = $("#drag-drop-frame"), dropWin = dropFrame[0].contentWindow;
+        // get the drop position
+        var dropFrameOffset = dropFrame.offset();
+        // If it is in the drop zone, notify the drop frame
+        if (dropFrameOffset.top < e.e.pageY && dropFrameOffset.top + dropFrame.height() > e.e.pageY &&
+            dropFrameOffset.left < e.e.pageX && dropFrameOffset.left  + dropFrame.width() > e.e.pageX) {
+            dropWin.postMessage({action: 'object:drop', direction: 'down'}, '*');
+        }
+        interactionMode = false;
+        return;
+    }
+
     if (newBezierLine != null){
         if (e.target != null){
             if (e.target.class == 'element' && newBezierLine.startElement != e.target){
@@ -848,7 +861,8 @@ canvas.on('object:moving', function(e){
         if (dropFrameOffset.top < e.e.pageY && dropFrameOffset.top + dropFrame.height() > e.e.pageY &&
             dropFrameOffset.left < e.e.pageX && dropFrameOffset.left  + dropFrame.width() > e.e.pageX) {
             targetElement = object;
-            dropWin.postMessage({action: 'object:drag', itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX - dropFrameOffset.left, itemY: e.e.pageY - dropFrameOffset.top}, '*');
+            dropWin.postMessage({action: 'object:drag', direction: 'down', itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX - dropFrameOffset.left, itemY: e.e.pageY - dropFrameOffset.top}, '*');
+            interactionMode = true;
             object.setVisible(false);
             object.newPoint.setVisible(false);
             object.tickButton.setVisible(false);
@@ -857,7 +871,7 @@ canvas.on('object:moving', function(e){
             object.setVisible(true);
             object.newPoint.setVisible(true);
             object.tickButton.setVisible(true);
-            dropWin.postMessage({action: 'object:drag:cancel'}, '*');
+            dropWin.postMessage({action: 'object:drag:cancel', direction: 'down'}, '*');
         }
 
         canvas.renderAll();

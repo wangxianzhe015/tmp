@@ -448,9 +448,9 @@ function getElementName(type, x, y){
             names.forEach(function(o,index){
                 title = o.trim();
                 if (type == 'hex') {
-                    clusters['temp'][index] = addNewHexagon(title,"batch",index);
+                    clusters['temp'][index] = addNewHexagon(title,"batch",index).id;
                 } else if (type == 'circle') {
-                    clusters['temp'][index] = addNewCircle(title,"batch",index);
+                    clusters['temp'][index] = addNewCircle(title,"batch",index).id;
                 }
             });
             $("#new-element-div").hide();
@@ -604,7 +604,7 @@ function addNewHexagon(name, type, index, left, top, datatext){
         y: element.top
     };
 
-    return element.id;
+    return element;
 }
 
 function addNewCircle(name, type, index, left, top, datatext){
@@ -725,7 +725,7 @@ function addNewCircle(name, type, index, left, top, datatext){
         y: element.top
     };
 
-    return element.id;
+    return element;
 }
 
 function addNewRectangle(name, type, index, left, top, datatext){
