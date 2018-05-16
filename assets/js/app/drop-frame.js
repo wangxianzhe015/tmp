@@ -1,6 +1,7 @@
 var dndCanvas = new fabric.CanvasEx("drop-canvas");
 var dropObj = null;
 var targetObj = null;
+var targetBox = null;
 var radius = 50;
 var border = 2;
 var effectDepth = 2;
@@ -11,6 +12,7 @@ dndCanvas.selectionColor = 'rgba(0,0,0,0)';
 dndCanvas.selectionBorderColor = 'white';
 dndCanvas.selectionLineWidth = 2;
 dndCanvas.selectionDashArray = [5, 5];
+dndCanvas.selection = false;
 
 fabric.Object.prototype.set({
     objectCaching: false
@@ -26,11 +28,13 @@ $(document).ready(function(){
     $(document).on({
         mouseup: function(){
             if (dropObj){
-                parent.postMessage({action: "object:drop", direction: "up"}, '*');
+                parent.postMessage({action: "object:drop"}, '*');
                 dropObj = null;
             }
         }
-    })
+    });
+
+    loadFrame();
 });
 
 dndCanvas.on("object:moving", function(e){
@@ -45,7 +49,7 @@ dndCanvas.on("object:moving", function(e){
             top: object.top - object.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
         }).setCoords();
         if (e.e.pageX < 0 || e.e.pageX > window.innerWidth || e.e.pageY < 0 || e.e.pageY > window.innerHeight) {
-            parent.postMessage({action: "object:drag", direction: "up", itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX, itemY: e.e.pageY}, '*');
+            parent.postMessage({action: "object:drag", itemText: object._objects[1].text.trim(), itemClass: object.category, itemID: object.id, itemX: e.e.pageX, itemY: e.e.pageY}, '*');
             object.set({
                 opacity: 0
             });
@@ -57,7 +61,7 @@ dndCanvas.on("object:moving", function(e){
             });
             targetObj = object;
         } else {
-            parent.postMessage({action: "object:drag:cancel", direction: "up"}, '*');
+            parent.postMessage({action: "object:drag:cancel"}, '*');
             object.set({
                 opacity: 1
             });
@@ -68,11 +72,146 @@ dndCanvas.on("object:moving", function(e){
                 opacity: 1
             });
         }
+    } else if (object.class == "tickbox") {
+        object.topText.set({
+            left: object.left,
+            top: object.top - 15
+        });
+        object.rightText.set({
+            left: object.left + object.scaleX * object.width + 15,
+            top: object.top
+        });
+        object.leftText.set({
+            left: object.left - 15,
+            top: object.top + object.scaleY * object.height
+        });
+        object.bottomText.right = object.left + object.width;
+        object.bottomText.set({
+            left: object.bottomText.right - object.bottomText.width,
+            top: object.top + object.scaleY * object.height + 5
+        });
+        object.topText.setCoords();
+        object.rightText.setCoords();
+        object.leftText.setCoords();
+        object.bottomText.setCoords();
+        dndCanvas.renderAll();
+    }
+});
+
+dndCanvas.on("object:scaling", function(e){
+    var object = e.target, event = e.e;
+    if (object != null) {
+        if (object.class == "tickbox"){
+            object.set({
+                scaleX: 1,
+                scaleY: 1
+            });
+            if (event.pageX < object.left + object.width / 4) {
+                object.set({
+                    left: event.pageX,
+                    width: object.width - event.movementX
+                });
+            } else if (event.pageX > object.left + 3 * object.width / 4) {
+                object.set({
+                    width: event.pageX - object.left
+                })
+            }
+            if (event.pageY < object.top + object.height / 4) {
+                object.set({
+                    top: event.pageY,
+                    height: object.height - event.movementY
+                });
+            } else if (event.pageY > object.top + 3 * object.height / 4) {
+                object.set({
+                    height: event.pageY - object.top
+                })
+            }
+            object.setCoords();
+            if (object.height <= 20 && object.width <= 20) {
+                dndCanvas.remove(object.topText, object.rightText, object.leftText, object.bottomText, object);
+            }
+            dndCanvas.renderAll();
+        }
+    }
+});
+
+dndCanvas.on("mouse:up", function(e){
+    if (targetBox != null){
+        addBoundary(targetBox.left, targetBox.top, e.e.pageX, e.e.pageY, targetBox);
+        targetBox = null;
+        dndCanvas.renderAll();
+    }
+    saveFrame();
+});
+
+dndCanvas.on("mouse:down", function(e){
+    var object = e.target;
+    if (object != null) {
+        if (object.class == "boundary-text") {
+            object.set("opacity", 1);
+        }
+    }
+});
+
+dndCanvas.on("mouse:move", function(e){
+    var event = e.e;
+    if (targetBox != null){
+        if (targetBox.origX > event.pageX){
+            targetBox.set({
+                left: event.pageX
+            });
+        } else {
+            targetBox.set({
+                left: targetBox.origX
+            });
+        }
+        if (targetBox.origY > event.pageY){
+            targetBox.set({
+                top: event.pageY
+            });
+        } else {
+            targetBox.set({
+                top: targetBox.origY
+            });
+        }
+        targetBox.set({
+            width: Math.abs(event.pageX - targetBox.origX),
+            height: Math.abs(event.pageY - targetBox.origY)
+        }).setCoords();
+        dndCanvas.renderAll();
+    }
+});
+
+dndCanvas.on("mouse:dblclick", function(e){
+    if (e.target == null){
+        targetBox = addTickBox(e.e.pageX, e.e.pageY, 0, 0);
+        targetBox.set({
+            origX: e.e.pageX,
+            origY: e.e.pageY
+        });
+        showNotification("Drag area of box.");
+        setTimeout(hideNotification, 2000);
+    }
+});
+
+dndCanvas.on("text:changed", function(e){
+    var object = e.target;
+    if (object.class == "boundary-text") {
+        var newText = "";
+        $.each(object._textLines, function(i, line){
+            newText += line;
+        });
+        object.text = newText;
+        dndCanvas.renderAll();
+
+        if (object.right != null) {
+            object.set("left", object.right - object.width);
+            object.setCoords();
+        }
     }
 });
 
 function dragDropHandler(message){
-    if (message.data.direction != "down") return;
     switch (message.data.action){
         case "object:drag":
             if (dropObj == null || dropObj.id != message.data.itemID) {
@@ -98,20 +237,99 @@ function dragDropHandler(message){
             if (dropObj) {
                 dndCanvas.remove(dropObj);
                 dndCanvas.remove(dropObj.newPoint, dropObj.tickButton);
+                dropObj = null;
             }
             break;
         case "object:drop":
             if (targetObj){
-                canvas.remove(targetObj);
-                canvas.remove(targetObj.newPoint, targetObj.tickButton);
+                dndCanvas.remove(targetObj);
+                dndCanvas.remove(targetObj.newPoint, targetObj.tickButton);
                 targetObj = null;
+                saveFrame();
             }
             break;
     }
 }
 
-function addNewElement(id, objClass, objText){
-    if (objClass == "circle"){
+function saveFrame(){
+    var elements = dndCanvas.getObjects(), el, info, result = [];
+    for (var i = 0; i < elements.length; i ++){
+        el = elements[i];
+        switch (el.class){
+            case "element":
+                info = {
+                    id: el.id,
+                    class: "element",
+                    category: el.category,
+                    text: el._objects[1].text.trim(),
+                    left: el.left,
+                    top: el.top
+                };
+                result.push(info);
+                break;
+            case "tickbox":
+                info = {
+                    class: "tickbox",
+                    left: el.left,
+                    top: el.top,
+                    width: el.width,
+                    height: el.height,
+                    leftText: el.leftText.text,
+                    topText: el.topText.text,
+                    rightText: el.rightText.text,
+                    bottomText: el.bottomText.text
+                };
+                result.push(info);
+                break;
+        }
+    }
+
+    $.ajax({
+        url: "../action.php",
+        type: "POST",
+        data: {
+            action: "save-drop-frame",
+            data: JSON.stringify(result)
+        },
+        success: function(res){
+
+        }
+    });
+}
+
+function loadFrame(){
+    $.ajax({
+        url: "../action.php",
+        type: "POST",
+        data: {
+            action: "load-drop-frame"
+        },
+        success: function(res){
+            if (res == "fail" || res == "no_content") return;
+            dndCanvas.clear();
+
+            var elems = $.parseJSON(res);
+            $.each(elems, function(i, el){
+                switch (el.class){
+                    case "element":
+                        var elem = addNewElement(el.id, el.category, el.text);
+                        elem.set({
+                            left: el.left,
+                            top: el.top
+                        }).setCoords();
+                        break;
+                    case "tickbox":
+                        var tickBox = addTickBox(el.left, el.top, el.width, el.height);
+                        addBoundary(el.left, el.top, el.left + el.width, el.top + el.height, tickBox, el.topText, el.rightText, el.leftText, el.bottomText);
+                        break;
+                }
+            });
+        }
+    });
+}
+
+function addNewElement(id, objCategory, objText){
+    if (objCategory == "circle"){
         var circle1 = new fabric.Circle({radius: Math.sqrt(3) * (radius - border / 2) / 2, fill: elementColor, opacity:.5});
 
         var text1 = new fabric.Text(objText, {
@@ -158,7 +376,7 @@ function addNewElement(id, objClass, objText){
             bl: false
         });
         dndCanvas.add(element);
-    } else if (objClass == "hexagon"){
+    } else if (objCategory == "hexagon"){
         var points = regularPolygonPoints(6, radius - border / 2);
         var myPoly = new fabric.Polygon(points, {
             stroke: 'rgba(255,255,255,.2)',
@@ -179,7 +397,7 @@ function addNewElement(id, objClass, objText){
             originX: 'center',
             originY: 'center',
             lineHeight: 1,
-            fill: 'black',
+            fill: '#FFF',
             fontFamily: 'VagRounded',
             fontWeight: 'bold'
         });
@@ -261,7 +479,6 @@ function addNewElement(id, objClass, objText){
         fill: 'transparent'
     });
 
-    dndCanvas.add(element);
     dndCanvas.add(newPoint);
     element.bringForward();
     newPoint.bringForward();
@@ -269,6 +486,147 @@ function addNewElement(id, objClass, objText){
     newPoint.master = element;
 
     return element;
+}
+
+function addTickBox(left, top, width, height){
+    var tickBox = new fabric.Rect({
+        left: left,
+        top: top,
+        width: width,
+        height: height,
+        selectable: true,
+        hasRotatingPoint: false,
+        cornerSize: 7,
+        hasBorders: true,
+        class: "tickbox",
+        fill: 'transparent',
+        strokeWidth: 1,
+        stroke: '#EEE',
+        strokeDashArray: [1, 2]
+    });
+
+    tickBox.setControlsVisibility({
+        mt: false,
+        mb: false,
+        ml: false,
+        mr: false,
+        tr: true,
+        tl: true,
+        br: true,
+        bl: true
+    });
+
+    dndCanvas.add(tickBox);
+    tickBox.sendToBack();
+
+    return tickBox;
+}
+
+function addBoundary(x1, y1, x2, y2, tickBox, text1, text2, text3, text4) {
+    text1 = text1==undefined?"Label":text1;
+    text2 = text2==undefined?"Label":text2;
+    text3 = text3==undefined?"Label":text3;
+    text4 = text4==undefined?"Label":text4;
+    var boundaryText1 = new fabric.IText(text1, {
+        fontSize: 10,
+        left: x1,
+        top: y1 - 15,
+        width: tickBox.width + 20,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: false,
+        class: 'boundary-text',
+        category: 'top',
+        opacity: 0,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText2 = new fabric.IText(text2, {
+        fontSize: 10,
+        left: x2 + 15,
+        top: y1,
+        angle: 90,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: false,
+        class: 'boundary-text',
+        category: 'right',
+        opacity: 0,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText3 = new fabric.IText(text3, {
+        fontSize: 10,
+        left: x1 - 15,
+        top: y2,
+        angle: -90,
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: false,
+        class: 'boundary-text',
+        category: 'left',
+        opacity: 0,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    var boundaryText4 = new fabric.IText(text4, {
+        fontSize: 10,
+        top: y2 + 5,
+        textAlign: "right",
+        selectable: true,
+        lockMovementX: true,
+        lockMovementY: true,
+        hasControls: false,
+        hasRotatingPoint: false,
+        hasBorders: false,
+        class: 'boundary-text',
+        category: 'bottom',
+        opacity: 0,
+        //originX: 'center',
+        //originY: 'center',
+        lineHeight: 1,
+        fill: 'white',
+        fontFamily: 'VagRounded',
+        fontWeight: 'bold'
+    });
+
+    boundaryText4.set({
+        left: x2 - boundaryText4.width,
+        right: x2
+    });
+
+    tickBox.set({
+        topText: boundaryText1,
+        rightText: boundaryText2,
+        leftText: boundaryText3,
+        bottomText: boundaryText4
+    });
+
+    dndCanvas.add(boundaryText1, boundaryText2, boundaryText3, boundaryText4);
 }
 
 function regularPolygonPoints(sideCount,radius){
@@ -396,4 +754,12 @@ function wrapCanvasText(t, canvas, maxW, maxH, justify) {
 
     });
 
+}
+
+function showNotification(msg){
+    $("#notification").show().find(".content").html(msg);
+}
+
+function hideNotification(){
+    $("#notification").hide();
 }

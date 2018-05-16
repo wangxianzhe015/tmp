@@ -57,7 +57,6 @@ var targetHudLine = null;
 
 var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
-var dropFrameClock = 0;
 var interactionMode = false;
 
 // This is for fuzzy font problem fix

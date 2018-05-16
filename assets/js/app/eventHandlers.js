@@ -2007,6 +2007,7 @@ function objectDropHandler(message){
                 canvas.remove(targetElement, targetElement.newPoint, targetElement.tickButton);
                 targetElement = null;
                 interactionMode = false;
+                canvas.deactivateAll();
                 canvas.renderAll();
             }
             break;
@@ -2027,10 +2028,12 @@ function objectDropHandler(message){
                     left: targetElement.left,
                     top: targetElement.top - targetElement.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
                 }).setCoords();
-                targetElement.tickButton.set({
-                    left: targetElement.left + targetElement.scaleX * radius,
-                    top: targetElement.top - targetElement.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
-                }).setCoords();
+                if (targetElement.tickButton) {
+                    targetElement.tickButton.set({
+                        left: targetElement.left + targetElement.scaleX * radius,
+                        top: targetElement.top - targetElement.scaleX * Math.sqrt(3) * (radius - border / 2) / 2
+                    }).setCoords();
+                }
                 canvas.renderAll();
             }
             break;

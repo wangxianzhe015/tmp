@@ -5,7 +5,6 @@ function addLeftBarButtons(){
     addHideButton();
     addUploadButton();
     addChipButton();
-    addFeedButton();
     addUserButton();
     addCalendarButton();
     addIntegrationButton();
@@ -13,6 +12,8 @@ function addLeftBarButtons(){
 }
 
 function addRightBarButtons(){
+    addExchangeButton();
+    addFeedButton();
     addRingButton();
     addBLineCircleButton();
     addTweenButton();
@@ -730,6 +731,20 @@ function addMoveButton(left, top, parent){
         canvas.add(btn);
         canvas.renderAll();
     });
+}
+
+function addExchangeButton(){
+    $("<img/>", {
+        id: "settings-button",
+        src: "./assets/images/icons/exchange-24.png",
+        class: "icon-button child"
+    }).on("mouseover", function(){
+        if ($("#drop-frame-div").data("status") != "shown") {
+            removeImageTools();
+            showDropFrame();
+            hideRightSidebar();
+        }
+    }).appendTo("#right-sidebar");
 }
 
 function showChildButtons(){

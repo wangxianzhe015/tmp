@@ -108,6 +108,12 @@ switch ($action) {
     case 'load-eml':
         getHtmlFromEml();
         break;
+    case 'save-drop-frame':
+        saveDropFrame();
+        break;
+    case 'load-drop-frame':
+        loadDropFrame();
+        break;
 }
 
 function save(){
@@ -729,3 +735,29 @@ function getHtmlFromEml() {
 
     echo json_encode($result);
 }
+
+function saveDropFrame(){
+    $param = $_POST['data'];
+    $myFile = fopen("./drop/data.json", "wr") or die("Unable to open file!");
+    fwrite($myFile, $param);
+    fclose($myFile);
+
+    echo "Save completed";
+}
+
+function loadDropFrame() {
+    $myFile = fopen("./drop/data.json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        if (filesize("./drop/data.json") > 0) {
+            $content = fread($myFile, filesize("./drop/data.json"));
+            fclose($myFile);
+            echo $content;
+        } else {
+            echo "no_content";
+        }
+    } else {
+        echo "fail";
+    }
+
+}
+

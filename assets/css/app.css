@@ -777,7 +777,7 @@ button .text{
     display:block;
 }
 .tab-menu>li{
-    min-width: 75px;
+    /*min-width: 75px;*/
     z-index: 1;
 }
 .tab-menu>li>a{
@@ -1453,7 +1453,7 @@ textarea.default-textarea{
     height: 100%;
     border: none;
 }
-#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe, #drop-frame-div .close-iframe{
+#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe{
     background-color: black;
     padding: 10px;
     color: white;
@@ -1929,9 +1929,11 @@ textarea.default-textarea{
 }
 
 #drop-frame-div{
-    width: 600px;
-    height: 400px;
-    position: absolute;
+    width: 30%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
     display: none;
 }
 #drag-drop-frame{
@@ -1939,4 +1941,13 @@ textarea.default-textarea{
     height: 100%;
     padding: 0;
     border: none;
+}
+#drop-frame-div .close-iframe{
+    top: 0;
+    background-color: black;
+    padding: 10px;
+    color: white;
+    position: absolute;
+    left: 0;
+    cursor: pointer;
 }

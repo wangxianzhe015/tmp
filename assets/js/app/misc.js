@@ -1,10 +1,7 @@
-function showDropFrame(left, top){
-    $("#drag-drop-frame").attr("src", window.location.href + "/drop/").parent().css({
-        left: left,
-        top: top
-    }).show();
+function showDropFrame(){
+    $("#drag-drop-frame").attr("src", window.location.href + "/drop/").parent().data("status", "shown").show();
 }
 
 function hideDropFrame(){
-    $("#drag-drop-frame").attr("src", "").parent().hide();
+    $("#drag-drop-frame").attr("src", "").parent().data("status", "hidden").hide();
 }
