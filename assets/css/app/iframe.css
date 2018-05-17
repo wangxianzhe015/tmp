@@ -1,0 +1,20 @@
+:focus{
+    outline: none;
+}
+body{
+    width: 90%;
+    height: 90%;
+    margin: 10px auto;
+    background-color: #ffffff;
+    overflow: auto;
+}
+#close-btn{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 10px;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+}
