@@ -1,7 +1,7 @@
 {
-    "name": "fabric/app",
-    "description": "Fabric Javascript App",
-    "keywords": ["fabric", "framework"],
+    "name": "handsonetables/app",
+    "description": "Handsonetables App",
+    "keywords": ["javascript", "jquery"],
     "license": "MIT",
     "type": "project",
     "require": {
