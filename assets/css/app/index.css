@@ -106,3 +106,40 @@ textarea.form-control[readonly]{
     display: block;
     margin: 10px;
 }
+#dropzones{
+    position: absolute;
+    right: 10%;
+    top: 30px;
+}
+.dropzone{
+    width: 15vw;
+    height: 15vw;
+    min-width: 200px;
+    min-height: 200px;
+    margin: 10px 0;
+}
+.dropzone:first-child{
+    margin-top: 0;
+}
+.dropzone:last-child{
+    margin-bottom: 0;
+}
+.dropzone input[type='file']{
+    display: none;
+}
+.dropzone div.button{
+    width: 50%;
+    padding: 5px;
+    background-color: #3c8dbc;
+    color: white;
+    text-align: center;
+    transform: translateY(calc(7.5vw - 50%)) translateX(calc(7.5vw - 50%));
+    float: left;
+    margin: 0 auto;
+    cursor: pointer;
+    box-shadow: 3px 4px 5px gray;
+    display: none;
+}
+.dropzone div.button:hover{
+    box-shadow: 5px 6px 5px gray;
+}

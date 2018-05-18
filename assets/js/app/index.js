@@ -17,6 +17,34 @@ $(document).ready(function(){
         }
     });
 
+    $('.dropzone').dropper({
+        action: "process.php"
+    }).on({
+        "start.dropper": function(e, files){
+
+        },
+        "fileComplete.dropper": function(e, file, response){
+            console.log(response);
+        },
+        mouseover: function(){
+            $(this).find(".button").fadeIn("fast");
+        },
+        mouseleave: function(){
+            $(this).find(".button").fadeOut("fast");
+        }
+    }).find(".button").on("click", function(){
+        $(this).parent().find(".dropper-dropzone").click();
+    });
+
+    window.addEventListener("dragover",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+    window.addEventListener("drop",function(e){
+        e = e || event;
+        e.preventDefault();
+    },false);
+
     $("#plus-button").on("click", function(){
         loadIframe();
     });
