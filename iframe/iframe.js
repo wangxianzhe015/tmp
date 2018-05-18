@@ -51,7 +51,7 @@ function messageHandler(message){
             var name = message.data.name;
             if (name == ""){
                 isNew = true;
-                $("#table-container").handsontable({
+                var hot = new Handsontable(document.getElementById("table-container"),{
                     data: generateData(30, 26),
                     minRows: 1,
                     minCols: 1,
