@@ -86,7 +86,7 @@ textarea.form-control[readonly]{
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 98%;
     display: none;
 }
 #iframe-container iframe{
@@ -103,5 +103,6 @@ textarea.form-control[readonly]{
     border-radius: 2em;
     font-size: 1em;
     font-weight: bold;
-    margin-right: 10px;
+    display: block;
+    margin: 10px;
 }

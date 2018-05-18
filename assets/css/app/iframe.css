@@ -2,14 +2,12 @@
     outline: none;
 }
 body{
-    width: 90%;
-    height: 90%;
-    margin: 10px auto;
+    margin: 30px auto;
     background-color: #ffffff;
     overflow: auto;
 }
 #close-btn{
-    position: absolute;
+    position: fixed;
     right: 0;
     top: 0;
     padding: 10px;
@@ -17,4 +15,5 @@ body{
     background-color: rgba(0, 0, 0, 0.5);
     border: none;
     cursor: pointer;
+    z-index: 10;
 }

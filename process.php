@@ -33,6 +33,8 @@ function getAllApps(){
         }
     }
 
+    sort($res);
+
     echo json_encode($res);
 }
 
@@ -56,8 +58,9 @@ function saveApp(){
     if (isset($_POST['name'])){
         $fileName = $_POST['name'];
     } else {
-        $fileName = "data-" . $time;
+        $fileName = "--" . $time;
     }
+
     $myFile = fopen("./data/" . $fileName, "wr") or die("fail");
     fwrite($myFile, $data);
     fclose($myFile);

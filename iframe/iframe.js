@@ -52,14 +52,9 @@ function messageHandler(message){
             if (name == ""){
                 isNew = true;
                 $("#table-container").handsontable({
-                    data: [["", "", "", "", ""],
-                        ["", "", "", "", ""],
-                        ["", "", "", "", ""],
-                        ["", "", "", "", ""]],
-                    startRows: 4,
-                    startCols: 5,
-                    minRows: 4,
-                    minCols: 5,
+                    data: generateData(30, 26),
+                    minRows: 1,
+                    minCols: 1,
                     rowHeaders: true,
                     colHeaders: true,
                     filters: true,
@@ -77,8 +72,11 @@ function messageHandler(message){
                     success: function (res) {
                         $("#table-container").handsontable({
                             data: $.parseJSON(res),
+                            minRows: 1,
+                            minCols: 1,
                             rowHeaders: true,
                             colHeaders: true,
+                            filters: true,
                             contextMenu: true
                         }).data("name", name);
                     }
@@ -86,4 +84,16 @@ function messageHandler(message){
             }
             break;
     }
+}
+
+function generateData(rows, cols){
+    var res = [], row = [];
+    for (var i = 0; i < rows; i ++){
+        row = [];
+        for (var j = 0; j < cols; j ++){
+            row.push("");
+        }
+        res.push(row);
+    }
+    return res;
 }
