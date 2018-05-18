@@ -126,7 +126,7 @@ function parentMessageHandler(message){
                 break;
             }
             if (message.data.isNew) {
-                addButton(timeConverter(message.data.time));
+                addButton("--" + message.data.time);
             }
             break;
     }
