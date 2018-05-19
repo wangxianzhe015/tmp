@@ -58,6 +58,7 @@ function messageHandler(message){
                     rowHeaders: true,
                     colHeaders: true,
                     filters: true,
+                    dropdownMenu: true,
                     contextMenu: true,
                     licenseKey: "63ae9-00dfe-0b600-f450d-35624"
                 });
@@ -78,6 +79,7 @@ function messageHandler(message){
                             rowHeaders: true,
                             colHeaders: true,
                             filters: true,
+                            dropdownMenu: true,
                             contextMenu: true,
                             licenseKey: "63ae9-00dfe-0b600-f450d-35624"
                         }).data("name", name);
