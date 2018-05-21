@@ -125,12 +125,12 @@ function addButton(name){
             } else {
                 name = "--" + $(this).data("time");
             }
-            loadIframe(name);
+            loadIframe(name, $(this).text());
         }
     }).appendTo("#buttons");
 }
 
-function loadIframe(name){
+function loadIframe(name, text){
     if (name == undefined){
         name = "";
     }
@@ -138,7 +138,7 @@ function loadIframe(name){
     var iframeContainer = $("#iframe-container"), iframe = iframeContainer.find("iframe"), frameWin = iframe[0].contentWindow;
     iframe.attr("src", window.location.href + "/iframe/").off("load").on({
         load: function(){
-            frameWin.postMessage({action: 'app-name', name: name}, '*');
+            frameWin.postMessage({action: 'app-name', name: name, text: text}, '*');
         }
     });
 
