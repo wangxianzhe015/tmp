@@ -10,19 +10,16 @@ var settings = {
     colHeaders: true,
     filters: true,
     dropdownMenu: true,
-    contextMenu: {
-        items: {
-            "paste": {
-                name: 'Paste',
-                callback: function () {
-                    this.copyPaste.triggerPaste();
-                }
-            }
-        }
-    },
+    //collapsibleColumns: true,
+    hiddenColumns: true,
+    contextMenu: true,
+    manualRowResize: true,
+    manualColumnResize: true,
     contextMenuCopyPaste: true,
     copyPaste: true,
+    mergeCells: true,
     search: true,
+    stretchH: 'all',
     autoColumnSize: {useHeaders: true},
     autoRowSize: {syncLimit: 300},
     width: 1000,
