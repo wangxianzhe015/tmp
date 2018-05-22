@@ -45,9 +45,11 @@ $(document).ready(function(){
     $(window).on({
         focus: function(){
             isActive = true;
+            $("#page-cover").fadeOut();
         },
         blur: function(){
             isActive = false;
+            $("#page-cover").fadeIn();
         }
     });
 
