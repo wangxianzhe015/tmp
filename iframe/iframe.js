@@ -6,8 +6,8 @@ var hot;
 var settings = {
     minRows: 1,
     minCols: 1,
-    rowHeaders: true,
-    colHeaders: true,
+    rowHeaders: false,
+    colHeaders: false,
     filters: true,
     dropdownMenu: true,
     //collapsibleColumns: true,
@@ -57,18 +57,12 @@ $(document).ready(function(){
         hot.getPlugin('exportFile').downloadFile('csv', {filename: $("#table-container").data("text")});
     });
 
-    $('#toggle-row-header').on('click', function(e){
+    $('#toggle-header').on('click', function(e){
+        settings.colHeaders = !settings.colHeaders;
         settings.rowHeaders = !settings.rowHeaders;
         hot.updateSettings({
+            "colHeaders": settings.colHeaders,
             "rowHeaders": settings.rowHeaders
-        });
-        hot.render();
-    });
-
-    $('#toggle-col-header').on('click', function(e){
-        settings.colHeaders = !settings.colHeaders;
-        hot.updateSettings({
-            "colHeaders": settings.colHeaders
         });
         hot.render();
     });

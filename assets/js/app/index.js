@@ -24,7 +24,11 @@ $(document).ready(function(){
 
         },
         "fileComplete.dropper": function(e, file, response){
-            console.log(response);
+            var $obj = $(e.target).find(".upload-check");
+            $obj.fadeIn("fast");
+            setTimeout(function () {
+                $obj.fadeOut();
+            }, 3000);
         },
         mouseover: function(){
             $(this).find(".button").fadeIn("fast");
