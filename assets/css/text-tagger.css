@@ -1,0 +1,194 @@
+@font-face {
+    font-family: SanFrancisco;
+    src: url('./fonts/SF-UI-Display-Ultralight.eot');
+    src: url('./fonts/SF-UI-Display-Ultralight.eot?#iefix') format('embedded-opentype'), url('./fonts/SF-UI-Display-Ultralight.woff') format('woff'), url('./fonts/SF-UI-Display-Ultralight.ttf') format('truetype'), url('./fonts/SF-UI-Display-Ultralight.svg') format('svg');
+}
+*{
+    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-weight: bold;
+}
+:focus{
+    outline: none;
+}
+::-webkit-scrollbar {
+    height: 0.5em;
+    width: 0.5em;
+}
+::-webkit-scrollbar-track {
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-corner{
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(59,64,67);
+}
+html, body, .playground{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+input {
+    padding: 5px 10px;
+    margin: 0 10px;
+    border-radius: 5px;
+    border: solid 1px gray;
+    background-color: rgba(255,255,255,0);
+    color: #000000;
+}
+.playground{
+    overflow:hidden;
+    height: calc(95% - 90px);
+}
+.playground:before, .playground:after{
+    display: table;
+    content: " ";
+}
+.playground:after{
+    clear: both;
+}
+.tagger-keyword-left-panel, .tagger-keyword-right-panel{
+    height: 100%;
+    float: left;
+    display: block;
+}
+.tagger-keyword-left-panel {
+    width: 4em;
+}
+.tagger-keyword-right-panel{
+    width: 3%;
+    max-width: 10px;
+}
+.tagger-container{
+    color: #000000;
+    line-height: 1.5em;
+    height: 100%;
+    width: calc(100% - 10px - 4em);
+    float: left;
+}
+.tagger-content{
+    overflow-y: auto;
+    height: 100%;
+}
+.tagger-loading-div{
+    height: 30px;
+    padding: 10px 0;
+}
+.tagger-apps-select, .tagger-app-load-confirm{
+    display: none;
+}
+.tagger-apps-select{
+    width: 100px;
+    margin: 0 50px;
+    background-color: #191919;
+    color: white;
+    border-color: #191919;
+    font-size: 12px;
+    border-radius: 3px;
+}
+.tagger-icons-container{
+    color: white;
+    height: 5%;
+    /*min-height: 34px;*/
+    width: 100%;
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+    z-index: 100000;
+}
+.tagger-icon{
+    background-color: rgba(0,0,0,.3);
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    cursor: pointer;
+}
+#tagger-keyword-div{
+    display: none;
+    position: absolute;
+}
+#tagger-keyword-div #tagger-keyword-select{
+    padding: 5px 10px;
+    background-color: rgba(40,40,40,.8);
+    color: white;
+    border-radius: 5px;
+}
+#tagger-keyword-div #tagger-unhighlight-btn{
+    background: transparent;
+    color: #000000;
+    padding: 3px 7px;
+    margin-left: 10px;
+    cursor: pointer;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+}
+.tagger-highlight-text{
+    background: rgba(0,0,0,.3);
+    color: black;
+    cursor: pointer;
+    font-size: 1.2em;
+    letter-spacing: 1px;
+    line-height: 1.5em;
+    visibility: visible;
+}
+.tagger-highlight-keyword{
+    color: #000000;
+    display: none;
+    cursor: pointer;
+    padding: 2em 0.5em;
+    border-radius: 5em;
+    border: solid 1px #000000;
+    font-size: 12px;
+    width: 4em;
+    height: 1em;
+    text-align: center;
+    line-height: 1em;
+    margin: 5px auto;
+}
+.tagger-highlight-keyword.selected{
+    display: block;
+}
+.tagger-highlight-keyword.hover{
+    display: block;
+    background-color: rgba(140,158,140,.8);
+}
+.btn{
+    background-color: rgb(92,183,92);
+    color: white;
+    cursor: pointer;
+    padding: 5px 15px;
+    margin: 0 0 0 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    width: 80px;
+}
+.image-btn{
+    vertical-align: top;
+    cursor: pointer;
+}
+.tagger-button-panel{
+    text-align: center;
+    height: 30px;
+    padding: 10px 0;
+}
+.tagger-button-panel #tagger-app-name{
+    position: fixed;
+    right: calc(50% - 87px);
+    transition: right 0.5s;
+}
+.tagger-button-panel img{
+    position: fixed;
+    right: calc(50% - 115px);
+}
+.tagger-notification-panel{
+    color: black;
+    text-align: center;
+    height: 30px;
+}

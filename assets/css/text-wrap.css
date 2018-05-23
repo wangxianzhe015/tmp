@@ -1,0 +1,366 @@
+@font-face
+{
+    font-family: SanFrancisco;
+    src: url('./fonts/SF-UI-Display-Ultralight.eot');
+    src: url('./fonts/SF-UI-Display-Ultralight.eot?#iefix') format('embedded-opentype'), url('./fonts/SF-UI-Display-Ultralight.woff') format('woff'), url('./fonts/SF-UI-Display-Ultralight.ttf') format('truetype'), url('./fonts/SF-UI-Display-Ultralight.svg') format('svg');
+}
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
+:active, :focus{
+    outline: none;
+}
+p{
+    margin: 0;
+}
+.no-margin{
+    margin: 0!important;
+}
+.no-padding{
+    padding: 0!important;
+}
+.dialog{
+    background-color: rgba(45,48,53,.8);
+    color: #aaa;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 100000;
+    display: none;
+}
+.dialog-container{
+    background-color: rgb(34,37,42);
+    border-radius: 10px;
+    width: 30%;
+    min-width: 300px;
+    margin: 10% auto;
+}
+.dialog-header{
+    background-color: rgb(69,73,85);
+    border-radius: 10px 10px 0 0;
+    font-size: 1em;
+    padding: 10px;
+}
+.dialog-body{
+    padding: 30px 20px;
+}
+.dialog-footer{
+    border-top: dashed 1px rgb(69,73,85);
+    padding: 20px;
+    text-align: right;
+}
+.dialog-footer button{
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 10px;
+}
+.dialog-footer button.dialog-close{
+    background-color: rgb(69,73,85);
+}
+.dialog-footer button.confirm{
+    background-color: rgb(47,158,214);
+}
+.boundary-layout{
+    width: calc(100% - 60px);
+    height: calc(100% - 20px);
+    min-width: 100px;
+    min-height: 150px;
+    margin: 10px auto;
+    position: relative;
+    z-index: 100;
+}
+.boundary-layout.boundary-layout-content{
+    min-width: 50px;
+}
+.inner-boundary-layout{
+    width: calc(100% - 60px);
+    height: calc(100% - 20px);
+    min-width: 130px;
+    min-height: 150px;
+    margin: 10px auto;
+    position: relative;
+}
+.boundary-layout .top-boundary,.boundary-layout .left-boundary,.boundary-layout .right-boundary,.boundary-layout .bottom-boundary{
+    font-family: VagRounded, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: 100;
+	word-wrap: break-word;
+    overflow: hidden;
+}
+.boundary-layout .inner-top-boundary,.boundary-layout .inner-left-boundary,.boundary-layout .inner-right-boundary,.boundary-layout .inner-bottom-boundary{
+    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-size: 18px;
+    overflow: hidden;
+    transition: all 0.5s;
+}
+.boundary-layout [class*='-boundary']{
+    text-align: justify;
+    text-align-last: justify;
+}
+.left-boundary, .inner-left-boundary{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -webkit-transform-origin: left top;
+    -moz-transform-origin: left top;
+    -o-transform-origin: left top;
+    transform-origin: left top;
+    width: 10px;
+    float: left;
+    margin-left:1.5em;
+}
+.boundary-layout-content, .inner-boundary-layout-content{
+    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-size: 30px;
+    float: left;
+    width: calc(100% - 84px);
+    height: calc(100% - 112px);
+    overflow: hidden;
+    margin: 0 42px;
+}
+.right-boundary, .inner-right-boundary{
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+    -webkit-transform-origin: right bottom;
+    -moz-transform-origin: right bottom;
+    -o-transform-origin: right bottom;
+    transform-origin: right bottom;
+    float: right;
+    width: 10px;
+    margin-right: 1.5em;
+}
+.top-boundary, .bottom-boundary, .inner-top-boundary, .inner-bottom-boundary{
+    width: 99%;
+    float: left;
+}
+div.tagger-word{
+    margin-right: .5em;
+    display: inline-block;
+}
+.form-group{
+    margin-bottom: 10px;
+}
+.form-group.ext-info{
+    display: none;
+}
+.form-control{
+    margin: 10px 0;
+    width: 100%;
+}
+input.form-control,select.form-control,textarea.form-control{
+    color: #aaa;
+    padding: 10px 0;
+    border-radius: 1px;
+    background-color: rgb(40,40,40);
+    font-size: 12px;
+    line-height: 11px;
+    border: none;
+    overflow: hidden;
+    opacity: 1;
+}
+textarea.form-control[readonly]{
+    resize: none;
+}
+.form-group.width-half{
+    width: 50%;
+    display: inline-block;
+}
+.form-control.width-half{
+    padding: 10px 0;
+    width: calc(50% - 15px);
+    display: inline-block;
+}
+textarea.form-control, input.form-control{
+    background: transparent;
+    color: white;
+}
+textarea.form-control{
+    margin: 0;
+    width: 100%;
+}
+.tagger-tooltip{
+    display: none;
+    position: absolute;
+    height: 50%;
+    min-height: 400px;
+    width: 25%;
+    min-width: 300px;
+    top: 0;
+    background-color: transparent;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    overflow-y:hidden;
+    overflow-x:hidden;
+    margin: 0;
+    padding: 0;
+    z-index: 200;
+}
+.tagger-tooltip .ttip{
+    background-color: rgba(40,40,40,.8);
+    border-radius: 0;
+    border: none;
+    font: normal 12px/2 "Abel", Helvetica, sans-serif;
+    line-height:11px;
+    color: #FFF;
+    padding: 11px;
+    height: calc(100% - 22px);
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    filter: alpha(opacity=50);
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+.tagger-tooltip input, .tagger-tooltip textarea, .tagger-tooltip select{
+    font-family: VagRounded, Helvetica, sans-serif;
+}
+.ttip li:before{
+    content: "";
+}
+.tagger-tooltip .tooltip-button-panel {
+    text-align: right;
+}
+.tagger-tooltip .tooltip-button-panel img{
+    cursor: pointer;
+}
+.tagger-tooltip h3{
+    border-bottom: solid 1px rgb(108,158,222);
+    font-size: 1em;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.tagger-tooltip h3.white{
+    border-color: white;
+}
+.tagger-tooltip #tooltip-description{
+    height: calc(100% - 180px);
+}
+.tab-menu{
+    list-style: none;
+    border-top: solid 2px transparent;
+    border-bottom: solid 2px transparent;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+.tab-menu>li{
+    opacity: 1;
+    z-index: 1;
+}
+.tab-menu>li:before{
+    content: "";
+}
+.tab-menu>li>a{
+    background-color: rgba(40,40,40,.8);
+    color: white;
+    cursor: pointer;
+    display: block;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 5px 15px;
+    margin-right: 2px;
+    line-height: 1.42857143;
+    border: 1px solid transparent;
+    border-radius: 0;
+    text-align: center;
+}
+.tab-menu>li.active>a{
+    cursor: default;
+    background-color: rgba(21,45,65,.8);
+    border-bottom-color: transparent;
+}
+.tab-pane{
+    display:none;
+    height: 100%;
+}
+.tab-pane.active{
+    display: block;
+}
+option[disabled]{
+    display: none;
+}
+.normal-btn{
+    background-color: rgb(92,183,92);
+    color: white;
+    cursor: pointer;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    width: 80px;
+}
+#tooltip-text{
+    text-transform: uppercase;
+}
+#message-tooltip #message-content{
+    height: 100%;
+}
+#message-tooltip #message-date{
+    text-align: right;
+}
+#message-tooltip #message-send-btn{
+    position: absolute;
+    bottom: 10px;
+}
+#message-tooltip #message-body{
+    height: calc(100% - 294px);
+}
+#message-tooltip #message-bcc-check{
+    height: 26px;
+    vertical-align: middle;
+}
+/* file upload */
+.fileupload-buttons{
+    padding: 20px 0;
+    border-bottom: solid 1px white;
+}
+.fileupload-buttons .upload-button{
+    color: #ffffff;
+    cursor: pointer;
+    margin: 0 10px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-repeat: no-repeat;
+}
+.fileupload-buttons .upload-plus{
+    background-image: url(../images/icons/plus-outline-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons .upload-start{
+    background-image: url(../images/icons/play-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons .upload-cancel{
+    background-image: url(../images/icons/cancel-24.png);
+    background-size: 16px;
+}
+.fileupload-buttons table{
+    width: 100%;
+}
+.fileupload-progress {
+    margin: 10px 0;
+}
+.fileupload-progress .progress-extended {
+    margin-top: 5px;
+}
+.fileupload-progress .ui-progressbar-value{
+    /*background: url('lib/images/progressbar.gif');*/
+    background: #4ca20b;
+}

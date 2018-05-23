@@ -1,0 +1,46 @@
+@font-face {
+    font-family: VagRounded;
+    src: url('./fonts/VAGRoundedStd-Black.eot');
+    src: url('./fonts/VAGRoundedStd-Black.eot?#iefix') format('embedded-opentype'), url('./fonts/VAGRoundedStd-Black.woff') format('woff'), url('./fonts/VAGRoundedStd-Black.ttf') format('truetype'), url('./fonts/VAGRoundedStd-Black.svg') format('svg');
+}
+*{
+    font-family: VagRounded, Helvetica, sans-serif;
+}
+::-webkit-scrollbar {
+    height: .5em;
+    width: .5em;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-corner{
+    background-color: rgb(44,49,51);
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgb(59,64,67);
+}
+
+body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: rgba(0,0,0,0.5);
+}
+
+#notification{
+    width: 100%;
+    pointer-events: none;
+    position: fixed;
+    top: 100px;
+    display: none;
+}
+
+#notification .content{
+    width: 50%;
+    min-width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #eee;
+    margin: 0 auto;
+}
