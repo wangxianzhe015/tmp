@@ -251,6 +251,8 @@ function save(name, target){
         saveElements(name);
     } else if (target == "line") {
         saveLineAndBox(name);
+    } else if (target == "text-cell") {
+        saveTextCells(name);
     }
 }
 

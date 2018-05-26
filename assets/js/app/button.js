@@ -22,6 +22,7 @@ function addRightBarButtons(){
     addLineSaveButton();
     addLineLoadButton();
     addEmlButton();
+    addBalanceButton();
 }
 
 function addBrowseButton(){
@@ -287,6 +288,16 @@ function addEmlButton(){
         class: "icon-button"
     }).on("click", function(){
         loadEml();
+    }).appendTo("#right-sidebar");
+}
+
+function addBalanceButton(){
+    $("<img/>", {
+        id: "balance-button",
+        src: "./assets/images/icons/balance-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+
     }).appendTo("#right-sidebar");
 }
 

@@ -114,6 +114,12 @@ switch ($action) {
     case 'load-drop-frame':
         loadDropFrame();
         break;
+    case 'save-text-cell':
+        saveTextCells();
+        break;
+    case 'load-text-cell':
+        loadTextCells();
+        break;
 }
 
 function save(){
@@ -759,5 +765,22 @@ function loadDropFrame() {
         echo "fail";
     }
 
+}
+
+function saveTextCells(){
+    $param = $_POST['elements'];
+    $fileName = $_POST['fileName'];
+    $myFile = fopen("./data/cells/".$fileName.".json", "wr") or die("Unable to open file!");
+    fwrite($myFile, $param);
+    fclose($myFile);
+
+    echo "Save completed";
+}
+
+function loadTextCells() {
+    $path = "./data/cells/";
+    $files = scandir($path);
+
+    echo json_encode($files);
 }
 

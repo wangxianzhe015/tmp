@@ -1916,6 +1916,7 @@ textarea.default-textarea{
     cursor: pointer;
     display: block;
     margin: 5px 0;
+    image-rendering: pixelated;
 }
 
 .cropped-image-annotation{

@@ -900,6 +900,12 @@ function addSubTextTooltip(left, top, defaultText, parent){
             src: "./assets/images/icons/plus-40.png"
         }).on("click", function(){
             addTextTooltip(groupBox.data("group-count") * 420 + 30, 20);
+        })).append($("<img/>", {
+            src: "./assets/images/icons/save-40.png"
+        }).on("click", function(){
+            $("#save-target").val("text-cell");
+            $("label[for='save-file-name']").text("Name");
+            $("#save").fadeIn();
         }))
         //    .append($("<img/>", {
         //    src: "./assets/images/icons/move-24.png"
@@ -993,7 +999,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
         var parent = $(this).parents(".image-tooltip"), obj = parent.find("textarea")[0], text = $(obj).val().substr(obj.selectionStart, obj.selectionEnd - obj.selectionStart), box, groupBoxes, lines, offsetY;
         if (text != ""){
             $(obj).val($(obj).val().substr(0,obj.selectionStart - 1) + $(obj).val().substr(obj.selectionEnd));
-            box = addSubTextTooltip(parent.offset().left, parent.offset().top + parent.innerHeight() + 20, text, parent.data("group"));
+            box = addSubTextTooltip(parent.offset().left, $(".text-cell-group").prop("scrollTop") + parent.offset().top + parent.innerHeight() + 20, text, parent.data("group"));
+            parent.after(box);
             offsetY = box.innerHeight() + 20;
             lines = parent.data("lines");
             for (var i = 0; i < lines.length; i ++){
@@ -1006,8 +1013,14 @@ function addSubTextTooltip(left, top, defaultText, parent){
                     lines[i].path[1][4] = box.offset().top;
                 }
             }
-            parent.next().data("lines", [parent.next().data("lines")[0]]);
-            var newLine = addBezierLine(box, parent.next());
+            lines = box.next().data("lines");
+            for (i = 0; i < lines.length; i ++){
+                if (lines[i].rightElement.attr("id") == box.next().attr("id").substr(1)){
+                    lines.splice(i, 1);
+                }
+            }
+            box.next().data("lines", lines);
+            var newLine = addBezierLine(box, box.next());
             newLine.set({
                 strokeDashArray: [1, 0]
             });
@@ -1017,15 +1030,20 @@ function addSubTextTooltip(left, top, defaultText, parent){
             newLine.rightCircle.set({
                 opacity: 0
             });
-            groupBoxes = parent.nextAll();
+            groupBoxes = box.nextAll();
             for (i = 0; i < groupBoxes.length; i ++){
-                if (parent.data("group") == $(groupBoxes[i]).data("group") && $(groupBoxes[i]).attr("id") != box.attr("id")){
+                if (parent.data("group") == $(groupBoxes[i]).data("group")){
                     $(groupBoxes[i]).css({
-                        top: $(groupBoxes[i]).offset().top + box.innerHeight() + 20
+                        top: $(".text-cell-group").prop("scrollTop") + $(groupBoxes[i]).offset().top + box.innerHeight() + 20
                     });
                     $(groupBoxes[i]).data("lines")[0].path[0][2] += offsetY;
                     $(groupBoxes[i]).data("lines")[0].path[1][2] += offsetY;
                     $(groupBoxes[i]).data("lines")[0].path[1][4] += offsetY;
+                    if ($(groupBoxes[i]).data("lines")[1]) {
+                        $(groupBoxes[i]).data("lines")[1].path[0][2] += offsetY;
+                        $(groupBoxes[i]).data("lines")[1].path[1][2] += offsetY;
+                        $(groupBoxes[i]).data("lines")[1].path[1][4] += offsetY;
+                    }
                 }
             }
             canvas.renderAll();
@@ -1133,9 +1151,27 @@ function mergeUpTextCell($cell){
     leftElem.css("height", leftElem.find("textarea").prop("scrollHeight") + 22);
     leftElem.find("textarea").css("height", leftElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
-    addBezierLine(leftElem, rightElem).set({
+    var line = addBezierLine(leftElem, rightElem).set({
         strokeDashArray: [1]
     });
+    line.set({
+        opacity: 1
+    });
+    line.leftCircle.set({
+        opacity: 0
+    });
+    line.rightCircle.set({
+        opacity: 0
+    });
+    lines = leftElem.data("lines");
+    for (i = 0; i < lines.length; i ++){
+        lines[i].path[0][1] = lines[i].leftElement.offset().left + lines[i].leftElement.outerWidth() / 2;
+        lines[i].path[0][2] = lines[i].leftElement.offset().top + lines[i].leftElement.innerHeight();
+        lines[i].path[1][1] = (lines[i].path[0][1] + lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2) / 2;
+        lines[i].path[1][2] = (lines[i].path[0][2] + lines[i].rightElement.offset().top) / 2;
+        lines[i].path[1][3] = lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2;
+        lines[i].path[1][4] = lines[i].rightElement.offset().top;
+    }
     canvas.renderAll();
 }
 
@@ -1175,9 +1211,27 @@ function mergeDownTextCell($cell){
     });
     rightElem.find("textarea").css("height", rightElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
-    addBezierLine(leftElem, rightElem).set({
+    var line = addBezierLine(leftElem, rightElem).set({
         strokeDashArray: [1]
     });
+    line.set({
+        opacity: 1
+    });
+    line.leftCircle.set({
+        opacity: 0
+    });
+    line.rightCircle.set({
+        opacity: 0
+    });
+    lines = rightElem.data("lines");
+    for (i = 0; i < lines.length; i ++){
+        lines[i].path[0][1] = lines[i].leftElement.offset().left + lines[i].leftElement.outerWidth() / 2;
+        lines[i].path[0][2] = lines[i].leftElement.offset().top + lines[i].leftElement.innerHeight();
+        lines[i].path[1][1] = (lines[i].path[0][1] + lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2) / 2;
+        lines[i].path[1][2] = (lines[i].path[0][2] + lines[i].rightElement.offset().top) / 2;
+        lines[i].path[1][3] = lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2;
+        lines[i].path[1][4] = lines[i].rightElement.offset().top;
+    }
     canvas.renderAll();
 }
 
@@ -1263,15 +1317,51 @@ function splitText($el){
                 });
             }
 
+            var $container = $(".text-cell-group");
+
             $el.removeClass("expanded").attr("data-hidden", true).css({
-                left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                left: ($container.data("group-count") - 1) * 420 + 30,
                 top: 20
             }).data("newPoint").set({
-                left: ($(".text-cell-group").data("group-count") - 1) * 420 + 30,
+                left: ($container.data("group-count") - 1) * 420 + 30,
                 top: 20
             }).setCoords();
+
+            $container.append($el);
 
             canvas.renderAll();
         }
     }
+}
+
+function saveTextCells(name){
+    var data = [], $container = $(".text-cell-group"), $cells = $container.find(".image-tooltip"), $cell;
+
+    for (var i = 0; i < $cells.length; i ++){
+        $cell = $($cells[i]);
+        data.push({
+            id: $cell.attr("id"),
+            left: $cell.offset().left + $container.prop("scrollLeft"),
+            top: $cell.offset().top + $container.prop("scrollTop"),
+            text: $cell.find("textarea").val()
+        });
+    }
+
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "save-text-cell",
+            "elements": JSON.stringify(data),
+            "fileName": name
+        },
+        success: function(res){
+            $("#save").fadeOut();
+            alert('Success', res);
+        },
+        complete: function(){
+            $(".loader-container").fadeOut();
+        }
+    });
+
 }
