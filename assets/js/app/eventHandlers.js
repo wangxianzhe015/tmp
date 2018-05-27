@@ -280,7 +280,9 @@ function initHandlers(){
         } else if (action == "remove-tooltip") {
             $("#" + $valueTag.val()).remove();
         } else if (action == "remove-text-cell-group"){
-            removeTextCellGroup($("#" + $valueTag.val()));
+            $("#save-target").val("text-cell-group:" + $valueTag.val());
+            $("label[for='save-file-name']").text("Name");
+            $("#save").fadeIn();
         } else if (action == "remove-text-cell-in-group"){
             removeTextCellInGroup($("#" + $valueTag.val()));
         }
@@ -359,7 +361,7 @@ function initHandlers(){
     });
 
     $("#save-confirm").on("click", function(){
-        $(".loader-container").fadeIn();
+        showSpinner();
         var fileName = $("#save-file-name").val();
         var saveTarget = $("#save-target").val();
         if (fileName == ''){
@@ -371,7 +373,7 @@ function initHandlers(){
         }
     });
     $("#load-confirm").on("click", function(){
-        $(".loader-container").fadeIn();
+        showSpinner();
         var fileName = $("#load-file-name").val();
         var loadTarget = $("#load-target").val();
         if (fileName == ''){
@@ -387,6 +389,8 @@ function initHandlers(){
                 loadElements(fileName);
             } else if (loadTarget == "line") {
                 loadLineAndBox(fileName);
+            } else if (loadTarget == "text-cell") {
+                loadTextCell(fileName);
             }
         }
     });

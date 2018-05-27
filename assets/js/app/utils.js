@@ -253,6 +253,25 @@ function save(name, target){
         saveLineAndBox(name);
     } else if (target == "text-cell") {
         saveTextCells(name);
+    } else if (target.indexOf("text-cell-group") > -1) {
+        var $group = $("#" + target.split(":")[1]);
+        var groupName1 = $group.data("groups")[0];
+        var $tooltips = $group.find(".image-tooltip");
+        var text = "";
+
+        for (var i = 0; i < $tooltips.length; i ++){
+            if ($($tooltips[i]).data("group") == groupName1){
+                text += $($tooltips[i]).find("textarea").val() + "\r\n\r\n";
+            }
+        }
+
+        var shape = addNewHexagon(name, "", 0, window.scrollX + window.innerWidth / 2, window.scrollY + window.innerHeight / 2, "");
+        shape.beatTab = ["Tab 1"];
+        shape.beatTabText = [text];
+
+        removeTextCellGroup($group);
+        $("#save").fadeOut();
+        hideSpinner();
     }
 }
 

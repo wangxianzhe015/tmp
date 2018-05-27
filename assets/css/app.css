@@ -589,6 +589,7 @@ button .text{
     top: 5px;
     right: 0;
     z-index: 10;
+    display: block;
 }
 .image-tooltip.text .text-cell-buttons img{
     cursor: pointer;
@@ -600,8 +601,12 @@ button .text{
 .image-tooltip.text .text-cell-buttons.inside img{
     width: 8px;
     height: 8px;
+    display: inline;
 }
 .image-tooltip.text.expanded .text-cell-buttons{
+    display: block;
+}
+.image-tooltip.text.expanded .text-cell-buttons.inside img{
     display: block;
 }
 .image-tooltip#preview-box{
@@ -881,6 +886,10 @@ input.form-control,select.form-control,textarea.form-control{
 }
 textarea.form-control[readonly]{
     resize: none;
+}
+textarea.form-control.bottom-tab-text{
+    height: calc(100% - 100px);
+    overflow: auto;
 }
 .form-group.width-half{
     width: 50%;

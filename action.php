@@ -117,8 +117,11 @@ switch ($action) {
     case 'save-text-cell':
         saveTextCells();
         break;
+    case 'load-text-cell-names':
+        loadTextCellNames();
+        break;
     case 'load-text-cell':
-        loadTextCells();
+        loadTextCell();
         break;
 }
 
@@ -777,10 +780,22 @@ function saveTextCells(){
     echo "Save completed";
 }
 
-function loadTextCells() {
+function loadTextCellNames() {
     $path = "./data/cells/";
     $files = scandir($path);
 
     echo json_encode($files);
+}
+
+function loadTextCell() {
+    $fileName = $_POST['fileName'];
+    $myFile = fopen("./data/cells/".$fileName.".json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        $content = fread($myFile, filesize("./data/cells/".$fileName.".json"));
+        fclose($myFile);
+        echo $content;
+    } else {
+        echo "fail";
+    }
 }
 

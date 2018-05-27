@@ -1029,7 +1029,7 @@ function loadLineAndBox(file){
             $("body").css("overflow","auto");
         },
         complete: function(){
-            $(".loader-container").fadeOut();
+            hideSpinner();
         }
     });
 }

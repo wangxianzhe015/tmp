@@ -906,6 +906,10 @@ function addSubTextTooltip(left, top, defaultText, parent){
             $("#save-target").val("text-cell");
             $("label[for='save-file-name']").text("Name");
             $("#save").fadeIn();
+        })).append($("<img/>", {
+            src: "./assets/images/icons/folder-open-40.png"
+        }).on("click", function(){
+            loadTextCells();
         }))
         //    .append($("<img/>", {
         //    src: "./assets/images/icons/move-24.png"
@@ -1022,7 +1026,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
             box.next().data("lines", lines);
             var newLine = addBezierLine(box, box.next());
             newLine.set({
-                strokeDashArray: [1, 0]
+                strokeDashArray: [1, 0],
+                opacity: 1
             });
             newLine.leftCircle.set({
                 opacity: 0
@@ -1152,7 +1157,8 @@ function mergeUpTextCell($cell){
     leftElem.find("textarea").css("height", leftElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
     var line = addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1]
+        strokeDashArray: [1, 0],
+        opacity: 1
     });
     line.set({
         opacity: 1
@@ -1212,7 +1218,7 @@ function mergeDownTextCell($cell){
     rightElem.find("textarea").css("height", rightElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
     var line = addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1]
+        strokeDashArray: [1, 0]
     });
     line.set({
         opacity: 1
@@ -1262,7 +1268,7 @@ function removeTextCellInGroup($cell){
     }
     $cell.remove();
     addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1]
+        strokeDashArray: [1, 0]
     });
     canvas.renderAll();
 }
@@ -1343,7 +1349,9 @@ function saveTextCells(name){
             id: $cell.attr("id"),
             left: $cell.offset().left + $container.prop("scrollLeft"),
             top: $cell.offset().top + $container.prop("scrollTop"),
-            text: $cell.find("textarea").val()
+            text: $cell.find("textarea").val(),
+            group: $cell.data("group"),
+            status: $cell.hasClass("expanded")?1:0
         });
     }
 
@@ -1360,8 +1368,90 @@ function saveTextCells(name){
             alert('Success', res);
         },
         complete: function(){
-            $(".loader-container").fadeOut();
+            hideSpinner()
         }
     });
 
+}
+
+function loadTextCells(){
+    showSpinner();
+    $("#load-target").val("text-cell");
+    $("label[for='load-file-name']").text("Choose Name");
+    $(".load-extra-option").hide();
+
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load-text-cell-names"
+        },
+        success: function(res){
+            var names = $.parseJSON(res);
+            $("#load-file-name").html('');
+            names.forEach(function(name){
+                if (name != '.' && name != '..' && name != '.gitignore') {
+                    var option = document.createElement('option');
+                    $(option).attr('value', name.split('.json')[0]).html(name.split('.json')[0]);
+                    $("#load-file-name").append(option);
+                }
+            });
+            $("#load").fadeIn();
+        },
+        complete: function(){
+            hideSpinner();
+        }
+    });
+
+}
+
+function loadTextCell(name){
+    $.ajax({
+        url: "action.php",
+        type: "POST",
+        data: {
+            "action": "load-text-cell",
+            "fileName": name
+        },
+        success: function(res) {
+            var cells = $.parseJSON(res), c, i, $tooltip, result = [], line;
+
+            for (i = 0; i < cells.length; i ++){
+                c = cells[i];
+                if (c.id.indexOf("sub-text-") > -1){
+                    $tooltip = addSubTextTooltip(c.left, c.top, c.text, c.group);
+                    $tooltip.attr("id", c.id);
+                } else {
+                    $tooltip = addTextTooltip(c.left, c.top, c.text);
+                    $(".text-cell-group").append($tooltip);
+                    $tooltip.attr("id", c.id);
+                }
+                if (c.status == 1){
+                    $tooltip.addClass("expanded");
+                } else {
+                    $tooltip.removeClass("expanded");
+                }
+                result.push($tooltip);
+            }
+            for (i = 0; i < result.length - 1; i ++){
+                if (result[i].attr("id").indexOf("sub-text-") > -1 && result[i + 1].attr("id").indexOf("sub-text-") > -1){
+                    line = addBezierLine(result[i], result[i + 1]);
+                    line.set({
+                        strokeDashArray: [1, 0],
+                        opacity: 1
+                    });
+                    line.leftCircle.set({
+                        opacity: 0
+                    });
+                    line.rightCircle.set({
+                        opacity: 0
+                    });
+                }
+            }
+            $("#load").fadeOut();
+        },
+        complete: function(){
+            hideSpinner();
+        }
+    })
 }
