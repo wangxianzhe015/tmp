@@ -889,7 +889,8 @@ function addSubTextTooltip(left, top, defaultText, parent){
             }
         }).data({
             "group-count": 1,
-            "groups": [parent]
+            "groups": [parent],
+            "step": 0
         }).append($("<div></div>", {
             class: "text-cell-buttons"
         }).append($("<img/>", {
@@ -910,10 +911,11 @@ function addSubTextTooltip(left, top, defaultText, parent){
             src: "./assets/images/icons/folder-open-40.png"
         }).on("click", function(){
             loadTextCells();
+        })).append($("<img/>", {
+            src: "./assets/images/icons/balance-24.png"
+        }).on("click", function(){
+            handleTextCells($(this).parents(".text-cell-group"));
         }))
-        //    .append($("<img/>", {
-        //    src: "./assets/images/icons/move-24.png"
-        //}))
         ).appendTo("body");
 
         if (canvas.height - top < 400){
@@ -1454,4 +1456,48 @@ function loadTextCell(name){
             hideSpinner();
         }
     })
+}
+
+function handleTextCells($obj) {
+    var allCells = $obj.find(".image-tooltip[id*='sub-text-box-']"), i, j, cells = [];
+    switch ($obj.data("step")){
+        case 0:
+            for (i = 0; i < allCells.length; i ++) {
+                if ($(allCells[i]).data("group") == $obj.data("groups")[0]) {
+                    cells.push($(allCells[i]));
+                }
+            }
+            for (i = 0; i < cells.length - 1; i ++) {
+                for (j = i + 1; j < cells.length; j ++) {
+                    if ($(cells[i]).find("textarea").val().trim() == $(cells[j]).find("textarea").val().trim()){
+                        $(cells[i]).addClass("same").data("same", $(cells[j]).attr("id"));
+                        $(cells[j]).addClass("same").data("same", $(cells[i]).attr("id"));
+                    }
+                }
+            }
+            $obj.data("step", 1);
+            break;
+        case 1:
+            for (i = 0; i < allCells.length; i ++) {
+                if ($(allCells[i]).data("group") == $obj.data("groups")[0] && !$(allCells[i]).hasClass("same")) {
+                    cells.push($(allCells[i]));
+                }
+            }
+            var sentences = [];
+            for (i = 0; i < cells.length; i ++) {
+                sentences = sentences.concat($(cells[i]).find("textarea").val().trim().split("."));
+            }
+            alert("Sentences", sentences.join("\r\n"));
+            $obj.data("step", 2);
+            break;
+        case 2:
+            $obj().find(".same").removeClass("expanded");
+            $obj.data("step", 3);
+            break;
+        case 3:
+            allCells.addClass("expanded");
+            $obj().find(".same").removeClass("same");
+            $obj.data("step", 0);
+            break;
+    }
 }

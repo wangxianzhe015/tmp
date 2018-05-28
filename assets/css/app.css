@@ -508,6 +508,9 @@ button .text{
     -o-transition: width 1s, height 1s;
     transition: width 1s, height 1s;
 }
+.image-tooltip.text.same{
+    opacity: 0.2;
+}
 .third-image-tooltip{
     height: 80%;
     min-height: 0;
