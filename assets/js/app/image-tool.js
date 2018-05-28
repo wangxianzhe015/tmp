@@ -1487,7 +1487,7 @@ function handleTextCells($obj) {
             for (i = 0; i < cells.length; i ++) {
                 sentences = sentences.concat($(cells[i]).find("textarea").val().trim().split("."));
             }
-            alert("Sentences", sentences.join("\r\n"));
+            console.log(sentences.join("\r\n"));
             $obj.data("step", 2);
             break;
         case 2:
