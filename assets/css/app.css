@@ -1451,21 +1451,21 @@ textarea.default-textarea{
     top: 0;
     right: 0;
 }
-#calendar-iframe, #integration-iframe, #timeline-iframe{
+#calendar-iframe, #integration-iframe, #timeline-iframe, #mapper-iframe{
     background-color: transparent;
     position: fixed;
     width: 100%;
     height: 100%;
-    z-index: 1000;
+    z-index: 2000;
     text-align: center;
     display: none;
 }
-#calendar-iframe iframe, #integration-iframe iframe, #timeline-iframe iframe{
+#calendar-iframe iframe, #integration-iframe iframe, #timeline-iframe iframe, #mapper-iframe iframe{
     width: 100%;
     height: 100%;
     border: none;
 }
-#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe{
+#calendar-iframe .close-iframe, #integration-iframe .close-iframe, #timeline-iframe .close-iframe, #mapper-iframe .close-iframe{
     background-color: black;
     padding: 10px;
     color: white;

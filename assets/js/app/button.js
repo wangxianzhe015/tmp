@@ -12,16 +12,17 @@ function addLeftBarButtons(){
 }
 
 function addRightBarButtons(){
-    addExchangeButton();
-    addFeedButton();
-    addRingButton();
-    addBLineCircleButton();
-    addTweenButton();
-    addFishEyeButton();
-    addDownloadJSONButton();
-    addLineSaveButton();
-    addLineLoadButton();
+    //addExchangeButton();
+    //addFeedButton();
+    //addRingButton();
+    //addBLineCircleButton();
+    //addTweenButton();
+    //addFishEyeButton();
+    //addDownloadJSONButton();
+    //addLineSaveButton();
+    //addLineLoadButton();
     addEmlButton();
+    addMapperButton();
 }
 
 function addBrowseButton(){
@@ -287,6 +288,16 @@ function addEmlButton(){
         class: "icon-button"
     }).on("click", function(){
         loadEml();
+    }).appendTo("#right-sidebar");
+}
+
+function addMapperButton(){
+    $("<img/>", {
+        id: "mapper-show-button",
+        src: "./assets/images/icons/translate-24.png",
+        class: "icon-button"
+    }).on("click", function(){
+        showMapperFrame();
     }).appendTo("#right-sidebar");
 }
 
@@ -836,4 +847,15 @@ function showTimelineFrame(){
 function hideTimelineFrame(){
     $(".sidebar").show();
     $("#timeline-iframe").hide().find("iframe").attr("src", "");
+}
+
+function showMapperFrame(){
+    removeImageTools(true);
+    $(".sidebar").hide();
+    $("#mapper-iframe").show().find("iframe").attr("src", window.location.href + "/word-mapper/");
+}
+
+function hideMapperFrame(){
+    $(".sidebar").show();
+    $("#mapper-iframe").hide().find("iframe").attr("src", "");
 }

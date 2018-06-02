@@ -1269,9 +1269,12 @@ function removeTextCellInGroup($cell){
         canvas.remove(lines[i].leftCircle, lines[i].rightCircle, lines[i]);
     }
     $cell.remove();
-    addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1, 0]
-    });
+    if (leftElem && rightElem) {
+        addBezierLine(leftElem, rightElem).set({
+            strokeDashArray: [1, 0],
+            opacity: 1
+        });
+    }
     canvas.renderAll();
 }
 
@@ -1491,12 +1494,12 @@ function handleTextCells($obj) {
             $obj.data("step", 2);
             break;
         case 2:
-            $obj().find(".same").removeClass("expanded");
+            $obj.find(".same").removeClass("expanded");
             $obj.data("step", 3);
             break;
         case 3:
             allCells.addClass("expanded");
-            $obj().find(".same").removeClass("same");
+            $obj.find(".same").removeClass("same");
             $obj.data("step", 0);
             break;
     }

@@ -1091,6 +1091,10 @@ function initHandlers(){
             hideDropFrame();
             return;
         }
+        if ($(this).parents("#mapper-iframe").length > 0){
+            hideMapperFrame();
+            return;
+        }
         $(this).parents(".image-tooltip").hide();
         $(this).parents(".third-image-tooltip").hide();
         if ($(this).parents("#tagger-iframe").length > 0){

@@ -123,6 +123,9 @@ switch ($action) {
     case 'load-text-cell':
         loadTextCell();
         break;
+    case 'save-word-mapper':
+        saveWordMapper();
+        break;
 }
 
 function save(){
@@ -798,4 +801,14 @@ function loadTextCell() {
         echo "fail";
     }
 }
+
+function saveWordMapper(){
+    $data = $_POST['data'];
+    $myFile = fopen("./data/word-mapper/data.json", "wr") or die("Unable to open file!");
+    fwrite($myFile, $data);
+    fclose($myFile);
+
+    echo "Save completed";
+}
+
 
