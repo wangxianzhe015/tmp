@@ -823,35 +823,12 @@ function addSubTextTooltip(left, top, defaultText, parent){
             id: "text-cell-group-" + parseInt(Math.random() * 100000000)
         }).on({
             scroll: function(e){
-                var $tooltips = $(this).find(".image-tooltip"), lines, line, left1, top1, left2, top2;
+                var $tooltips = $(this).find(".image-tooltip"), lines, line;
                 for (var i = 0; i < $tooltips.length; i ++){
                     lines = $($tooltips[i]).data("lines");
                     for (var j = 0; j < lines.length; j ++){
                         line = lines[j];
-                        left1 = line.leftElement.offset().left + line.leftElement.outerWidth() / 2;
-                        top1 = line.leftElement.offset().top + line.leftElement.innerHeight();
-                        left2 = line.rightElement.offset().left + line.rightElement.outerWidth() / 2;
-                        top2 = line.rightElement.offset().top;
-                        line.path[0][1] = left1;
-                        line.path[0][2] = top1;
-                        line.path[1][1] = (left1 + left2) / 2;
-                        line.path[1][2] = (top1 + top2) / 2;
-                        line.path[1][3] = left2;
-                        line.path[1][4] = top2;
-
-                        if ((line.path[0][1] > 0 && line.path[0][1] < window.innerWidth &&
-                            line.path[0][2] > 0 && line.path[0][2] < window.innerHeight) ||
-                            (line.path[1][3] > 0 && line.path[1][3] < window.innerWidth &&
-                            line.path[1][4] > 0 && line.path[1][4] < window.innerHeight)) {
-                            line.set({
-                                opacity: 1
-                            });
-                        } else {
-                            line.set({
-                                opacity: 0
-                            });
-                        }
-
+                        adjustCellLines(line);
                     }
                 }
 
@@ -923,7 +900,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
         }
     }
     var $tooltip = $("<div></div>", {
-        class: "image-tooltip second text expanded",
+        class: "image-tooltip second text expanded text-group-" + parent,
         id: "sub-text-box-" + parseInt(Math.random() * 10000000000)
     }).data({
         lines: [],
@@ -933,16 +910,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
         drag: function(){
             var left1, top1, left2, top2;
             $.each($(this).data("lines"), function (i, line) {
-                left1 = line.leftElement.offset().left + line.leftElement.outerWidth() / 2;
-                top1 = line.leftElement.offset().top + line.leftElement.innerHeight();
-                left2 = line.rightElement.offset().left + line.rightElement.outerWidth() / 2;
-                top2 = line.rightElement.offset().top;
-                line.path[0][1] = left1;
-                line.path[0][2] = top1;
-                line.path[1][1] = (left1 + left2) / 2;
-                line.path[1][2] = (top1 + top2) / 2;
-                line.path[1][3] = left2;
-                line.path[1][4] = top2;
+                adjustCellLines(line);
             });
             canvas.renderAll();
         }
@@ -1013,10 +981,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
                 if (lines[i].leftElement.attr("id") == parent.attr("id")){
                     lines[i].rightElement = box;
                     box.data("lines", [lines[i]]);
-                    lines[i].path[1][1] = (lines[i].path[0][1] + box.offset().left + box.outerWidth() / 2) / 2;
-                    lines[i].path[1][2] = (lines[i].path[0][2] + box.offset().top) / 2;
-                    lines[i].path[1][3] = box.offset().left + box.outerWidth() / 2;
-                    lines[i].path[1][4] = box.offset().top;
+                    adjustCellLines(lines[i]);
                 }
             }
             lines = box.next().data("lines");
@@ -1039,7 +1004,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
             });
             groupBoxes = box.nextAll();
             for (i = 0; i < groupBoxes.length; i ++){
-                if (parent.data("group") == $(groupBoxes[i]).data("group")){
+                if (!$(groupBoxes[i]).hasClass("group-move-div") && parent.data("group") == $(groupBoxes[i]).data("group")){
                     $(groupBoxes[i]).css({
                         top: $(".text-cell-group").prop("scrollTop") + $(groupBoxes[i]).offset().top + box.innerHeight() + 20
                     });
@@ -1173,14 +1138,8 @@ function mergeUpTextCell($cell){
     });
     lines = leftElem.data("lines");
     for (i = 0; i < lines.length; i ++){
-        lines[i].path[0][1] = lines[i].leftElement.offset().left + lines[i].leftElement.outerWidth() / 2;
-        lines[i].path[0][2] = lines[i].leftElement.offset().top + lines[i].leftElement.innerHeight();
-        lines[i].path[1][1] = (lines[i].path[0][1] + lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2) / 2;
-        lines[i].path[1][2] = (lines[i].path[0][2] + lines[i].rightElement.offset().top) / 2;
-        lines[i].path[1][3] = lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2;
-        lines[i].path[1][4] = lines[i].rightElement.offset().top;
+        adjustCellLines(lines[i]);
     }
-    canvas.renderAll();
 }
 
 function mergeDownTextCell($cell){
@@ -1233,14 +1192,8 @@ function mergeDownTextCell($cell){
     });
     lines = rightElem.data("lines");
     for (i = 0; i < lines.length; i ++){
-        lines[i].path[0][1] = lines[i].leftElement.offset().left + lines[i].leftElement.outerWidth() / 2;
-        lines[i].path[0][2] = lines[i].leftElement.offset().top + lines[i].leftElement.innerHeight();
-        lines[i].path[1][1] = (lines[i].path[0][1] + lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2) / 2;
-        lines[i].path[1][2] = (lines[i].path[0][2] + lines[i].rightElement.offset().top) / 2;
-        lines[i].path[1][3] = lines[i].rightElement.offset().left + lines[i].rightElement.outerWidth() / 2;
-        lines[i].path[1][4] = lines[i].rightElement.offset().top;
+        adjustCellLines(lines[i]);
     }
-    canvas.renderAll();
 }
 
 function removeTextCellInGroup($cell){
@@ -1280,9 +1233,13 @@ function removeTextCellInGroup($cell){
 
 function removeTextCellGroup($div){
     $.each($div.find(".image-tooltip"), function(i, tooltip){
-        $.each($(tooltip).data("lines"), function(i, line){
-            canvas.remove(line.leftCircle, line.rightCircle, line);
-        });
+        if ($(tooltip).attr("id").indexOf("sub-text") > -1 ) {
+            $.each($(tooltip).data("lines"), function (i, line) {
+                canvas.remove(line.leftCircle, line.rightCircle, line);
+            });
+        } else {
+            $(tooltip).appendTo("body");
+        }
     });
     $div.remove();
     $("body").css("overflow", "");
@@ -1329,6 +1286,54 @@ function splitText($el){
             }
 
             var $container = $(".text-cell-group");
+
+            $("<div></div>", {
+                class: "group-move-div"
+            }).data({
+                group: $el.attr("id")
+            }).css({
+                left: boxes[0].css("left"),
+                top: parseInt(boxes[0].css("top")) - 35,
+                cursor: "pointer"
+            }).draggable({
+                start: function(e, ui){
+                    var $cells = $(".text-group-" + $(this).data("group"));
+                    
+                    $.each($cells, function(i, cell){
+                        $.each($(cell).data("lines"), function(i, line){
+                            line.set({
+                                opacity: 0
+                            });
+                        });
+                        $(cell).data({
+                            left: parseInt($(cell).css("left")),
+                            top: parseInt($(cell).css("top"))
+                        })
+                    });
+                    canvas.renderAll();
+                },
+                drag: function(e, ui){
+                    var $cells = $(".text-group-" + $(this).data("group"));
+
+                    $.each($cells, function(i, cell){
+                        $(cell).css({
+                            left: $(cell).data("left") - ui.originalPosition.left + ui.position.left,
+                            top: $(cell).data("top") - ui.originalPosition.top + ui.position.top
+                        });
+                    });
+                },
+                end: function(e, ui){
+                    var $cells = $(".text-group-" + $(this).data("group"));
+
+                    $.each($cells, function(i, cell){
+                        $.each($(cell).data("lines"), function(i, line){
+                            adjustCellLines(line);
+                        });
+                    });
+                }
+            }).append($("<img/>", {
+                src: "assets/images/icons/move-24.png"
+            })).appendTo($container);
 
             $el.removeClass("expanded").attr("data-hidden", true).css({
                 left: ($container.data("group-count") - 1) * 420 + 30,
@@ -1503,4 +1508,31 @@ function handleTextCells($obj) {
             $obj.data("step", 0);
             break;
     }
+}
+
+function adjustCellLines(line){
+    var left1 = line.leftElement.offset().left + line.leftElement.outerWidth() / 2;
+    var top1 = line.leftElement.offset().top + line.leftElement.innerHeight();
+    var left2 = line.rightElement.offset().left + line.rightElement.outerWidth() / 2;
+    var top2 = line.rightElement.offset().top;
+    line.path[0][1] = left1;
+    line.path[0][2] = top1;
+    line.path[1][1] = (left1 + left2) / 2;
+    line.path[1][2] = (top1 + top2) / 2;
+    line.path[1][3] = left2;
+    line.path[1][4] = top2;
+
+    if ((line.path[0][1] > 0 && line.path[0][1] < window.innerWidth &&
+        line.path[0][2] > 0 && line.path[0][2] < window.innerHeight) ||
+        (line.path[1][3] > 0 && line.path[1][3] < window.innerWidth &&
+        line.path[1][4] > 0 && line.path[1][4] < window.innerHeight)) {
+        line.set({
+            opacity: 1
+        });
+    } else {
+        line.set({
+            opacity: 0
+        });
+    }
+    canvas.renderAll();
 }
