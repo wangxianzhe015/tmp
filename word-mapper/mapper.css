@@ -1,3 +1,10 @@
+:focus{
+    outline: none;
+}
+::selection{
+    background-color: yellowgreen;
+    cursor: none;
+}
 *{
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
@@ -12,6 +19,37 @@ html,body{
 body{
     /*background-color: rgb(76,76,76);*/
 }
+#add-word-btn{
+    cursor: pointer;
+    position: fixed;
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+}
+#page-title{
+    position: fixed;
+    top: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    color: white;
+}
+#load-btn{
+    cursor: pointer;
+    position: fixed;
+    top: 1em;
+    left: 1em;
+}
+#load-file-name{
+    position: fixed;
+    top: 17px;
+    left: 50px;
+    width: 120px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    display: none;
+}
 #outer-box{
     background-color: transparent;
     border: solid 1px rgb(42,42,42);
@@ -24,4 +62,7 @@ body{
     position: absolute!important;
     min-height: 1em;
     min-width: 1em;
+    color: white;
+    font-size: 16px;
+    cursor: move;
 }

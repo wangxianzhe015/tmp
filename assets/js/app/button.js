@@ -12,10 +12,10 @@ function addLeftBarButtons(){
 }
 
 function addRightBarButtons(){
-    //addExchangeButton();
-    //addFeedButton();
-    //addRingButton();
-    //addBLineCircleButton();
+    addExchangeButton();
+    addFeedButton();
+    addRingButton();
+    addBLineCircleButton();
     //addTweenButton();
     //addFishEyeButton();
     //addDownloadJSONButton();

@@ -126,6 +126,12 @@ switch ($action) {
     case 'save-word-mapper':
         saveWordMapper();
         break;
+    case 'load-word-mapper':
+        loadWordMapper();
+        break;
+    case 'load-mapper-names':
+        loadMapperNames();
+        break;
 }
 
 function save(){
@@ -804,11 +810,31 @@ function loadTextCell() {
 
 function saveWordMapper(){
     $data = $_POST['data'];
-    $myFile = fopen("./data/word-mapper/data.json", "wr") or die("Unable to open file!");
+    $name = $_POST['name'];
+    $myFile = fopen("./data/word-mapper/" . $name . ".json", "wr") or die("Unable to open file!");
     fwrite($myFile, $data);
     fclose($myFile);
 
     echo "Save completed";
 }
 
+function loadMapperNames() {
+    $path = "./data/word-mapper/";
+    $files = scandir($path);
+
+    echo json_encode($files);
+}
+
+function loadWordMapper() {
+    $name = $_POST['name'];
+    $myFile = fopen("./data/word-mapper/" . $name . ".json", "r") or die("Unable to open file!");
+    if ($myFile) {
+        $content = fread($myFile, filesize("./data/word-mapper/" . $name . ".json"));
+        fclose($myFile);
+        echo $content;
+    } else {
+        echo "fail";
+    }
+
+}
 
