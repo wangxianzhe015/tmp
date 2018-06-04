@@ -248,7 +248,7 @@ function addTitle(title){
                 $(this).blur();
             }
         },
-        dblclick: function(){
+        dblclick: function(e){
             e.stopPropagation();
         }
     }).appendTo("body").focus();
