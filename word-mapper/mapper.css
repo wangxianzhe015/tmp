@@ -1,3 +1,8 @@
+@font-face {
+    font-family: SanFrancisco;
+    src: url('../assets/css/fonts/SF-UI-Display-Ultralight.eot');
+    src: url('../assets/css/fonts/SF-UI-Display-Ultralight.eot?#iefix') format('embedded-opentype'), url('../assets/css/fonts/SF-UI-Display-Ultralight.woff') format('woff'), url('../assets/css/fonts/SF-UI-Display-Ultralight.ttf') format('truetype'), url('../assets/css/fonts/SF-UI-Display-Ultralight.svg') format('svg');
+}
 :focus{
     outline: none;
 }
@@ -6,8 +11,8 @@
     cursor: none;
 }
 *{
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 14px;
+    font-family: SanFrancisco, Helvetica, sans-serif;
+    font-weight: bold;
 }
 html,body{
     margin: 0;
@@ -17,22 +22,21 @@ html,body{
     overflow: hidden;
 }
 body{
-    background-color: rgba(76,76,76,0.8);
-    background-image: url('pattern.png');
+    background-color: transparent;
 }
 #add-word-btn{
     cursor: pointer;
     position: fixed;
-    top: 1em;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
 }
 #page-title{
     position: fixed;
-    top: 1em;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
+    transform: translate(-50%, -50%);
+    font-size: 22px;
     color: white;
 }
 #load-btn{
@@ -51,12 +55,24 @@ body{
     border-radius: 5px;
     display: none;
 }
-#outer-box{
-    background-color: rgba(42,42,42,0.8);
-    border: solid 1px rgb(42,42,42);
+.box{
+    position: absolute!important;
 }
-#inner-box{
-    background-color: rgba(42,42,42,0.8);
+#box-1{
+    background-color: rgb(57,57,57);
+    border: solid 1px rgb(57,57,57);
+}
+#box-2{
+    background-color: rgb(76,76,76);
+    background-image: url('pattern.png');
+    border: solid 2px rgb(42,42,42);
+}
+#box-3{
+    background-color: rgb(57,57,57);
+    border: solid 2px rgb(42,42,42);
+}
+#box-4{
+    background-color: rgb(42,42,42);
     border: solid 1px rgb(42,42,42);
 }
 .word{

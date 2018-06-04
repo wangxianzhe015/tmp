@@ -771,6 +771,7 @@ function hideChildButtons(){
 function showTaggerFrame(){
     removeImageTools(true);
     var $obj = $("#tagger-iframe");
+    $obj.find("iframe").attr("src", window.location.href + "/tagger/");
     $obj.css({
         top: window.scrollY + 150,
         left: window.scrollX + (window.innerWidth - parseInt($obj.css("width"))) / 2

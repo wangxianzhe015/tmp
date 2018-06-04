@@ -59,6 +59,8 @@ var pgJsonObjects = null, pgJsonGroupKey = "group-name";
 
 var interactionMode = false;
 
+var lineInGroup = true;
+
 // This is for fuzzy font problem fix
 fabric.Object.prototype.set({
     objectCaching: false

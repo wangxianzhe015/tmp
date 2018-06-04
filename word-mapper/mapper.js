@@ -3,21 +3,32 @@ var $targetWord = null;
 var gridStep = 25;
 
 $(document).ready(function(){
-    $("#outer-box").css({
+    $(".box").resizable({
+        handles: "all"
+    });
+    $("#box-1").css({
+        width: window.innerWidth,
+        height: window.innerHeight,
+        left: 0,
+        top: 0
+    });
+    $("#box-2").css({
+        width: window.innerWidth - 80,
+        height: window.innerHeight - 80,
+        left: 40,
+        top: 40
+    });
+    $("#box-3").css({
         width: window.innerWidth / 2,
         height: window.innerHeight / 2,
         left: window.innerWidth / 4,
         top: window.innerHeight / 4
-    }).resizable({
-        handles: "all"
     });
-    $("#inner-box").css({
-        width: window.innerWidth / 3,
-        height: window.innerHeight / 3,
-        left: window.innerWidth / 12,
-        top: window.innerHeight / 12
-    }).resizable({
-        handles: "all"
+    $("#box-4").css({
+        width: window.innerWidth / 2 - 100,
+        height: window.innerHeight / 2 - 100,
+        left: window.innerWidth / 4 + 50,
+        top: window.innerHeight / 4 + 50
     });
 
     $(window).on({
@@ -30,15 +41,11 @@ $(document).ready(function(){
             e.preventDefault();
         },
         dblclick: function(e){
-            if ($targetWord == null) {
-                addWord(e.pageX, e.pageY);
-            }
+            addWord(e.pageX, e.pageY);
         },
         mouseup: function(e){
             mouseDown = false;
-            if (!($(e.originalEvent.target).hasClass("word") || $(e.originalEvent.target).hasClass("page-title"))){
-                $targetWord = null;
-            }
+            $targetWord = null;
         },
         mousemove: function(e){
             if (mouseDown && $targetWord instanceof jQuery){
@@ -78,20 +85,32 @@ $(document).ready(function(){
 function save(){
     var $titleDiv = $("#page-title");
     if ($titleDiv.length == 0) return;
-    var outerBox = $("#outer-box"), innerBox = $("#inner-box");
+    var box1 = $("#box1"), box2 = $("#box2"), box3 = $("#box3"), box4 = $("#box4");
     var data = {
         title: $titleDiv.text(),
-        outerBox: {
-            left: outerBox.css("left"),
-            top: outerBox.css("top"),
-            width: outerBox.innerWidth(),
-            height: outerBox.innerHeight()
+        box1: {
+            left: box1.css("left"),
+            top: box1.css("top"),
+            width: box1.innerWidth(),
+            height: box1.innerHeight()
         },
-        innerBox: {
-            left: innerBox.css("left"),
-            top: innerBox.css("top"),
-            width: innerBox.innerWidth(),
-            height: innerBox.innerHeight()
+        box2: {
+            left: box2.css("left"),
+            top: box2.css("top"),
+            width: box2.innerWidth(),
+            height: box2.innerHeight()
+        },
+        box3: {
+            left: box3.css("left"),
+            top: box3.css("top"),
+            width: box3.innerWidth(),
+            height: box3.innerHeight()
+        },
+        box4: {
+            left: box4.css("left"),
+            top: box4.css("top"),
+            width: box4.innerWidth(),
+            height: box4.innerHeight()
         },
         words: []
     };
@@ -132,22 +151,34 @@ function load(name){
             $("#page-title").remove();
             $("#add-word-btn").remove();
             $(".word").remove();
-            $("#outer-box").css({
-                left: objects.outerBox.left,
-                top: objects.outerBox.top,
-                width: objects.outerBox.width,
-                height: objects.outerBox.height
+            $("#box1").css({
+                left: objects.box1.left,
+                top: objects.box1.top,
+                width: objects.box1.width,
+                height: objects.box1.height
             });
-            $("#inner-box").css({
-                left: objects.innerBox.left,
-                top: objects.innerBox.top,
-                width: objects.innerBox.width,
-                height: objects.innerBox.height
+            $("#box2").css({
+                left: objects.box2.left,
+                top: objects.box2.top,
+                width: objects.box2.width,
+                height: objects.box2.height
+            });
+            $("#box3").css({
+                left: objects.box3.left,
+                top: objects.box3.top,
+                width: objects.box3.width,
+                height: objects.box3.height
+            });
+            $("#box4").css({
+                left: objects.box4.left,
+                top: objects.box4.top,
+                width: objects.box4.width,
+                height: objects.box4.height
             });
             $.each(objects.words, function(i, word){
                 addWord(word.left, word.top, word.text);
             });
-            addTitle(objects.title);
+            addTitle(objects.title).blur();
         }
     });
 }
@@ -190,12 +221,24 @@ function addWord(left, top, text){
             if (e.originalEvent.keyCode == 13){
                 $(this).blur();
             }
+            if (window.getSelection().toString() == $(this).text()) {
+                $(this).text("").focus();
+            }
+        },
+        dblclick: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            var range = document.createRange();
+            range.selectNodeContents(this);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
         }
     }).appendTo("body").focus();
 }
 
 function addTitle(title){
-    $("<div></div>", {
+    return $("<div></div>", {
         id: "page-title",
         contentEditable: true,
         text: title==undefined?"Title":title
@@ -204,6 +247,9 @@ function addTitle(title){
             if (e.originalEvent.keyCode == 13){
                 $(this).blur();
             }
+        },
+        dblclick: function(){
+            e.stopPropagation();
         }
     }).appendTo("body").focus();
 }

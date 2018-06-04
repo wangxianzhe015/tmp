@@ -823,46 +823,18 @@ function addSubTextTooltip(left, top, defaultText, parent){
             id: "text-cell-group-" + parseInt(Math.random() * 100000000)
         }).on({
             scroll: function(e){
-                var $tooltips = $(this).find(".image-tooltip"), lines, line;
-                for (var i = 0; i < $tooltips.length; i ++){
-                    lines = $($tooltips[i]).data("lines");
-                    for (var j = 0; j < lines.length; j ++){
-                        line = lines[j];
-                        adjustCellLines(line);
+                if (lineInGroup) {
+                    var $tooltips = $(this).find(".image-tooltip"), lines, line;
+                    for (var i = 0; i < $tooltips.length; i++) {
+                        lines = $($tooltips[i]).data("lines");
+                        for (var j = 0; j < lines.length; j++) {
+                            line = lines[j];
+                            adjustCellLines(line);
+                        }
                     }
-                }
 
-                canvas.renderAll();
-            },
-            drag: function(e){
-                //var $groupDiv;
-                //if ($(e.originalEvent.target).prop("nodeName") == "IMG") {
-                //    $.each($(this).find(".image-tooltip"), function (i, tooltip) {
-                //        $.each($(tooltip).data("lines"), function (i, line) {
-                //            $groupDiv = line.leftElement.parents(".text-cell-group");
-                //            adjustLine(line);
-                //            if (line.leftCircle.left < parseInt($groupDiv.css("left")) ||
-                //                line.leftCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                //                line.leftCircle.top < parseInt($groupDiv.css("top")) ||
-                //                line.leftCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ||
-                //                line.rightCircle.left < parseInt($groupDiv.css("left")) ||
-                //                line.rightCircle.left > parseInt($groupDiv.css("left")) + $groupDiv.innerWidth() ||
-                //                line.rightCircle.top < parseInt($groupDiv.css("top")) ||
-                //                line.rightCircle.top > parseInt($groupDiv.css("top")) + $groupDiv.innerHeight() ){
-                //                line.set("opacity", 0);
-                //                line.leftCircle.set("opacity", 0);
-                //                line.rightCircle.set("opacity", 0);
-                //            } else {
-                //                line.set("opacity", 1);
-                //                line.leftCircle.set("opacity", 1);
-                //                line.rightCircle.set("opacity", 1);
-                //                line.path[1][1] = (line.path[0][1] + line.path[1][3]) / 2;
-                //                line.path[1][2] = (line.path[0][2] + line.path[1][4]) / 2;
-                //            }
-                //        });
-                //    });
-                //    canvas.renderAll();
-                //}
+                    canvas.renderAll();
+                }
             }
         }).data({
             "group-count": 1,
@@ -889,6 +861,21 @@ function addSubTextTooltip(left, top, defaultText, parent){
         }).on("click", function(){
             loadTextCells();
         })).append($("<img/>", {
+            src: "./assets/images/icons/hide-24.png"
+        }).on("click", function(){
+                var $cells = $(this).parents(".text-cell-group").find(".image-tooltip");
+                lineInGroup = !lineInGroup;
+                $.each($cells, function(i, cell){
+                    $.each($(cell).data("lines"), function(i, line){
+                        adjustCellLines(line);
+                        line.set({
+                            opacity: lineInGroup?1:0
+                        });
+                    });
+                });
+                canvas.renderAll();
+                $(this).attr("src", lineInGroup?"./assets/images/icons/hide-24.png":"./assets/images/icons/unhide-24.png");
+        })).append($("<img/>", {
             src: "./assets/images/icons/balance-24.png"
         }).on("click", function(){
             handleTextCells($(this).parents(".text-cell-group"));
@@ -908,11 +895,12 @@ function addSubTextTooltip(left, top, defaultText, parent){
         hidden: false
     }).on({
         drag: function(){
-            var left1, top1, left2, top2;
-            $.each($(this).data("lines"), function (i, line) {
-                adjustCellLines(line);
-            });
-            canvas.renderAll();
+            if (lineInGroup) {
+                $.each($(this).data("lines"), function (i, line) {
+                    adjustCellLines(line);
+                });
+                canvas.renderAll();
+            }
         }
     }).css({
         left: left==0?(groupBox.data("group-count") - 1) * 420 + 30:left,
@@ -981,7 +969,9 @@ function addSubTextTooltip(left, top, defaultText, parent){
                 if (lines[i].leftElement.attr("id") == parent.attr("id")){
                     lines[i].rightElement = box;
                     box.data("lines", [lines[i]]);
-                    adjustCellLines(lines[i]);
+                    if (lineInGroup) {
+                        adjustCellLines(lines[i]);
+                    }
                 }
             }
             lines = box.next().data("lines");
@@ -994,7 +984,7 @@ function addSubTextTooltip(left, top, defaultText, parent){
             var newLine = addBezierLine(box, box.next());
             newLine.set({
                 strokeDashArray: [1, 0],
-                opacity: 1
+                opacity: lineInGroup?1:0
             });
             newLine.leftCircle.set({
                 opacity: 0
@@ -1008,13 +998,15 @@ function addSubTextTooltip(left, top, defaultText, parent){
                     $(groupBoxes[i]).css({
                         top: $(".text-cell-group").prop("scrollTop") + $(groupBoxes[i]).offset().top + box.innerHeight() + 20
                     });
-                    $(groupBoxes[i]).data("lines")[0].path[0][2] += offsetY;
-                    $(groupBoxes[i]).data("lines")[0].path[1][2] += offsetY;
-                    $(groupBoxes[i]).data("lines")[0].path[1][4] += offsetY;
-                    if ($(groupBoxes[i]).data("lines")[1]) {
-                        $(groupBoxes[i]).data("lines")[1].path[0][2] += offsetY;
-                        $(groupBoxes[i]).data("lines")[1].path[1][2] += offsetY;
-                        $(groupBoxes[i]).data("lines")[1].path[1][4] += offsetY;
+                    if (lineInGroup) {
+                        $(groupBoxes[i]).data("lines")[0].path[0][2] += offsetY;
+                        $(groupBoxes[i]).data("lines")[0].path[1][2] += offsetY;
+                        $(groupBoxes[i]).data("lines")[0].path[1][4] += offsetY;
+                        if ($(groupBoxes[i]).data("lines")[1]) {
+                            $(groupBoxes[i]).data("lines")[1].path[0][2] += offsetY;
+                            $(groupBoxes[i]).data("lines")[1].path[1][2] += offsetY;
+                            $(groupBoxes[i]).data("lines")[1].path[1][4] += offsetY;
+                        }
                     }
                 }
             }
@@ -1123,12 +1115,10 @@ function mergeUpTextCell($cell){
     leftElem.css("height", leftElem.find("textarea").prop("scrollHeight") + 22);
     leftElem.find("textarea").css("height", leftElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
-    var line = addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1, 0],
-        opacity: 1
-    });
+    var line = addBezierLine(leftElem, rightElem);
     line.set({
-        opacity: 1
+        strokeDashArray: [1, 0],
+        opacity: lineInGroup?1:0
     });
     line.leftCircle.set({
         opacity: 0
@@ -1136,9 +1126,11 @@ function mergeUpTextCell($cell){
     line.rightCircle.set({
         opacity: 0
     });
-    lines = leftElem.data("lines");
-    for (i = 0; i < lines.length; i ++){
-        adjustCellLines(lines[i]);
+    if (lineInGroup) {
+        lines = leftElem.data("lines");
+        for (i = 0; i < lines.length; i++) {
+            adjustCellLines(lines[i]);
+        }
     }
 }
 
@@ -1178,11 +1170,10 @@ function mergeDownTextCell($cell){
     });
     rightElem.find("textarea").css("height", rightElem.find("textarea").prop("scrollHeight"));
     $cell.remove();
-    var line = addBezierLine(leftElem, rightElem).set({
-        strokeDashArray: [1, 0]
-    });
+    var line = addBezierLine(leftElem, rightElem);
     line.set({
-        opacity: 1
+        strokeDashArray: [1, 0],
+        opacity: lineInGroup?1:0
     });
     line.leftCircle.set({
         opacity: 0
@@ -1190,9 +1181,11 @@ function mergeDownTextCell($cell){
     line.rightCircle.set({
         opacity: 0
     });
-    lines = rightElem.data("lines");
-    for (i = 0; i < lines.length; i ++){
-        adjustCellLines(lines[i]);
+    if (lineInGroup) {
+        lines = rightElem.data("lines");
+        for (i = 0; i < lines.length; i++) {
+            adjustCellLines(lines[i]);
+        }
     }
 }
 
@@ -1323,13 +1316,16 @@ function splitText($el){
                     });
                 },
                 end: function(e, ui){
-                    var $cells = $(".text-group-" + $(this).data("group"));
+                    if (lineInGroup) {
+                        var $cells = $(".text-group-" + $(this).data("group"));
 
-                    $.each($cells, function(i, cell){
-                        $.each($(cell).data("lines"), function(i, line){
-                            adjustCellLines(line);
+                        $.each($cells, function (i, cell) {
+                            $.each($(cell).data("lines"), function (i, line) {
+                                adjustCellLines(line);
+                            });
                         });
-                    });
+                        canvas.renderAll();
+                    }
                 }
             }).append($("<img/>", {
                 src: "assets/images/icons/move-24.png"
