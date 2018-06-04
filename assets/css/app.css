@@ -1930,6 +1930,9 @@ textarea.default-textarea{
     margin: 5px 0;
     image-rendering: pixelated;
 }
+.text-cell-group .group-move-div{
+    position: absolute!important;
+}
 
 .cropped-image-annotation{
     font-size: 12px;

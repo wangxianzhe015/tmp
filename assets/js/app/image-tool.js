@@ -1463,31 +1463,33 @@ function loadTextCell(name){
 }
 
 function handleTextCells($obj) {
-    var allCells = $obj.find(".image-tooltip[id*='sub-text-box-']"), i, j, cells = [];
+    if ($obj.data("group-count") < 2){
+        alert("Alert", "You must add at least two groups");
+        return;
+    }
+    var groupKeys = $obj.data("groups");
+    var i, j, k, l, $cells1, $cells2;
     switch ($obj.data("step")){
         case 0:
-            for (i = 0; i < allCells.length; i ++) {
-                if ($(allCells[i]).data("group") == $obj.data("groups")[0]) {
-                    cells.push($(allCells[i]));
-                }
-            }
-            for (i = 0; i < cells.length - 1; i ++) {
-                for (j = i + 1; j < cells.length; j ++) {
-                    if ($(cells[i]).find("textarea").val().trim() == $(cells[j]).find("textarea").val().trim()){
-                        $(cells[i]).addClass("same").data("same", $(cells[j]).attr("id"));
-                        $(cells[j]).addClass("same").data("same", $(cells[i]).attr("id"));
+            for (i = 0; i < groupKeys.length - 1; i ++) {
+                $cells1 = $(".text-group-" + groupKeys[i]);
+                for (j = i + 1; j < groupKeys.length; j ++) {
+                    $cells2 = $(".text-group-" + groupKeys[j]);
+                    for (k = 0; k < $cells1.length; k ++){
+                        for (l = 0; l < $cells2.length; l ++){
+                            if ($($cells1[k]).find("textarea").val().trim() == $($cells2[l]).find("textarea").val().trim()){
+                                $($cells1[k]).addClass("same").data("same", $($cells2[l]).attr("id"));
+                                $($cells2[l]).addClass("same").data("same", $($cells1[k]).attr("id"));
+                            }
+                        }
                     }
                 }
             }
             $obj.data("step", 1);
             break;
         case 1:
-            for (i = 0; i < allCells.length; i ++) {
-                if ($(allCells[i]).data("group") == $obj.data("groups")[0] && !$(allCells[i]).hasClass("same")) {
-                    cells.push($(allCells[i]));
-                }
-            }
             var sentences = [];
+            var cells = $obj.find(".image-tooltip[id*='sub-text-']:not(.same)");
             for (i = 0; i < cells.length; i ++) {
                 sentences = sentences.concat($(cells[i]).find("textarea").val().trim().split("."));
             }
@@ -1499,7 +1501,7 @@ function handleTextCells($obj) {
             $obj.data("step", 3);
             break;
         case 3:
-            allCells.addClass("expanded");
+            $obj.find(".image-tooltip[id*='sub-text-']").addClass("expanded");
             $obj.find(".same").removeClass("same");
             $obj.data("step", 0);
             break;
